@@ -1,0 +1,803 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plume Light · 國泰 Door-to-Door 留學生搬遷</title>
+<!--
+  Plume Light — 初版交互原型（v0.1）
+  设计语言：对齐「國泰文化餐飲體驗」既有 GUI（浅底 + 國泰翠绿、深绿圆角 Hero、
+  航班进度条、白色圆角卡片、胶囊选择器、竖线小节标题）。
+  记忆点：双轨进度 —— 「人」与「物」在同一时间轴上并排前行。
+  交互：主导航视图切换 / 三步预约向导 / 行李步进与实时报价 / 预约成功回执 / 追踪进度动画。
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ================= Design Tokens ================= */
+:root{
+  /* 色彩 —— 國泰翠绿主导，金色仅用于「物」的进度与奖励 */
+  --jade-900:#003f3a; --jade-800:#005049; --jade-700:#00615e; --jade-600:#0b7a70;
+  --jade-100:#d9efe8; --jade-050:#eaf5f1;
+  --gold:#c98f2d; --gold-600:#a9761c; --gold-050:#fbf3de;
+  --bg:#f4f8f6; --surface:#ffffff; --line:#e0ebe7; --line-strong:#cfe0da;
+  --text:#17322e; --muted:#5e7470;
+  --amber:#c25e00; --amber-050:#fdf1e3;
+  --radius-lg:18px; --radius:14px; --radius-sm:10px;
+  --shadow-1:0 2px 8px rgba(0,64,58,.07);
+  --shadow-2:0 10px 30px rgba(0,64,58,.12);
+  --ease-out:cubic-bezier(.16,1,.3,1);
+  --dur-fast:160ms; --dur-base:320ms; --dur-slow:640ms;
+  --font-latin:'Sora',-apple-system,sans-serif;
+  --font-cjk:'PingFang TC','Hiragino Sans GB','Microsoft JhengHei','Noto Sans TC',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:var(--font-cjk);background:var(--bg);color:var(--text);
+  font-size:15px;line-height:1.7;letter-spacing:.02em;
+  -webkit-font-smoothing:antialiased;
+}
+button{font:inherit;color:inherit;cursor:pointer;background:none;border:0}
+input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--jade-600);outline-offset:2px;border-radius:4px}
+.num{font-family:var(--font-latin);font-variant-numeric:tabular-nums}
+
+/* ================= 顶部服务条 ================= */
+.topbar{background:var(--jade-050);border-bottom:1px solid var(--line);font-size:12.5px;color:var(--muted)}
+.topbar .in{max-width:1120px;margin:0 auto;padding:6px 20px;display:flex;justify-content:flex-end;gap:18px;align-items:center}
+.topbar .brand-l{margin-right:auto;color:var(--jade-700);font-weight:600}
+.topbar a{color:inherit;text-decoration:none}
+.topbar .who{display:inline-flex;align-items:center;gap:6px;color:var(--jade-700);font-weight:600}
+.avatar{width:20px;height:20px;border-radius:50%;background:var(--jade-700);color:#fff;display:inline-grid;place-items:center;font-size:11px}
+
+/* ================= 主导航 ================= */
+.nav{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:50}
+.nav .in{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;align-items:center;gap:6px;height:56px}
+.logo{display:flex;align-items:center;gap:8px;margin-right:22px;color:var(--jade-700);font-weight:700;letter-spacing:.08em}
+.logo img{width:26px;height:auto;display:block}
+.nav-tab{padding:8px 14px;border-radius:999px;color:var(--muted);font-weight:500;white-space:nowrap;transition:background var(--dur-fast) ease-out,color var(--dur-fast) ease-out}
+.nav-tab:hover{background:var(--jade-050);color:var(--jade-700)}
+.nav-tab[aria-selected="true"]{background:var(--jade-050);color:var(--jade-700);font-weight:700}
+.nav-tab.brand-tab[aria-selected="true"]{background:var(--jade-700);color:#fff}
+.nav .sp{flex:1}
+
+/* ================= 航班条（双轨） ================= */
+.strip-wrap{background:linear-gradient(90deg,#e9f6f0,#f3faf6);border-bottom:1px solid var(--line)}
+.strip{max-width:1120px;margin:0 auto;padding:14px 20px}
+.strip .row{display:grid;grid-template-columns:170px 1fr 170px;gap:18px;align-items:center}
+.strip .end{text-align:center}
+.strip .end b{display:block;font-size:14px}
+.strip .end span{font-size:12px;color:var(--muted)}
+.strip .mid{text-align:center}
+.strip .mid .pax{font-size:13.5px;font-weight:700;color:var(--jade-800)}
+.strip .mid .pax span{font-weight:400;color:var(--muted)}
+.track{position:relative;height:6px;border-radius:3px;background:linear-gradient(90deg,var(--gold),#e9c98a);margin:9px 0 6px;overflow:visible}
+.track i{position:absolute;left:0;top:0;bottom:0;width:50%;border-radius:3px;background:var(--jade-700);transition:width 1.2s var(--ease-out)}
+/* 移动标记：.wing = Brushwing 尖点锚定（尖点对准进度条中心线），.crate = 普通居中 */
+.track .mover{position:absolute;top:50%;transition:left 1.2s var(--ease-out)}
+.track .wing{width:22px;transform:translate(-21.9px,-17.9px)}
+.track .wing img{width:22px;height:auto;display:block}
+.track .crate{width:20px;height:20px;color:var(--jade-700);transform:translate(-50%,-50%)}
+.strip .hint{text-align:center;font-size:11.5px;color:var(--muted)}
+.strip .hint b{color:var(--gold-600);font-weight:600}
+.cargo-row{display:grid;grid-template-columns:170px 1fr 170px;gap:18px;align-items:center;margin-top:10px;padding-top:10px;border-top:1px dashed var(--line-strong)}
+.cargo-row .end span{display:block}
+.chip-mini{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;background:var(--gold-050);color:var(--gold-600);font-weight:600}
+
+/* ================= 布局与通用组件 ================= */
+main{max-width:1120px;margin:0 auto;padding:28px 20px 80px}
+.view{display:none}
+.view.active{display:block;animation:viewin var(--dur-slow) var(--ease-out)}
+@keyframes viewin{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+.hero{background:linear-gradient(135deg,#02816f 0%,var(--jade-700) 45%,var(--jade-900) 100%);
+  color:#fff;border-radius:var(--radius-lg);padding:56px 48px;text-align:center;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;pointer-events:none;
+  background:radial-gradient(42rem 20rem at 88% -20%,rgba(255,255,255,.16),transparent 60%),
+             radial-gradient(30rem 18rem at -6% 120%,rgba(217,161,59,.22),transparent 55%)}
+.hero>*{position:relative}
+.brand-pill{display:inline-flex;align-items:center;gap:8px;font-family:var(--font-latin);font-size:11.5px;
+  letter-spacing:.28em;font-weight:700;color:#ffe9bd;border:1px solid rgba(255,233,189,.45);
+  border-radius:999px;padding:5px 16px 5px 18px;margin-bottom:18px}
+.hero h1{font-family:var(--font-latin);font-size:clamp(30px,4.6vw,50px);line-height:1.12;letter-spacing:-.02em;font-weight:800}
+.hero h1 em{font-style:normal;color:#ffe9bd}
+.hero p{margin:14px auto 0;max-width:640px;color:rgba(255,255,255,.88);font-size:15px}
+.hero .cta{margin-top:26px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:44px;padding:10px 26px;
+  border-radius:999px;font-weight:700;font-size:14.5px;transition:transform var(--dur-fast) ease-out,box-shadow var(--dur-fast) ease-out,background var(--dur-fast) ease-out}
+.btn:active{transform:scale(.97)}
+.btn-gold{background:#ffe9bd;color:var(--jade-900)}
+.btn-gold:hover{box-shadow:0 6px 18px rgba(255,233,189,.35);transform:translateY(-1px)}
+.btn-ghost{border:1.5px solid rgba(255,255,255,.55);color:#fff}
+.btn-ghost:hover{background:rgba(255,255,255,.12)}
+.btn-primary{background:var(--jade-700);color:#fff}
+.btn-primary:hover{background:var(--jade-800);box-shadow:var(--shadow-2);transform:translateY(-1px)}
+.btn-line{border:1.5px solid var(--line-strong);color:var(--jade-700);background:#fff}
+.btn-line:hover{border-color:var(--jade-600);background:var(--jade-050)}
+.btn[disabled]{opacity:.45;pointer-events:none}
+
+/* 卡片与小节 */
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow-1)}
+.sec-head{display:flex;align-items:center;gap:10px;margin:34px 0 16px}
+.sec-head .ic{width:26px;height:26px;border-radius:8px;background:var(--jade-050);display:grid;place-items:center;color:var(--jade-700)}
+.sec-head h2{font-size:19px;letter-spacing:.02em}
+.sec-head::after{content:"";flex:1;height:1px;background:var(--line)}
+
+/* 四步旅程 */
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.flow .step{padding:20px 18px;position:relative}
+.flow .step .no{font-family:var(--font-latin);font-size:12px;font-weight:800;letter-spacing:.22em;color:var(--gold-600)}
+.flow .step h3{font-size:16px;margin:6px 0 6px;display:flex;align-items:center;gap:8px}
+.flow .step h3 svg{width:20px;height:20px;color:var(--jade-700)}
+.flow .step p{font-size:13px;color:var(--muted)}
+.flow .step .who{margin-top:12px;font-size:11.5px;color:var(--jade-700);background:var(--jade-050);display:inline-block;padding:2px 10px;border-radius:999px;font-weight:600}
+.flow .step::after{content:"→";position:absolute;right:-13px;top:50%;transform:translateY(-50%);
+  color:var(--line-strong);font-size:18px;font-weight:700;z-index:1}
+.flow .step:last-child::after{display:none}
+
+/* 特性卡 */
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:14px}
+.grid4 .f{padding:20px 18px}
+.grid4 .f .ic{width:38px;height:38px;border-radius:11px;background:var(--jade-050);display:grid;place-items:center;color:var(--jade-700);margin-bottom:12px}
+.grid4 .f h3{font-size:15.5px;margin-bottom:6px}
+.grid4 .f p{font-size:13px;color:var(--muted)}
+
+/* 里程横幅 */
+.miles{margin-top:14px;background:var(--gold-050);border:1px solid #f0e2bb;border-radius:var(--radius);
+  padding:18px 22px;display:flex;align-items:center;gap:14px}
+.miles .big{font-family:var(--font-latin);font-size:30px;font-weight:800;color:var(--gold-600);letter-spacing:-.02em}
+.miles p{font-size:13.5px;color:#6d5a2c}
+
+/* ================= 向导 ================= */
+.wizard{display:grid;grid-template-columns:230px 1fr;gap:20px;align-items:start}
+.wsteps{padding:20px 18px;position:sticky;top:76px}
+.wsteps .w{display:flex;gap:12px;padding:10px 0;opacity:.45;transition:opacity var(--dur-base) ease-out}
+.wsteps .w.on{opacity:1}
+.wsteps .dot{width:26px;height:26px;border-radius:50%;border:1.5px solid var(--line-strong);display:grid;place-items:center;
+  font-family:var(--font-latin);font-size:12px;font-weight:700;color:var(--muted);flex:none;transition:all var(--dur-base) var(--ease-out)}
+.wsteps .w.on .dot{background:var(--jade-700);border-color:var(--jade-700);color:#fff}
+.wsteps .w b{font-size:14px;display:block}
+.wsteps .w span{font-size:12px;color:var(--muted)}
+.wsteps .ln{width:1.5px;height:18px;background:var(--line);margin-left:12px}
+
+.wstep{display:none}
+.wstep.on{display:block;animation:viewin var(--dur-base) var(--ease-out)}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;padding:22px}
+.form-grid .full{grid-column:1/-1}
+label.lb{display:block;font-size:13px;font-weight:700;margin-bottom:6px;color:var(--jade-900)}
+label.lb .req{color:#c25e00;margin-left:2px}
+.hint{font-size:12px;color:var(--muted)}
+.in,.sel{width:100%;height:44px;border:1px solid var(--line-strong);border-radius:var(--radius-sm);
+  padding:0 14px;background:#fff;transition:border-color var(--dur-fast) ease-out,box-shadow var(--dur-fast) ease-out}
+.in:focus,.sel:focus{outline:none;border-color:var(--jade-600);box-shadow:0 0 0 3px rgba(11,122,112,.14)}
+.sel{appearance:none;background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235e7470' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 14px center}
+
+.flight-auto{grid-column:1/-1;border:1px solid var(--jade-100);background:linear-gradient(90deg,var(--jade-050),#fff);
+  border-radius:var(--radius-sm);padding:14px 16px;display:flex;gap:14px;align-items:center}
+.flight-auto .rt{font-family:var(--font-latin);font-weight:800;font-size:17px;color:var(--jade-800);letter-spacing:.02em}
+.flight-auto .meta{font-size:12.5px;color:var(--muted)}
+
+.seg{display:flex;gap:8px;flex-wrap:wrap}
+.seg button{padding:8px 16px;min-height:38px;border-radius:999px;border:1.5px solid var(--line-strong);
+  background:#fff;color:var(--muted);font-size:13px;transition:all var(--dur-fast) ease-out}
+.seg button:hover{border-color:var(--jade-600);color:var(--jade-700)}
+.seg button[aria-pressed="true"]{border-color:var(--jade-700);color:var(--jade-700);background:var(--jade-050);font-weight:700}
+
+/* 行李步进器 */
+.lug{display:flex;align-items:center;gap:14px;padding:16px 0;border-bottom:1px dashed var(--line)}
+.lug:last-of-type{border-bottom:0}
+.lug .ic{width:40px;height:40px;border-radius:11px;background:var(--jade-050);display:grid;place-items:center;color:var(--jade-700);flex:none}
+.lug b{font-size:14.5px;display:block}
+.lug span{font-size:12.5px;color:var(--muted)}
+.lug .grow{flex:1}
+.stepper{display:flex;align-items:center;gap:2px;border:1.5px solid var(--line-strong);border-radius:999px;overflow:hidden}
+.stepper button{width:38px;height:38px;font-size:18px;color:var(--jade-700);transition:background var(--dur-fast) ease-out}
+.stepper button:hover{background:var(--jade-050)}
+.stepper output{width:38px;text-align:center;font-family:var(--font-latin);font-weight:700;font-size:15px}
+.check{display:flex;gap:10px;align-items:flex-start;font-size:13.5px;color:var(--muted);cursor:pointer}
+.check input{width:18px;height:18px;margin-top:2px;accent-color:var(--jade-700)}
+
+/* 报价 */
+.quote{padding:0;overflow:hidden}
+.quote .qrow{display:flex;justify-content:space-between;padding:11px 22px;font-size:14px;border-bottom:1px dashed var(--line)}
+.quote .qrow span{color:var(--muted)}
+.quote .qrow.off b{color:var(--jade-700)}
+.quote .qrow.total{background:var(--jade-050);border-bottom:0;font-size:16px;font-weight:800;color:var(--jade-900)}
+.quote .qrow.total span{color:var(--jade-900)}
+.wnav{display:flex;justify-content:space-between;margin-top:18px}
+.sum-line{display:flex;justify-content:space-between;padding:9px 22px;font-size:13.5px;border-bottom:1px dashed var(--line)}
+.sum-line span{color:var(--muted)}
+
+/* ================= 双轨追踪 ================= */
+.dual-card{padding:30px 28px;overflow:hidden}
+.dual-head{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;margin-bottom:26px}
+.dual-head .t{font-size:17px;font-weight:800}
+.dual-head .ref{font-family:var(--font-latin);font-size:12.5px;color:var(--muted);letter-spacing:.04em}
+.chip{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;padding:4px 12px;border-radius:999px}
+.chip.live{background:var(--jade-050);color:var(--jade-700)}
+.chip.live::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--jade-600);animation:pulse 1.6s infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(11,122,112,.45)}55%{box-shadow:0 0 0 7px rgba(11,122,112,0)}}
+
+.dual{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative}
+.dual .lane{display:grid;grid-template-columns:subgrid;grid-column:1/-1;align-items:center}
+.dual .lab{font-size:12.5px;font-weight:700;color:var(--jade-900);width:64px;flex:none;
+  display:inline-flex;align-items:center;gap:6px}
+.lane .node{display:flex;flex-direction:column;align-items:center;gap:7px;text-align:center;position:relative;padding:0 4px}
+.lane .node .bub{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;background:#fff;
+  border:2px solid var(--line-strong);color:var(--line-strong);transition:all var(--dur-base) var(--ease-out)}
+.lane .node .bub svg{width:17px;height:17px}
+.lane .node.done .bub{background:var(--jade-700);border-color:var(--jade-700);color:#fff}
+.lane .node.now .bub{border-color:var(--jade-700);color:var(--jade-700);box-shadow:0 0 0 5px rgba(11,122,112,.14);animation:ring 1.8s infinite}
+@keyframes ring{0%,100%{box-shadow:0 0 0 4px rgba(11,122,112,.14)}55%{box-shadow:0 0 0 9px rgba(11,122,112,0)}}
+.lane .node small{font-size:11.5px;color:var(--muted);line-height:1.35;max-width:110px}
+.lane .node.now small{color:var(--jade-800);font-weight:700}
+.lane .node.done small{color:var(--text)}
+.lane-mid{position:relative;height:44px;align-items:center}
+.lane-mid .bar{position:absolute;left:6%;right:6%;top:50%;height:5px;transform:translateY(-50%);
+  background:var(--jade-100);border-radius:3px}
+.lane-mid .bar i{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:3px;
+  background:linear-gradient(90deg,var(--jade-600),var(--jade-800));transition:width 1.4s var(--ease-out)}
+.lane-mid .mover{position:absolute;top:50%;left:6%;transform:translate(-50%,-50%);width:38px;height:38px;border-radius:50%;
+  background:#fff;border:2px solid var(--jade-700);display:grid;place-items:center;color:var(--jade-700);
+  box-shadow:var(--shadow-1);transition:left 1.4s var(--ease-out)}
+.lane-mid .mover svg{width:18px;height:18px}
+
+/* 事件时间线 */
+.twocol{display:grid;grid-template-columns:1.25fr .75fr;gap:20px;margin-top:20px;align-items:start}
+.tl{padding:24px 26px}
+.tl-item{display:flex;gap:14px;position:relative;padding-bottom:20px}
+.tl-item:last-child{padding-bottom:0}
+.tl-item::before{content:"";position:absolute;left:8px;top:22px;bottom:-2px;width:1.5px;background:var(--line)}
+.tl-item:last-child::before{display:none}
+.tl-item .dot2{width:17px;height:17px;border-radius:50%;flex:none;margin-top:3px;border:2px solid var(--line-strong);background:#fff}
+.tl-item.done .dot2{background:var(--jade-700);border-color:var(--jade-700)}
+.tl-item.done .dot2::after{content:"";display:block;width:5px;height:5px;background:#fff;border-radius:50%;margin:4px auto}
+.tl-item .t{font-size:12px;color:var(--muted);font-family:var(--font-latin);letter-spacing:.02em}
+.tl-item b{font-size:14px;display:block}
+.tl-item p{font-size:13px;color:var(--muted)}
+.tl-item.next .t{color:var(--gold-600)}
+
+.kv{padding:22px 24px}
+.kv .row{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px dashed var(--line);font-size:13.5px}
+.kv .row:last-of-type{border-bottom:0}
+.kv .row span{color:var(--muted)}
+.kv .row b{text-align:right;font-weight:600}
+.kv .acts{display:grid;gap:10px;margin-top:14px}
+
+/* ================= 我的搬遷 ================= */
+.order{display:flex;align-items:center;gap:18px;padding:20px 22px;margin-bottom:14px;flex-wrap:wrap}
+.order .route{font-size:16px;font-weight:800;display:flex;align-items:center;gap:8px}
+.order .route svg{width:16px;height:16px;color:var(--muted)}
+.order .meta{font-size:12.5px;color:var(--muted)}
+.order .oref{font-family:var(--font-latin);font-size:11.5px;letter-spacing:.06em;color:var(--muted)}
+.order .grow{flex:1;min-width:220px}
+.chip.gray{background:#eef2f1;color:var(--muted)}
+.chip.amberc{background:var(--amber-050);color:var(--amber)}
+.order .acts{display:flex;gap:10px}
+
+/* ================= 成功回执 ================= */
+.overlay{position:fixed;inset:0;background:rgba(4,42,38,.55);backdrop-filter:blur(3px);
+  display:none;place-items:center;z-index:100;padding:20px}
+.overlay.on{display:grid}
+.modal{max-width:460px;width:100%;text-align:center;padding:40px 34px;border-radius:20px;
+  animation:viewin var(--dur-slow) var(--ease-out)}
+.modal .ok{width:64px;height:64px;border-radius:50%;background:var(--jade-700);color:#fff;display:grid;place-items:center;margin:0 auto 18px}
+.modal .ok svg{width:30px;height:30px}
+.modal h2{font-size:21px;margin-bottom:6px}
+.modal .ref{font-family:var(--font-latin);font-size:14px;letter-spacing:.1em;color:var(--jade-700);font-weight:800;
+  background:var(--jade-050);border-radius:10px;padding:8px 14px;display:inline-block;margin:10px 0 4px}
+.modal p{font-size:13.5px;color:var(--muted)}
+.modal .duo{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0 22px}
+.modal .duo div{border:1px dashed var(--line-strong);border-radius:12px;padding:12px 10px}
+.modal .duo b{font-size:12px;color:var(--jade-700);display:block}
+.modal .duo span{font-size:12px;color:var(--muted)}
+.modal .cta{display:flex;flex-direction:column;gap:10px}
+
+/* 页脚 */
+footer{background:#eef3f1;border-top:1px solid var(--line);margin-top:30px}
+footer .in{max-width:1120px;margin:0 auto;padding:20px;display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap}
+footer p{font-size:12.5px;color:var(--muted)}
+footer nav{display:flex;gap:18px;align-items:center;font-size:12.5px;color:var(--muted)}
+footer .back{border:1.5px solid var(--line-strong);border-radius:999px;padding:5px 14px;color:var(--jade-700);font-weight:600}
+
+/* 入场序列 */
+.reveal{opacity:0;transform:translateY(22px)}
+.reveal.on{opacity:1;transform:none;transition:opacity var(--dur-base) var(--ease-out),transform var(--dur-base) var(--ease-out)}
+.reveal.d1{transition-delay:80ms}.reveal.d2{transition-delay:160ms}.reveal.d3{transition-delay:240ms}.reveal.d4{transition-delay:320ms}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  .reveal{opacity:1;transform:none}
+  html{scroll-behavior:auto}
+}
+
+/* ================= 响应式 ================= */
+@media (max-width:960px){
+  .wizard{grid-template-columns:1fr}
+  .wsteps{position:static;display:flex;gap:4px}
+  .wsteps .w{flex:1;padding:6px 4px}
+  .wsteps .ln,.wsteps .w span{display:none}
+  .twocol{grid-template-columns:1fr}
+  .grid4{grid-template-columns:1fr 1fr}
+}
+@media (max-width:720px){
+  .topbar .in{gap:12px}
+  .topbar .hide-s{display:none}
+  .nav .in{overflow-x:auto;scrollbar-width:none}
+  .strip .row,.cargo-row{grid-template-columns:auto 1fr auto}
+  .flow{grid-template-columns:1fr 1fr}
+  .flow .step::after{display:none}
+  .dual{display:none}
+  .dual-mobile{display:block!important}
+  .grid4{grid-template-columns:1fr}
+  .form-grid{grid-template-columns:1fr}
+  .hero{padding:40px 22px}
+  .order .acts{width:100%}
+  .order .acts .btn{flex:1}
+}
+/* 移动端纵向双轨 */
+.dual-mobile{display:none;padding:6px 2px}
+.dual-mobile .msec{margin-bottom:16px}
+.dual-mobile .msec>div{font-size:12.5px;font-weight:800;color:var(--jade-900);margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.mi{display:flex;gap:12px;padding:8px 0;align-items:flex-start}
+.mi .b{width:30px;height:30px;border-radius:50%;border:2px solid var(--line-strong);display:grid;place-items:center;color:var(--line-strong);flex:none;background:#fff}
+.mi.done .b{background:var(--jade-700);border-color:var(--jade-700);color:#fff}
+.mi.now .b{border-color:var(--jade-700);color:var(--jade-700)}
+.mi b{font-size:13.5px;display:block}
+.mi span{font-size:11.5px;color:var(--muted)}
+</style>
+</head>
+<body>
+
+<!-- 顶部服务条：与既有 GUI 一致 -->
+<div class="topbar">
+  <div class="in">
+    <span class="brand-l hide-s">服務供應</span>
+    <a href="#" class="hide-s">🔍 搜索</a>
+    <a href="#" class="hide-s">? 詢問機場支援</a>
+    <a href="#" class="hide-s">♦ 關懷中心</a>
+    <a href="#" class="hide-s">簡</a><a href="#">繁</a><a href="#" class="hide-s">English</a>
+    <span class="who"><i class="avatar">陳</i>陳大文</span>
+    <a href="#">登出</a>
+  </div>
+</div>
+
+<!-- 主导航：Plume Light 作为主区块，与餐飲體驗並列 -->
+<header class="nav">
+  <div class="in">
+    <span class="logo">
+      <img src="assets/cathay-brushwing.png" alt="國泰航空 Brushwing">
+      國泰
+    </span>
+    <button class="nav-tab brand-tab" data-v="home" aria-selected="true">Plume Light 搬遷</button>
+    <button class="nav-tab" data-v="book">預約搬遷</button>
+    <button class="nav-tab" data-v="track">貨件追蹤</button>
+    <button class="nav-tab" data-v="orders">我的搬遷</button>
+    <button class="nav-tab hide-s">我的</button>
+  </div>
+</header>
+
+<!-- 航班条：签名式双轨 —— 上轨「人」，下轨「物」 -->
+<div class="strip-wrap">
+  <div class="strip">
+    <div class="row">
+      <div class="end"><b>香港 · <span class="num">CX888</span></b><span class="num">2026年11月15日 09:30</span></div>
+      <div class="mid">
+        <div class="pax">陳大文 <span>· 商務艙 · 1成人</span></div>
+        <div class="track"><i id="stripFill"></i>
+          <span class="mover wing" id="stripPlane"><img src="assets/cathay-brushwing.png" alt="國泰"></span>
+        </div>
+        <div class="hint">航班飛行進度 <b class="num">50%</b> · 準點</div>
+      </div>
+      <div class="end"><b>北京</b><span class="num">2026年11月15日 13:15</span></div>
+    </div>
+    <div class="cargo-row">
+      <div class="end"><b>我的行李 · <span class="num">3件</span></b><span class="num">PL-CX888-1024</span></div>
+      <div class="mid">
+        <div class="pax">已裝入 <span class="num">CX888</span> 客機腹艙 <span class="chip-mini">與你同機</span></div>
+        <div class="track"><i id="stripFill2"></i>
+          <svg class="mover crate" id="stripPlane2" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 7v10M5 7l7 4 7-4"/></svg>
+        </div>
+        <div class="hint">行李運輸進度 <b class="num">50%</b> · 預計 11月15日 <span class="num">18:00</span> 前送達宿舍</div>
+      </div>
+      <div class="end"><b>海淀宿舍</b><span class="num">預計 11月15日 18:00</span></div>
+    </div>
+  </div>
+</div>
+
+<main>
+<!-- ============ 视图 1：主頁 ============ -->
+<section class="view active" id="view-home" role="tabpanel">
+  <div class="hero reveal on">
+    <span class="brand-pill">PLUME LIGHT · CATHAY PACIFIC</span>
+    <h1>One journey, for both <em>you</em> &amp; your belongings.</h1>
+    <p>為留學生提供一站式 Door-to-Door 跨境搬遷：本地夥伴上門收件，搭乘國泰客機腹艙與貨機運力跨境，抵達後由當地夥伴直送宿舍——人和行李，同一趟旅程。</p>
+    <div class="cta">
+      <button class="btn btn-gold" data-v="book">立即預約搬遷</button>
+      <button class="btn btn-ghost" data-v="track">追蹤我的行李</button>
+    </div>
+  </div>
+
+  <div class="sec-head reveal"><span class="ic">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M8 1.5l6 3.4v6.2L8 14.5l-6-3.4V4.9z"/></svg>
+  </span><h2>一趟旅程 · 四個站點</h2></div>
+  <div class="flow">
+    <div class="card step reveal"><span class="no">STEP 01</span>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9a1 1 0 01-1 1h-5v-6h-6v6H4a1 1 0 01-1-1z"/></svg>上門收取</h3>
+      <p>合作本地物流從你的住所上門收取行李與個人物品，運至出發機場。</p>
+      <span class="who">本地物流夥伴</span></div>
+    <div class="card step reveal d1"><span class="no">STEP 02</span>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 19l19-7-19-7 4.5 7z"/></svg>空運跨境</h3>
+      <p>接入國泰客機腹艙、貨機及貨運運力，與你的航班同程飛往目的地。</p>
+      <span class="who">國泰貨運</span></div>
+    <div class="card step reveal d2"><span class="no">STEP 03</span>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13h-5v-7h-6v7z"/><path d="M4 8h16"/></svg>機場提存</h3>
+      <p>抵達後接入當地物流系統，於目的地機場完成清關與轉運。</p>
+      <span class="who">當地物流夥伴</span></div>
+    <div class="card step reveal d3"><span class="no">STEP 04</span>
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2"/></svg>直送入住</h3>
+      <p>由夥伴從機場直接配送至宿舍或新住所，簽收後同步里程獎勵。</p>
+      <span class="who">當地物流夥伴</span></div>
+  </div>
+
+  <div class="sec-head reveal"><span class="ic">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><path d="M8 1v14M1 8h14"/></svg>
+  </span><h2>為什麼選擇 Plume Light</h2></div>
+  <div class="grid4">
+    <div class="card f reveal"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M4 12h16M4 12l4-4m-4 4l4 4"/><path d="M20 5v14"/></svg></span>
+      <h3>一站式預約</h3><p>機票與行李運輸同一平台完成，無需分別聯絡航司、國際物流與搬家公司。</p></div>
+    <div class="card f reveal d1"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 7v10M5 7l7 4 7-4"/></svg></span>
+      <h3>腹艙運力直連</h3><p>直接使用國泰客機腹艙、貨機與貨運倉位，行李與你同機起飛。</p></div>
+    <div class="card f reveal d2"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg></span>
+      <h3>人 · 物雙軌追蹤</h3><p>統一記錄「你」和「行李」的運輸狀態，全程節點可視、狀態同步。</p></div>
+    <div class="card f reveal d3"><span class="ic"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 21C7 17 3 13.5 3 9.5A4.5 4.5 0 0112 6a4.5 4.5 0 019 3.5c0 4-4 7.5-9 11.5z"/></svg></span>
+      <h3>里數獎勵</h3><p>搬遷運費按實付金額累積亞洲萬里通里數，與機票里程一同入賬。</p></div>
+  </div>
+
+  <div class="miles reveal">
+    <span class="big num">1,584</span>
+    <p>本單預計可賺取 <b>亞洲萬里通里數</b>。留學生認證後自動享運費折扣，抵達簽收後 48 小時內入賬。</p>
+  </div>
+</section>
+
+<!-- ============ 视图 2：預約搬遷 ============ -->
+<section class="view" id="view-book" role="tabpanel">
+  <div class="wizard">
+    <aside class="card wsteps">
+      <div class="w on" data-w="1"><span class="dot num">1</span><div><b>行程與地址</b><span>航班 · 取件 · 送達</span></div></div>
+      <div class="ln"></div>
+      <div class="w" data-w="2"><span class="dot num">2</span><div><b>行李資料</b><span>件數 · 類型 · 申報</span></div></div>
+      <div class="ln"></div>
+      <div class="w" data-w="3"><span class="dot num">3</span><div><b>確認與支付</b><span>報價 · 里數 · 條款</span></div></div>
+    </aside>
+
+    <div>
+      <!-- STEP 1 -->
+      <div class="wstep on" data-s="1">
+        <div class="card form-grid">
+          <div class="flight-auto">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="var(--jade-700)" stroke-width="1.7" stroke-linejoin="round"><path d="M2.5 19l19-7-19-7 4.5 7z"/></svg>
+            <div><div class="rt num">CX888 · HKG → PEK</div>
+            <div class="meta">已自動帶入你的機票：2026年11月15日 09:30 出發 · 商務艙</div></div>
+          </div>
+          <div class="full"><label class="lb">上門取件地址 <i class="req">*</i></label>
+            <input class="in" value="香港九龍塘multicultural學生公寓 12樓 1203 室"></div>
+          <div><label class="lb">取件日期 <i class="req">*</i></label>
+            <select class="sel"><option>2026年11月13日（建議）</option><option>2026年11月12日</option><option>2026年11月11日</option></select></div>
+          <div><label class="lb">取件時段 <i class="req">*</i></label>
+            <div class="seg" role="group" aria-label="取件時段">
+              <button aria-pressed="true">09:00–12:00</button><button aria-pressed="false">14:00–17:00</button><button aria-pressed="false">18:00–21:00</button>
+            </div></div>
+          <div class="full"><label class="lb">送達地址（目的地） <i class="req">*</i></label>
+            <input class="in" value="北京市海淀區學院路 30 號 學生宿舍 7 號樓 512"></div>
+          <div><label class="lb">派送時段 <i class="req">*</i></label>
+            <select class="sel"><option>抵達當日 16:00–20:00（建議）</option><option>抵達次日 09:00–12:00</option><option>抵達次日 14:00–18:00</option></select></div>
+          <div><label class="lb">聯絡電話</label>
+            <input class="in num" value="+86 138 **** 6602"></div>
+        </div>
+        <div class="wnav"><span></span><button class="btn btn-primary" data-next="2">下一步 · 行李資料 →</button></div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="wstep" data-s="2">
+        <div class="card" style="padding:8px 22px 16px">
+          <div class="lug"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="7" width="14" height="14" rx="2"/><path d="M9 7V4h6v3M9 11v6M15 11v6"/></svg></span>
+            <div class="grow"><b>大行李箱（28吋內）</b><span>每件估算 23 kg · 適用腹艙行李額度外託運</span></div>
+            <div class="stepper" data-item="big"><button data-d="-1" aria-label="減少">−</button><output class="num">1</output><button data-d="1" aria-label="增加">＋</button></div></div>
+          <div class="lug"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="9" width="14" height="12" rx="2"/><path d="M9 9V5h6v4"/></svg></span>
+            <div class="grow"><b>小行李箱（20吋內）</b><span>每件估算 12 kg</span></div>
+            <div class="stepper" data-item="small"><button data-d="-1" aria-label="減少">−</button><output class="num">1</output><button data-d="1" aria-label="增加">＋</button></div></div>
+          <div class="lug"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z"/><path d="M4 7.5l8 4.5 8-4.5M12 12v9"/></svg></span>
+            <div class="grow"><b>紙箱（衣物 / 書籍）</b><span>每箱估算 15 kg · 免費提供打包材料</span></div>
+            <div class="stepper" data-item="box"><button data-d="-1" aria-label="減少">−</button><output class="num">2</output><button data-d="1" aria-label="增加">＋</button></div></div>
+          <div class="lug"><span class="ic"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M9 18V6l10-2v12"/><circle cx="6.5" cy="18" r="2.5"/><circle cx="16.5" cy="16" r="2.5"/></svg></span>
+            <div class="grow"><b>需特別處理物品</b><span>樂器 / 顯示器 / 電器等 · 專屬包裝與簽收</span></div>
+            <div class="stepper" data-item="spec"><button data-d="-1" aria-label="減少">−</button><output class="num">0</output><button data-d="1" aria-label="增加">＋</button></div></div>
+          <div style="padding:16px 0 6px"><label class="check"><input type="checkbox" id="valuable">
+            <span>含有貴重物品（如電腦、證件），啟用<b style="color:var(--jade-700)">專人簽收與保值運輸</b>，費率 +5%</span></label></div>
+        </div>
+        <div class="wnav"><button class="btn btn-line" data-next="1">← 上一步</button><button class="btn btn-primary" data-next="3">下一步 · 確認報價 →</button></div>
+      </div>
+
+      <!-- STEP 3 -->
+      <div class="wstep" data-s="3">
+        <div class="card sum-line"><span>取件</span><b id="sumPick">—</b></div>
+        <div class="card sum-line"><span>送達</span><b id="sumDrop">—</b></div>
+        <div class="card sum-line"><span>行李</span><b id="sumLug">—</b></div>
+        <div class="card quote" style="margin-top:14px">
+          <div class="qrow"><span>上門取件（香港 · 本地夥伴）</span><b class="num" id="qPick">HK$280</b></div>
+          <div class="qrow"><span>國泰空運（客機腹艙 · CX888）</span><b class="num" id="qAir">HK$1,260</b></div>
+          <div class="qrow"><span>當地派送（北京 · 至宿舍）</span><b class="num" id="qDrop">HK$220</b></div>
+          <div class="qrow off"><span>留學生認證折扣（85 折）</span><b class="num" id="qDisc">− HK$264</b></div>
+          <div class="qrow total"><span>總計</span><b class="num" id="qTotal">HK$1,496</b></div>
+        </div>
+        <div class="miles reveal on" style="margin-top:14px"><span class="big num" id="qMiles">1,496</span>
+          <p>本單預計賺取亞洲萬里通里數，簽收後 48 小時內與機票里程一同入賬。</p></div>
+        <div style="padding:16px 2px 2px"><label class="check"><input type="checkbox" id="agree">
+          <span>我已閱讀並同意《Plume Light 運輸條款》《危險品與禁運品須知》，並確認申報物品屬實。</span></label></div>
+        <div class="wnav"><button class="btn btn-line" data-next="2">← 上一步</button><button class="btn btn-primary" id="submitBtn" disabled>確認預約 · HK$<span class="num" id="qTotal2">1,496</span></button></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 视图 3：貨件追蹤 ============ -->
+<section class="view" id="view-track" role="tabpanel">
+  <div class="card dual-card">
+    <div class="dual-head">
+      <div><div class="t">人 · 物雙軌追蹤</div><div class="ref num">FLIGHT CX888 &nbsp;·&nbsp; WAYBILL PL-CX888-1024</div></div>
+      <span class="chip live">運輸中 · 即時更新</span>
+    </div>
+
+    <!-- 桌面双轨 -->
+    <div class="dual" id="dual">
+      <div class="lane">
+        <span class="lab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><circle cx="12" cy="7" r="3.5"/><path d="M5 21c1-4 3.5-6 7-6s6 2 7 6"/></svg>人</span>
+        <div class="node done"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></span><small>市區出發<br>11/15 06:30</small></div>
+        <div class="node done"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13z"/></svg></span><small>香港國際機場<br>08:05 抵達</small></div>
+        <div class="node now"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M2.5 19l19-7-19-7 4.5 7z"/></svg></span><small>空運中<br>CX888 腹艙</small></div>
+        <div class="node"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13z"/></svg></span><small>北京首都機場<br>預計 13:15</small></div>
+        <div class="node"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg></span><small>宿舍入住<br>預計 15:00</small></div>
+      </div>
+      <div class="lane lane-mid">
+        <div class="bar"><i id="dualFill"></i></div>
+        <span class="mover" id="dualMover">
+          <img src="assets/cathay-brushwing.png" alt="國泰" style="width:19px;height:auto;display:block">
+        </span>
+      </div>
+      <div class="lane">
+        <span class="lab"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 7v10M5 7l7 4 7-4"/></svg>物</span>
+        <div class="node done"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg></span><small>已上門收取<br>11/13 10:24</small></div>
+        <div class="node done"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13z"/></svg></span><small>香港機場貨運站<br>11/13 15:40</small></div>
+        <div class="node now"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M12 3l7 4v10l-7 4-7-4V7z"/><path d="M12 7v10M5 7l7 4 7-4"/></svg></span><small>已裝機 · 腹艙<br>11/14 21:05</small></div>
+        <div class="node"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 21V8l8-5 8 5v13z"/></svg></span><small>北京機場貨運站<br>預計 11/15</small></div>
+        <div class="node"><span class="bub"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M3 11l9-7 9 7v9h-6v-6H9v6H3z"/></svg></span><small>派送至宿舍<br>預計 18:00 前</small></div>
+      </div>
+    </div>
+
+    <!-- 移动端纵向双轨 -->
+    <div class="dual-mobile">
+      <div class="msec"><div>✈ 人 · 航班 CX888</div>
+        <div class="mi done"><span class="b">✓</span><div><b>市區出發</b><span>11/15 06:30</span></div></div>
+        <div class="mi done"><span class="b">✓</span><div><b>香港國際機場</b><span>08:05 抵達</span></div></div>
+        <div class="mi now"><span class="b">✈</span><div><b>空運中 · CX888</b><span>目前位置</span></div></div>
+        <div class="mi"><span class="b"></span><div><b>北京首都機場</b><span>預計 13:15</span></div></div>
+      </div>
+      <div class="msec"><div>📦 物 · PL-CX888-1024</div>
+        <div class="mi done"><span class="b">✓</span><div><b>已上門收取</b><span>11/13 10:24</span></div></div>
+        <div class="mi done"><span class="b">✓</span><div><b>香港機場貨運站</b><span>11/13 15:40</span></div></div>
+        <div class="mi now"><span class="b">▣</span><div><b>已裝機 · 客機腹艙</b><span>與你同機</span></div></div>
+        <div class="mi"><span class="b"></span><div><b>派送至宿舍</b><span>預計 18:00 前</span></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="twocol">
+    <div class="card tl">
+      <div class="sec-head" style="margin:0 0 18px"><span class="ic">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 4.5V8l2.5 1.5"/></svg></span><h2 style="font-size:16px">最新動態</h2></div>
+      <div class="tl-item done"><span class="dot2"></span><div><span class="t num">11月14日 21:05</span><b>已裝入 CX888 客機腹艙</b><p>3 件行李完成安檢並裝機，與你同機飛往北京。</p></div></div>
+      <div class="tl-item done"><span class="dot2"></span><div><span class="t num">11月13日 15:40</span><b>抵達香港國際機場貨運站</b><p>完成稱重（42 kg）與安檢，取得腹艙艙位。</p></div></div>
+      <div class="tl-item done"><span class="dot2"></span><div><span class="t num">11月13日 10:24</span><b>夥伴已上門收取</b><p>3 件行李核對清單後收取，你已電子簽收。</p></div></div>
+      <div class="tl-item next"><span class="dot2"></span><div><span class="t num">預計 11月15日 13:15</span><b>抵達北京首都機場</b><p>清關後轉入當地夥伴派送網絡。</p></div></div>
+      <div class="tl-item next"><span class="dot2"></span><div><span class="t num">預計 11月15日 18:00 前</span><b>派送至學生宿舍</b><p>北京市海淀區學院路 30 號 7 號樓 512，請攜帶證件簽收。</p></div></div>
+    </div>
+    <div class="card kv">
+      <div class="sec-head" style="margin:0 0 10px"><span class="ic">
+        <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 2h7l3 3v9H3z"/></svg></span><h2 style="font-size:16px">運單詳情</h2></div>
+      <div class="row"><span>貨件編號</span><b class="num">PL-CX888-1024</b></div>
+      <div class="row"><span>件數 / 重量</span><b class="num">3 件 · 42 kg</b></div>
+      <div class="row"><span>承運方式</span><b>國泰客機腹艙 · CX888</b></div>
+      <div class="row"><span>取件夥伴</span><b>本地物流夥伴（香港）</b></div>
+      <div class="row"><span>派送夥伴</span><b>當地物流夥伴（北京）</b></div>
+      <div class="row"><span>里數獎勵</span><b class="num" style="color:var(--gold-600)">+1,496 里（待入賬）</b></div>
+      <div class="acts">
+        <button class="btn btn-primary">聯絡派送夥伴</button>
+        <button class="btn btn-line">下載電子貨運單</button>
+        <button class="btn btn-line">修改派送時段</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 视图 4：我的搬遷 ============ -->
+<section class="view" id="view-orders" role="tabpanel">
+  <div class="sec-head" style="margin-top:6px"><span class="ic">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M3 2h7l3 3v9H3z"/><path d="M10 2v3h3"/></svg></span><h2>我的搬遷訂單</h2></div>
+
+  <div class="card order">
+    <div><div class="route">香港 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14m0 0l-5-5m5 5l-5 5"/></svg> 北京</div>
+      <div class="oref num">PL-CX888-1024</div></div>
+    <div class="grow"><div class="meta num">CX888 · 11月15日 抵達 · 3 件 · 42 kg</div>
+      <div class="meta">已裝機腹艙 · 預計 18:00 前送達宿舍</div></div>
+    <span class="chip live">運送中</span>
+    <div class="acts"><button class="btn btn-line" data-v="track">追蹤</button></div>
+  </div>
+
+  <div class="card order">
+    <div><div class="route">香港 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14m0 0l-5-5m5 5l-5 5"/></svg> 倫敦</div>
+      <div class="oref num">PL-CX255-0912</div></div>
+    <div class="grow"><div class="meta num">CX255 · 9月2日 送達 · 2 件 · 28 kg</div>
+      <div class="meta">已簽收 · 里數 +1,120 已入賬</div></div>
+    <span class="chip gray">已送達</span>
+    <div class="acts"><button class="btn btn-line">查看簽收單</button></div>
+  </div>
+
+  <div class="card order">
+    <div><div class="route">香港 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12h14m0 0l-5-5m5 5l-5 5"/></svg> 墨爾本</div>
+      <div class="oref num">PL-CX690-1102</div></div>
+    <div class="grow"><div class="meta num">CX690 · 12月28日 航班 · 報價確認中</div>
+      <div class="meta">報價 HK$2,040 · 保留至 10月16日 23:59</div></div>
+    <span class="chip amberc">待確認報價</span>
+    <div class="acts"><button class="btn btn-primary">查看報價</button><button class="btn btn-line">取消</button></div>
+  </div>
+
+  <p style="text-align:center;color:var(--muted);font-size:12.5px;margin-top:26px">需要搬遷更多物品？<a href="#" style="color:var(--jade-700);font-weight:600">聯絡顧問獲取定制方案</a></p>
+</section>
+</main>
+
+<footer>
+  <div class="in">
+    <p><b>Plume Light · Cathay Cargo</b><br>© 2026 國泰航空 · 示範原型，非官方產品</p>
+    <nav><a href="#" style="color:inherit;text-decoration:none">貨件追蹤</a><a href="#" style="color:inherit;text-decoration:none">條款與須知</a>
+      <button class="back">返回 GUI 總覽</button></nav>
+  </div>
+</footer>
+
+<!-- 预约成功回执 -->
+<div class="overlay" id="okOverlay" role="dialog" aria-modal="true" aria-labelledby="okTitle">
+  <div class="modal card">
+    <span class="ok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M4 12.5l5 5L20 6.5"/></svg></span>
+    <h2 id="okTitle">預約成功</h2>
+    <p>我們已預留 CX888 腹艙艙位，夥伴將按約上門收取。</p>
+    <div class="ref num">PL-CX888-1024</div>
+    <div class="duo">
+      <div><b>你的行程</b><span>機票 CX888 · 11/15 09:30</span></div>
+      <div><b>行李行程</b><span>腹艙同機 · 預計 18:00 送達</span></div>
+    </div>
+    <div class="cta">
+      <button class="btn btn-primary" id="okTrack">立即追蹤行李</button>
+      <button class="btn btn-line" id="okClose">返回主頁</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ================= 视图切换 ================= */
+const views = document.querySelectorAll('.view');
+const tabs  = document.querySelectorAll('.nav-tab');
+function go(v){
+  views.forEach(s => s.classList.toggle('active', s.id === 'view-' + v));
+  tabs.forEach(t => {
+    if (t.dataset.v === v) { t.setAttribute('aria-selected','true'); }
+    else if (['home','book','track','orders'].includes(t.dataset.v)) { t.removeAttribute('aria-selected'); }
+  });
+  // 追踪页进入时重放进度动画
+  if (v === 'track') requestAnimationFrame(playTrack);
+  if (v !== 'home') { resetStrip(); } else { resetStrip(); }
+  window.scrollTo({top:0, behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth'});
+}
+tabs.forEach(t => t.addEventListener('click', () => go(t.dataset.v)));
+document.querySelectorAll('[data-v]').forEach(b => {
+  if (!b.classList.contains('nav-tab')) b.addEventListener('click', () => go(b.dataset.v));
+});
+
+/* 首屏航班条进度（常驻 50%） */
+function resetStrip(){
+  ['stripFill','stripFill2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.width = '0'; });
+  ['stripPlane','stripPlane2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.left = '6%'; });
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    ['stripFill','stripFill2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.width = '50%'; });
+    ['stripPlane','stripPlane2'].forEach(id => { const el = document.getElementById(id); if (el) el.style.left = '50%'; });
+  }));
+}
+resetStrip();
+
+/* 追踪页双轨动画：人/物同步推进至 50% */
+function playTrack(){
+  const fill = document.getElementById('dualFill'), mv = document.getElementById('dualMover');
+  if (!fill) return;
+  fill.style.width = '0'; mv.style.left = '6%';
+  requestAnimationFrame(() => requestAnimationFrame(() => {
+    fill.style.width = '50%'; mv.style.left = 'calc(6% + 50% * 0.88)';
+  }));
+}
+
+/* ================= 预约向导 ================= */
+let step = 1;
+const PRICES = { big: 420, small: 320, box: 260, spec: 680 };   // 每件空运价
+const PICK = 280, DROP = 220, DISCOUNT = 0.85;                  // 取件/派送/学生折扣
+const names = { big:'大行李箱', small:'小行李箱', box:'紙箱', spec:'特別處理' };
+const counts = { big:1, small:1, box:2, spec:0 };
+
+function money(n){ return 'HK$' + n.toLocaleString('en-US'); }
+
+function calc(){
+  let pieces = 0;
+  for (const k in counts) pieces += counts[k] * PRICES[k];
+  let subtotal = pieces + PICK + DROP;
+  if (document.getElementById('valuable').checked) subtotal = Math.round(subtotal * 1.05);
+  const total = Math.round(subtotal * DISCOUNT);
+  return { pieces, subtotal, total };
+}
+function renderQuote(){
+  const { pieces, subtotal, total } = calc();
+  document.getElementById('qAir').textContent   = money(pieces);
+  document.getElementById('qPick').textContent  = money(PICK);
+  document.getElementById('qDrop').textContent  = money(DROP);
+  document.getElementById('qDisc').textContent  = '− ' + money(subtotal - total);
+  document.getElementById('qTotal').textContent = money(total);
+  document.getElementById('qTotal2').textContent= total.toLocaleString('en-US');
+  document.getElementById('qMiles').textContent = total.toLocaleString('en-US');
+  // 摘要行
+  const lug = Object.keys(counts).filter(k => counts[k] > 0).map(k => names[k] + '×' + counts[k]).join(' · ');
+  document.getElementById('sumPick').textContent = '11月13日 09:00–12:00 · 九龍塘';
+  document.getElementById('sumDrop').textContent = '11月15日 16:00–20:00 · 海淀宿舍';
+  document.getElementById('sumLug').textContent  = lug + ' · 空運 ' + money(pieces);
+  document.getElementById('submitBtn').disabled  = !document.getElementById('agree').checked;
+}
+// 步进器
+document.querySelectorAll('.stepper').forEach(st => {
+  const key = st.dataset.item, out = st.querySelector('output');
+  st.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    counts[key] = Math.max(0, Math.min(9, counts[key] + +b.dataset.d));
+    out.textContent = counts[key];
+    renderQuote();
+  }));
+});
+['valuable','agree'].forEach(id => document.getElementById(id).addEventListener('change', renderQuote));
+// 时段胶囊
+document.querySelectorAll('.seg').forEach(seg => seg.querySelectorAll('button').forEach(b =>
+  b.addEventListener('click', () => {
+    seg.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed','false'));
+    b.setAttribute('aria-pressed','true');
+  })));
+// 步骤切换
+document.querySelectorAll('[data-next]').forEach(b => b.addEventListener('click', () => {
+  step = +b.dataset.next;
+  document.querySelectorAll('.wstep').forEach(s => s.classList.toggle('on', +s.dataset.s === step));
+  document.querySelectorAll('.wsteps .w').forEach(w => w.classList.toggle('on', +w.dataset.w <= step));
+  renderQuote();
+  window.scrollTo({top:0, behavior:'smooth'});
+}));
+renderQuote();
+
+/* 预约成功回执 */
+const overlay = document.getElementById('okOverlay');
+document.getElementById('submitBtn').addEventListener('click', () => overlay.classList.add('on'));
+document.getElementById('okClose').addEventListener('click', () => { overlay.classList.remove('on'); go('home'); });
+document.getElementById('okTrack').addEventListener('click', () => { overlay.classList.remove('on'); go('track'); });
+overlay.addEventListener('click', e => { if (e.target === overlay) overlay.classList.remove('on'); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape') overlay.classList.remove('on'); });
+
+/* ================= 滚动入场 ================= */
+const io = new IntersectionObserver(es => es.forEach(e => {
+  if (e.isIntersecting) { e.target.classList.add('on'); io.unobserve(e.target); }
+}), { threshold: .15 });
+document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+</script>
+</body>
+</html>
