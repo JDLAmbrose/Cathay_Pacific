@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="zh-Hant" dir="ltr">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#043f39">
+  <meta name="description" content="Plume Light — a lighter Cathay journey. Luggage planning, collection and delivery, and travel assistance. Hackathon prototype.">
+  <title>Plume Light</title>
+  <link rel="icon" href="assets/cathay-brushwing.png">
+  <link rel="stylesheet" href="assets/styles.css">
+  <script defer src="assets/i18n.js"></script>
+  <script defer src="assets/model.js"></script>
+  <script defer src="assets/app.js"></script>
+</head>
+<body data-page="ops">
+  <div id="siteHeader"></div>
+  <div class="shell">
+    <section class="flight-banner" id="tripbar" aria-label="CX257"></section>
+    <main id="main" tabindex="-1"></main>
+    <div id="controls"></div>
+    <footer class="site-footer" id="siteFooter"></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog" aria-labelledby="dialogTitle">
+    <h2 id="dialogTitle"></h2>
+    <div id="dialogBody" class="body"></div>
+    <div id="dialogActions" class="actions"></div>
+  </dialog>
+  <noscript>This interactive prototype requires JavaScript.</noscript>
+</body>
+</html>
