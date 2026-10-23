@@ -9,6 +9,7 @@ const REGIONS={hk:{hours:24,pickupLead:12,factor:1},gba:{hours:48,pickupLead:24,
 const PEOPLE=[{id:'lin',name:'Lin Chen',type:'student'},{id:'child',name:'Alex Chen',type:'child'}];
 // Demo ticket entitlements and tariffs, independent of live Cathay fare rules.
 const DEMO_BAGGAGE_ALLOWANCE={bookingId:'PL-CX257-DEMO',travellers:{lin:{pieces:2,kgPerPiece:23},child:{pieces:1,kgPerPiece:23}}};
+const SERVICE_RATES={version:3,base:120000,maxBags:3};
 const TRANSPORT_RATES={extraPiece:60000,cargoUnit:25000,cargoUnitKg:23,volumeDivisor:6000};
 // Normalize legacy partner names in saved demo orders without changing their charges.
 function partnerName(value){return String(value??'').replace(/\bDPD\s+UK\b/g,'EBC UK');}
@@ -23,7 +24,7 @@ function migratePartnerNames(){
 function migratePricingState(){
  migratePartnerNames();
  state.extraBags??={};
- if(state.agent?.answer?.kind==='service'&&state.agent.answer.quote?.valid&&state.agent.answer.quote.pricingVersion!==2){state.agent.stale=true;state.agent.answer.stale=true;}
+ if(state.agent?.answer?.kind==='service'&&state.agent.answer.quote?.valid&&state.agent.answer.quote.pricingVersion!==SERVICE_RATES.version){state.agent.stale=true;state.agent.answer.stale=true;}
  if(state.flight?.bookingId===DEMO_BAGGAGE_ALLOWANCE.bookingId&&!Object.prototype.hasOwnProperty.call(state.flight,'baggageAllowance'))state.flight.baggageAllowance=clone(DEMO_BAGGAGE_ALLOWANCE);
 }
 function ticketAllowance(){
@@ -38,7 +39,7 @@ function baggagePlan(transport=state.transport){
  return {allowance,items:clone(items),required,requested,purchased,quoted:required,missing:Math.max(0,required-purchased),weight:items.reduce((n,i)=>n+(Number(i.weight)||0),0)};
 }
 
-function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map(i=>({...i,mode:'checked',service:true,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
+function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map((i,index)=>({...i,mode:'checked',service:index<SERVICE_RATES.maxBags,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
 
 let state,storageOK=true;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');state=saved?.schema===1?saved:initial();if(!state.drafts?.lin||!state.agent||!Array.isArray(state.orders))throw Error('invalid');state.processing=false;state.pendingPayment=null;state.frozenMiles=0;}catch(_){state=initial();}
@@ -60,20 +61,21 @@ function quoteService(transport=state.transport){
  if(!['flight','cargo'].includes(transport))return {valid:false,error:'e.transport'};
  if(!REGIONS[state.region])return {valid:false,error:'e.region'};
  if(!items.length)return {valid:false,error:'e.serviceBags'};
+ if(items.length>SERVICE_RATES.maxBags)return {valid:false,error:'e.serviceLimit'};
  if(items.some(i=>[i.weight,i.l,i.w,i.h].some(v=>v==null||!Number.isFinite(Number(v))||Number(v)<=0)))return {valid:false,error:'e.fullSpecs'};
  if(plan.items.length&&!plan.allowance)return {valid:false,error:'e.allowance'};
  if(!Number.isSafeInteger(plan.requested)||plan.requested<0||plan.requested>99)return {valid:false,error:'e.extraQuantity'};
  if(plan.items.some(i=>i.weight==null||!Number.isFinite(Number(i.weight))||Number(i.weight)<=0))return {valid:false,error:'e.flightWeight'};
  if(plan.items.some(i=>Number(i.weight)>plan.allowance.kgPerPiece))return {valid:false,error:'e.pieceWeight'};
- const weight=items.reduce((n,i)=>n+Number(i.weight),0),large=items.filter(i=>Math.max(i.l,i.w,i.h)>100).length;
- const first=Math.round(15000*items.length*REGIONS[state.region].factor),localGBP=Math.round((items.length*12.5+weight*.5+20+large*15)*100);
+ const weight=items.reduce((n,i)=>n+Number(i.weight),0);
+ const serviceFee=Math.round(SERVICE_RATES.base*REGIONS[state.region].factor);
  const priority=0,extraFee=plan.required*TRANSPORT_RATES.extraPiece;
  const chargeableWeight=transport==='cargo'?items.reduce((n,i)=>n+Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor),0):0;
  const cargoUnits=transport==='cargo'?items.reduce((n,i)=>n+Math.ceil(Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor)/TRANSPORT_RATES.cargoUnitKg),0):0;
- const cargoFee=cargoUnits*TRANSPORT_RATES.cargoUnit,total=first+localGBP*10+priority+extraFee+cargoFee;
+ const cargoFee=cargoUnits*TRANSPORT_RATES.cargoUnit,total=serviceFee+priority+extraFee+cargoFee;
  if(!Number.isSafeInteger(total)||!Number.isFinite(chargeableWeight))return {valid:false,error:'e.fullSpecs'};
- return {valid:true,pricingVersion:2,transport,first,localGBP,priority,extraFee,cargoFee,cargoUnits,chargeableWeight,plan,total,miles:Math.ceil(total/100*25),earn:Math.floor(total/1000),count:items.length,weight,
- signature:JSON.stringify({flight:state.flight,travellerId:state.travellerId,region:state.region,items,airlineItems:plan.items,extraPieces:plan.purchased,requestedExtraPieces:plan.requested,rates:TRANSPORT_RATES,partner:state.partner,transport,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,contact:state.contact,recipient:state.recipient,phone:state.phone})};
+ return {valid:true,pricingVersion:SERVICE_RATES.version,transport,serviceFee,priority,extraFee,cargoFee,cargoUnits,chargeableWeight,plan,total,miles:Math.ceil(total/100*25),earn:Math.floor(total/1000),count:items.length,weight,
+ signature:JSON.stringify({flight:state.flight,travellerId:state.travellerId,region:state.region,items,airlineItems:plan.items,extraPieces:plan.purchased,requestedExtraPieces:plan.requested,rates:TRANSPORT_RATES,serviceRates:SERVICE_RATES,partner:state.partner,transport,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,contact:state.contact,recipient:state.recipient,phone:state.phone})};
 }
 
 function isDirty(){const s=state.declarations[state.travellerId];return !s||s.legId!==state.flight.legId||JSON.stringify({items:s.items,zero:s.zero,countUnknown:s.countUnknown})!==JSON.stringify(draft());}
