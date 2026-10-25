@@ -22,7 +22,7 @@ footer.line	為每一種旅程，多想一步。從準備行李開始。	A littl
 footer.demo	規則、航班時刻、物流、費用及交易均為演示資料。	Rules, flight times, logistics, pricing and transactions are demonstrations.	Règles, horaires, logistique, tarifs et transactions sont simulés.	Normas, horarios, logística, precios y transacciones son simulados.	القواعد والمواعيد والخدمات اللوجستية والأسعار والمعاملات بيانات تجريبية.
 banner.hk	香港	Hong Kong	Hong Kong	Hong Kong	هونغ كونغ
 banner.london	倫敦希思羅 T3	London Heathrow T3	Londres Heathrow T3	Londres Heathrow T3	لندن هيثرو T3
-banner.cabin	商務艙	Business	Affaires	Business	درجة الأعمال
+banner.cabin	經濟艙	Economy	Économique	Económica	الدرجة السياحية
 banner.adult	1 位成人	1 adult	1 adulte	1 adulto	بالغ واحد
 banner.child	1 位兒童	1 child	1 enfant	1 menor	طفل واحد
 banner.progress	航班飛行進度	Flight progress	Progression du vol	Progreso del vuelo	تقدم الرحلة
@@ -36,7 +36,7 @@ home.title2	安心抵達。	Arrive with ease.	Arrivez l’esprit libre.	Llega co
 home.description	從香港的家，到倫敦的新開始。提前準備行李，把搬運交給我們，讓精力留給真正重要的人與事。	From home in Hong Kong to a new beginning in London. Plan your luggage ahead, leave the lifting to us, and make room for what matters.	De votre foyer à Hong Kong à une nouvelle vie à Londres. Anticipez vos bagages, confiez-nous leur transport et gardez du temps pour l’essentiel.	De tu hogar en Hong Kong a un nuevo comienzo en Londres. Prepara el equipaje con tiempo, déjanos el transporte y dedica tu energía a lo importante.	من منزلك في هونغ كونغ إلى بداية جديدة في لندن. جهّز أمتعتك مبكراً ودعنا نتولى حملها، لتتفرغ لما يهمك.
 home.start	開始準備行李	Prepare my luggage	Préparer mes bagages	Preparar mi equipaje	تجهيز أمتعتي
 home.ask	先問問 AI 助手	Ask the AI assistant	Consulter l’assistant IA	Consultar al asistente IA	اسأل المساعد الذكي
-home.audience	留學生 · 長者與兒童 · 殘障旅客	Students · Older travellers & children · Travellers with disabilities	Étudiants · Seniors et enfants · Voyageurs en situation de handicap	Estudiantes · Mayores y menores · Viajeros con discapacidad	الطلاب · كبار السن والأطفال · المسافرون ذوو الإعاقة
+home.audience	試點對象：留學生與家庭	Pilot: Students & families	Phase pilote : étudiants et familles	Piloto: estudiantes y familias	الفئة المستهدفة في المرحلة التجريبية: الطلاب والأسر
 home.ticket	你的下一趟旅程	YOUR NEXT CHAPTER	VOTRE PROCHAIN CHAPITRE	TU PRÓXIMO CAPÍTULO	فصلك القادم
 home.destination	行李送達目的地	Luggage delivery destination	Destination des bagages	Destino del equipaje	وجهة تسليم الأمتعة
 home.prepared	件行李，提前安排好	bags, planned ahead	bagages, préparés à l’avance	bultos preparados con tiempo	حقائب جرى التخطيط لها
