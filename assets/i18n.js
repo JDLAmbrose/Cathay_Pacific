@@ -36,7 +36,7 @@ home.title2	安心抵達。	Arrive with ease.	Arrivez l’esprit libre.	Llega co
 home.description	從香港的家，到倫敦的新開始。提前準備行李，把搬運交給我們，讓精力留給真正重要的人與事。	From home in Hong Kong to a new beginning in London. Plan your luggage ahead, leave the lifting to us, and make room for what matters.	De votre foyer à Hong Kong à une nouvelle vie à Londres. Anticipez vos bagages, confiez-nous leur transport et gardez du temps pour l’essentiel.	De tu hogar en Hong Kong a un nuevo comienzo en Londres. Prepara el equipaje con tiempo, déjanos el transporte y dedica tu energía a lo importante.	من منزلك في هونغ كونغ إلى بداية جديدة في لندن. جهّز أمتعتك مبكراً ودعنا نتولى حملها، لتتفرغ لما يهمك.
 home.start	開始準備行李	Prepare my luggage	Préparer mes bagages	Preparar mi equipaje	تجهيز أمتعتي
 home.ask	先問問 AI 助手	Ask the AI assistant	Consulter l’assistant IA	Consultar al asistente IA	اسأل المساعد الذكي
-home.audience	試點對象：留學生與家庭	Pilot: Students & families	Phase pilote : étudiants et familles	Piloto: estudiantes y familias	الفئة المستهدفة في المرحلة التجريبية: الطلاب والأسر
+home.audience	為留學生、獨行孩子與有需要的長者，提早準備。	Plan ahead for students, children travelling alone and older travellers.	Anticipez pour les étudiants, les enfants seuls et les voyageurs seniors.	Prepárate con tiempo para estudiantes, menores que viajan solos y mayores.	استعد مبكراً للطلاب والأطفال المسافرين وحدهم وكبار السن.
 home.ticket	你的下一趟旅程	YOUR NEXT CHAPTER	VOTRE PROCHAIN CHAPITRE	TU PRÓXIMO CAPÍTULO	فصلك القادم
 home.destination	行李送達目的地	Luggage delivery destination	Destination des bagages	Destino del equipaje	وجهة تسليم الأمتعة
 home.prepared	件行李，提前安排好	bags, planned ahead	bagages, préparés à l’avance	bultos preparados con tiempo	حقائب جرى التخطيط لها
@@ -79,9 +79,9 @@ common.version	版本	Version	Version	Versión	الإصدار
 common.proposed	擬合作示例	Proposed partner	Partenaire envisagé	Socio propuesto	شريك مقترح
 common.deadline	申請截止 · HKT	Apply by · HKT	Date limite · HKT	Solicitar antes de · HKT	آخر موعد للطلب · HKT
 step.1	乘機人	Passenger	Passager	Pasajero	المسافر
-step.2	行李預報	Luggage	Bagages	Equipaje	الأمتعة
-step.3	攜帶規則	Travel rules	Règles	Normas	القواعد
-step.4	首末程安排	Collection & delivery	Collecte et livraison	Recogida y entrega	الاستلام والتسليم
+step.2	信息預留	Collection details	Coordonnées	Datos de recogida	بيانات الاستلام
+step.3	行李預報	Luggage	Bagages	Equipaje	الأمتعة
+step.4	價格計算	Price calculator	Calcul du prix	Calcular precio	حساب السعر
 step.5	確認結算	Review & pay	Vérifier et payer	Revisar y pagar	المراجعة والدفع
 book.title	把行李安排好，出發更從容。	A lighter journey starts here.	Un voyage plus léger commence ici.	Un viaje más ligero empieza aquí.	رحلة أخف تبدأ هنا.
 book.sub	先保存預報，再按需要預約首末程服務。	Save your luggage plan, then arrange collection and delivery if needed.	Enregistrez vos bagages, puis réservez la collecte et la livraison si nécessaire.	Guarda el plan de equipaje y reserva recogida y entrega si lo necesitas.	احفظ خطة أمتعتك، ثم احجز الاستلام والتسليم عند الحاجة.
@@ -113,7 +113,7 @@ passenger.note	家人在家協助準備即可。兒童乘機與特殊協助仍�
 bag.title	提前告訴我們，帶多少行李。	Let us know what’s coming.	Dites-nous ce que vous emportez.	Cuéntanos qué llevas.	أخبرنا مسبقاً بما ستحمله.
 bag.sub	填寫全部預計托運行李，再選擇需要首末程服務的物件。	Declare all expected checked luggage, then choose what needs collection and delivery.	Déclarez tous les bagages en soute, puis choisissez ceux à collecter et livrer.	Declara todo el equipaje facturado y elige qué bultos necesitan recogida y entrega.	أدرج جميع الأمتعة المتوقع تسجيلها، ثم اختر ما يحتاج إلى الاستلام والتسليم.
 bag.add	添加一件行李	Add a bag	Ajouter un bagage	Añadir un bulto	إضافة حقيبة
-bag.zero	明確確認：此次沒有托運行李	I confirm I have no checked luggage	Je confirme ne pas avoir de bagage en soute	Confirmo que no tengo equipaje facturado	أؤكد أنه ليست لدي أمتعة مسجلة
+bag.zero	此次沒有行李	I have no luggage	Je n’ai pas de bagages	No llevo equipaje	ليس لدي أمتعة
 bag.unknownCount	件數尚未確定，先保留未知狀態	My bag count is not yet known	Le nombre de bagages est encore inconnu	Todavía no sé cuántos bultos llevaré	عدد الحقائب غير محدد بعد
 bag.zeroNote	已明確選擇 0 件，可保存預報，無需購買搬運服務。	Zero bags confirmed. Save the declaration without booking handling.	Zéro bagage confirmé. Enregistrez sans réserver de manutention.	Cero bultos confirmado. Guarda la declaración sin contratar transporte.	تم تأكيد عدم وجود حقائب. احفظ الإقرار دون حجز المناولة.
 bag.unknownNote	件數保留未知；規劃使用補估，不會當作零。確定後再預約。	Unknown counts use a planning estimate, never zero. Book once confirmed.	Un nombre inconnu est estimé, jamais assimilé à zéro. Réservez une fois confirmé.	Los bultos desconocidos se estiman, nunca se cuentan como cero. Reserva al confirmarlos.	يُستخدم تقدير للتخطيط عند عدم معرفة العدد، ولا يُعامل كصفر. احجز بعد التأكيد.
@@ -209,7 +209,7 @@ service.sub	按收取地區提前申請，為每次交接留足時間。	Apply a
 service.region	上門收取地區	Pickup region	Zone de collecte	Zona de recogida	منطقة الاستلام
 region.hk	香港境內	Hong Kong	Hong Kong	Hong Kong	هونغ كونغ
 region.gba	大灣區其他覆蓋地區	Other covered Greater Bay Area locations	Autres zones couvertes de la Grande Baie	Otras zonas cubiertas de la Gran Bahía	مناطق أخرى مشمولة في الخليج الكبرى
-region.mainland	出發國境內其他地區	Other areas within the departure country	Autres régions du pays de départ	Otras zonas del país de salida	مناطق أخرى داخل بلد المغادرة
+region.mainland	出發國境內	Within the departure country	Dans le pays de départ	Dentro del país de salida	داخل بلد المغادرة
 region.unsupported	其他地區 · 暫未覆蓋	Other regions · Not covered	Autres zones · Non couvertes	Otras zonas · Sin cobertura	مناطق أخرى · غير مشمولة
 service.pickup	取件日期與時間 · HKT	Pickup date & time · HKT	Date et heure de collecte · HKT	Fecha y hora de recogida · HKT	تاريخ ووقت الاستلام · HKT
 service.address	上門收取地址	Pickup address	Adresse de collecte	Dirección de recogida	عنوان الاستلام
@@ -268,6 +268,11 @@ journey.snapshot	訂單按確認時的快照保存。後續預報修改不會改
 ops.title	讓行李預報，成為更早的規劃依據。	Better visibility. Earlier planning.	Mieux voir. Planifier plus tôt.	Más visibilidad. Mejor planificación.	رؤية أفضل. تخطيط أبكر.
 ops.sub	CX257 · 100 名演示旅客 · 使用旅客端已保存的最新預報	CX257 · 100 demo passengers · Latest saved passenger declarations	CX257 · 100 passagers simulés · Dernières déclarations enregistrées	CX257 · 100 pasajeros simulados · Últimas declaraciones guardadas	CX257 · 100 مسافر تجريبي · أحدث الإقرارات المحفوظة
 ops.badge	僅限國泰員工 · 營運演示 · 規劃參考	Cathay staff only · Operations demo · Planning reference	Personnel Cathay uniquement · Démo opérations · Planification	Solo personal de Cathay · Operaciones de ejemplo · Planificación	لموظفي كاثي فقط · عمليات تجريبية · مرجع للتخطيط
+ops.aircraftAlt	飛機貨艙剖面，標示 1 托運行李、2 其他貨物、3 運行緩衝及 4 規劃餘量	Aircraft hold cutaway: 1 checked baggage, 2 other cargo, 3 operating buffer, 4 planning headroom	Coupe de la soute : 1 bagages, 2 autre fret, 3 marge opérationnelle, 4 capacité disponible	Corte de la bodega: 1 equipaje, 2 otra carga, 3 margen operativo, 4 capacidad disponible	مقطع لمقصورة الشحن: ١ الأمتعة المسجلة، ٢ بضائع أخرى، ٣ هامش التشغيل، ٤ السعة المتبقية
+ops.aircraftCaption	貨艙剖面示意 · 編號對應下方規劃數據，圖示不按裝載比例	Illustrative hold cutaway · Numbers match the planning figures below. Diagram is not to scale.	Coupe illustrative · Les numéros renvoient aux données ci-dessous. Schéma hors échelle.	Corte ilustrativo · Los números remiten a los datos de abajo. Diagrama sin escala.	مقطع توضيحي · الأرقام تقابل بيانات التخطيط أدناه. الرسم غير مرسوم بمقياس.
+ops.aircraftCargo	已分配其他貨物	Allocated other cargo	Autre fret alloué	Otra carga asignada	بضائع أخرى مخصصة
+ops.aircraftBuffer	預留運行緩衝	Reserved operating buffer	Marge opérationnelle réservée	Margen operativo reservado	هامش تشغيل محجوز
+ops.aircraftHeadroom	貨艙規劃餘量	Hold planning headroom	Marge prévue en soute	Margen previsto en bodega	السعة المتبقية للتخطيط
 ops.coverage	申報覆蓋率	Declaration coverage	Couverture des déclarations	Cobertura de declaraciones	تغطية الإقرارات
 ops.reported	{n} 人已報 / {m} 人待報	{n} reported / {m} pending	{n} déclarés / {m} en attente	{n} declarados / {m} pendientes	{n} مُقرّ / {m} قيد الانتظار
 ops.baggage	預計托運行李總重	Predicted checked weight	Poids prévu en soute	Peso facturado previsto	الوزن المتوقع للأمتعة المسجلة
@@ -502,22 +507,198 @@ fare.confirmed	已確認加購行李額	Confirmed extra allowance	Supplément co
 fare.estimate	預計總價 · 含所需加購	Estimated total · Required extras included	Total estimé · Suppléments requis inclus	Total estimado · Incluye extras necesarios	الإجمالي التقديري · يشمل الإضافات المطلوبة
 e.allowance	未能讀取此乘機人的機票行李額，請先核對機票資料。	Ticket allowance unavailable for this passenger. Check the ticket details.	Franchise indisponible pour ce passager. Vérifiez le billet.	Franquicia no disponible para este pasajero. Revisa el billete.	سماح التذكرة غير متاح لهذا المسافر. تحقّق من بيانات التذكرة.
 e.buyAllowance	請先確認加購所需的跟機行李額，再繼續結算。	Confirm the required extra flight allowance before checkout.	Confirmez le supplément de bagages requis avant de payer.	Confirma la franquicia adicional necesaria antes de pagar.	أكّد شراء سماح أمتعة الرحلة الإضافي المطلوب قبل الدفع.
-e.extraQuantity	加購件數須為 0 至 99 的整數。	Extra pieces must be a whole number from 0 to 99.	Le supplément doit être un entier de 0 à 99.	Los bultos adicionales deben ser un entero de 0 a 99.	يجب أن يكون عدد الحقائب الإضافية عدداً صحيحاً من 0 إلى 99.
+e.extraQuantity	加購件數須為非負整數。	Extra pieces must be a nonnegative whole number.	Le nombre de pièces supplémentaires doit être un entier positif ou nul.	Los bultos adicionales deben ser un entero no negativo.	يجب أن يكون عدد الحقائب الإضافية عدداً صحيحاً غير سالب.
 e.flightWeight	請補全所有跟機托運行李的重量，以核對機票額度。	Enter weights for all bags on the passenger flight to check the ticket allowance.	Indiquez le poids de tous les bagages sur le vol pour vérifier la franchise.	Indica el peso de todos los bultos en el vuelo para comprobar la franquicia.	أدخل أوزان جميع حقائب رحلة المسافر للتحقق من السماح.
 e.pieceWeight	有跟機行李超過演示機票的單件重量上限。加購件數不能抵銷單件超重；請重新分裝或改選 Cargo。	A flight bag exceeds the demo ticket’s per-piece limit. Extra pieces cannot cover an overweight bag; repack or choose Cargo.	Un bagage dépasse la limite par pièce du billet simulé. Ajouter des pièces ne corrige pas ce surpoids ; répartissez les affaires ou choisissez le fret.	Un bulto supera el límite individual del billete de ejemplo. Añadir bultos no cubre ese sobrepeso; redistribuye el contenido o elige Cargo.	تتجاوز إحدى الحقائب حد الوزن الفردي للتذكرة التجريبية. لا يعالج شراء حقائب إضافية ذلك؛ أعد توزيع الأمتعة أو اختر الشحن.
 `);
 addCopy(String.raw`
 fare.free	未超出機票免費行李額，跟機行李費為 HKD 0。取件及目的地配送費另計。	Within your ticket allowance: flight baggage costs HKD 0. Collection and destination delivery are charged separately.	Franchise du billet respectée : frais de bagages sur le vol de HKD 0. Collecte et livraison à destination facturées séparément.	Dentro de la franquicia: el equipaje en vuelo cuesta HKD 0. Recogida y entrega en destino se cobran por separado.	ضمن سماح التذكرة: رسوم أمتعة الرحلة HKD 0. تُحسب رسوم الاستلام والتسليم في الوجهة بشكل منفصل.
-fare.nextStep	先完成行李預報；在「首末程安排」選擇運輸方式，再抵扣機票免費額並計算超額費用。	Complete your luggage declaration first. Choose transport in Collection & delivery to apply your ticket allowance and calculate excess charges.	Complétez la déclaration, puis choisissez le transport dans Collecte et livraison pour déduire la franchise et calculer le supplément.	Completa la declaración y elige transporte en Recogida y entrega para descontar la franquicia y calcular el exceso.	أكمل إقرار الأمتعة أولاً، ثم اختر النقل في الاستلام والتسليم لتطبيق سماح التذكرة وحساب الرسوم الإضافية.
+fare.nextStep	完成行李預報後，在「價格計算」分配攜帶方式，自動抵扣免費托運額並計算費用。	After declaring bags, assign travel options in Price calculator to apply your allowance and calculate charges.	Après la déclaration, répartissez les bagages dans le calculateur pour appliquer la franchise et calculer les frais.	Tras declarar los bultos, asígnalos en el calculador para aplicar la franquicia y calcular los cargos.	بعد إقرار الأمتعة، وزّعها في حاسبة السعر لتطبيق السماح وحساب الرسوم.
 fare.requiredCost	僅收超額 {n} 件 × {price}／件 = {total}	Excess only: {n} pieces × {price} each = {total}	Excédent uniquement : {n} pièces × {price} = {total}	Solo exceso: {n} bultos × {price} cada uno = {total}	الزيادة فقط: {n} حقائب × {price} لكل حقيبة = {total}
 `);
 addCopy(String.raw`
-service.packagePrice	每次 HK$1,200 起，最多 3 件 · 擬議價格	From HK$1,200 per move, up to 3 bags · proposed	Dès HK$1,200 par envoi, jusqu’à 3 bagages · tarif proposé	Desde HK$1,200 por envío, hasta 3 bultos · propuesto	ابتداءً من HK$1,200 لكل طلب، حتى 3 حقائب · سعر مقترح
+service.packagePrice	每次 HK$1,200 起 · 擬議價格	From HK$1,200 per order · proposed	Dès HK$1,200 par commande · tarif proposé	Desde HK$1,200 por pedido · propuesto	ابتداءً من HK$1,200 لكل طلب · سعر مقترح
 service.packageSaving	較分開預訂參考價 HK$1,410 約省 15%。一次預訂，全程專人負責。	About 15% less than booking separately at an indicative HK$1,410. One booking, one person responsible throughout.	Environ 15 % de moins que les réservations séparées estimées à HK$1,410. Une réservation, un interlocuteur du début à la fin.	Aproximadamente un 15 % menos que reservar por separado, con referencia de HK$1,410. Una reserva y una persona responsable de principio a fin.	أقل بنحو 15% من الحجز المنفصل بسعر مرجعي HK$1,410. حجز واحد وشخص مسؤول طوال الرحلة.
-service.packageScope	香港至倫敦標準取送及處理套餐；其他收取地區按地區調整。超過 3 件須另行詢價，請先調整服務行李選擇。價格及節省幅度待順豐與 EBC 詢價後確認。	Standard Hong Kong–London collection, delivery and handling package; other pickup regions vary. More than 3 bags requires a separate quote; adjust your service bag selection. Price and savings await quotes from SF Express and EBC.	Forfait standard collecte, livraison et gestion Hong Kong–Londres ; tarif variable selon la zone. Au-delà de 3 bagages, devis séparé requis : ajustez la sélection. Prix et économies à confirmer auprès de SF Express et EBC.	Paquete estándar de recogida, entrega y gestión Hong Kong–Londres; otras zonas varían. Más de 3 bultos requiere otro presupuesto; ajusta la selección. Precio y ahorro pendientes de cotización de SF Express y EBC.	باقة الاستلام والتسليم والمناولة القياسية من هونغ كونغ إلى لندن؛ تختلف المناطق الأخرى. أكثر من 3 حقائب يتطلب عرضاً منفصلاً؛ عدّل الحقائب المحددة للخدمة. السعر والتوفير بانتظار عروض SF Express وEBC.
-service.packageFee	取送及處理套餐 · 最多 3 件 · 擬議	Collection, delivery & handling · up to 3 bags · proposed	Collecte, livraison et gestion · jusqu’à 3 bagages · proposé	Recogida, entrega y gestión · hasta 3 bultos · propuesto	باقة الاستلام والتسليم والمناولة · حتى 3 حقائب · مقترحة
-e.serviceLimit	每次套餐最多 3 件服務行李；超出部分須另行詢價。請返回行李預報，將服務行李選擇調整至最多 3 件。	Each package covers up to 3 service bags; additional bags require a separate quote. Return to the luggage declaration and select up to 3 service bags.	Le forfait couvre 3 bagages maximum ; devis séparé au-delà. Revenez à la déclaration et sélectionnez jusqu’à 3 bagages pour le service.	Cada paquete cubre hasta 3 bultos; los adicionales requieren otro presupuesto. Vuelve a la declaración y selecciona hasta 3 bultos para el servicio.	تغطي الباقة حتى 3 حقائب؛ تتطلب الحقائب الإضافية عرضاً منفصلاً. ارجع إلى إقرار الأمتعة وحدد حتى 3 حقائب للخدمة.
+service.packageScope	取送及處理套餐按收取地區計價；跟機加購與 Cargo 運費按實際安排另計。	The package price depends on the collection area. Flight extras and Cargo freight follow your bag choices.	Le forfait dépend de la zone de collecte. Les suppléments et le fret suivent vos choix.	El paquete depende de la zona de recogida. Los extras y el flete dependen de tus elecciones.	يعتمد سعر الباقة على منطقة الاستلام. تُحسب الإضافات والشحن وفق اختياراتك.
+service.packageFee	取送及處理套餐 · 擬議	Collection, delivery & handling · proposed	Collecte, livraison et gestion · proposé	Recogida, entrega y gestión · propuesto	الاستلام والتسليم والمناولة · مقترح
 book.feeNote	取送套餐為擬議價格，待合作伙伴報價確認；總價另計所選 Cargo 運費及所需跟機超額行李費。關稅與特殊處理另計。	The collection and delivery package is proposed, pending partner quotes. Totals add selected Cargo freight and required excess flight baggage. Duties and special handling are extra.	Forfait collecte et livraison proposé, sous réserve des devis partenaires. Le total ajoute fret choisi et excédents de bagages requis. Droits et traitement spécial en sus.	Paquete de recogida y entrega propuesto, pendiente de cotizaciones. El total añade el flete seleccionado y el exceso de equipaje necesario. Aranceles y gestión especial aparte.	باقة الاستلام والتسليم مقترحة بانتظار عروض الشركاء. يضاف للإجمالي الشحن المختار ورسوم الأمتعة الزائدة المطلوبة. الجمارك والمناولة الخاصة إضافية.
+`);
+addCopy(String.raw`
+home.beforeBooking	先了解服務，再安排你的行李。	Explore the service. Then plan your bags.	Découvrez le service, puis préparez vos bagages.	Conoce el servicio y organiza tu equipaje.	تعرّف على الخدمة، ثم خطّط لأمتعتك.
+home.bookedKicker	行李服務已預訂	LUGGAGE SERVICE BOOKED	SERVICE BAGAGES RÉSERVÉ	SERVICIO DE EQUIPAJE RESERVADO	تم حجز خدمة الأمتعة
+home.bookedTitle1	行李已安排，	Your bags are booked.	Vos bagages sont prévus.	Tu equipaje, reservado.	أمتعتك جاهزة للترتيب.
+home.bookedTitle2	出發更從容。	Travel with ease.	Partez l’esprit léger.	Viaja con tranquilidad.	سافر براحة بال.
+home.bookedDescription	取件與目的地配送已預約。查看行程，核對安排，並在行李交接時掌握最新確認。	Collection and destination delivery are booked. Review your arrangements and follow luggage handover confirmations in your journey.	Collecte et livraison réservées. Consultez vos dispositions et les confirmations de remise dans votre voyage.	Recogida y entrega reservadas. Revisa los detalles y sigue las confirmaciones de entrega en tu viaje.	تم حجز الاستلام والتسليم في الوجهة. راجع الترتيبات وتابع تأكيدات تسليم الأمتعة في رحلتك.
+home.bookedNotice	行李服務已預訂，出發前更從容。	Your luggage service is booked.	Votre service bagages est réservé.	Tu servicio de equipaje está reservado.	تم حجز خدمة أمتعتك.
+home.pickupNotice	預約取件：{time} HKT · 詳細安排及交接進度可在行程概覽查看。	Collection booked: {time} HKT · View arrangements and handover progress in your journey.	Collecte prévue : {time} HKT · Consultez les détails et les remises dans votre voyage.	Recogida prevista: {time} HKT · Consulta los detalles y el seguimiento en tu viaje.	موعد الاستلام: {time} HKT · اطّلع على الترتيبات ومتابعة التسليم في رحلتك.
+family.kicker	家人協助 · 輕裝同行	FAMILY CARE · A LIGHTER JOURNEY	EN FAMILLE · VOYAGER PLUS LÉGER	EN FAMILIA · UN VIAJE MÁS LIGERO	رعاية الأسرة · رحلة أخف
+family.title1	家人的安心，	Care from family.	L’attention des proches.	El cuidado de tu familia.	اطمئنان الأسرة،
+family.title2	從出發前開始。	Before the journey begins.	Avant même le départ.	Desde antes de partir.	يبدأ قبل السفر.
+family.intro	孩子獨自出發，或長輩行動不便，家人都可以在家協助準備。從行李資料到取送安排，提前多做一步，讓他們路上少一點負擔。	When a child travels alone or an older relative has limited mobility, family can help from home. Prepare luggage details and collection and delivery arrangements ahead, so they have less to carry.	Pour un enfant voyageant seul ou un proche âgé à mobilité réduite, la famille peut aider depuis chez elle. Anticipez les bagages, la collecte et la livraison pour alléger leur trajet.	Si un menor viaja solo o un familiar mayor tiene movilidad reducida, la familia puede ayudar desde casa. Prepara el equipaje y organiza la recogida y la entrega para aligerar su viaje.	عندما يسافر طفل وحده أو يكون أحد كبار الأسرة محدود الحركة، يمكن للعائلة المساعدة من المنزل بإعداد تفاصيل الأمتعة وترتيبات الاستلام والتسليم لتخفيف العبء عنهم.
+family.childTitle	孩子獨行，家人先準備。	A child travels. Family prepares.	L’enfant voyage, les proches préparent.	Viaja el menor. Prepara la familia.	يسافر الطفل وتستعد الأسرة.
+family.childText	家長協助填寫行李及聯絡資料，預先安排上門收取與目的地接收人，讓孩子少搬行李，安心啟程。	Parents can help enter luggage and contact details, arrange collection and name a recipient at the destination, leaving the child less to carry.	Les parents peuvent renseigner bagages et contacts, prévoir la collecte et désigner un destinataire à l’arrivée pour alléger le trajet de l’enfant.	Los padres pueden completar los datos del equipaje y de contacto, organizar la recogida e indicar quién recibe en destino para que el menor cargue menos.	يمكن للوالدين تعبئة بيانات الأمتعة والتواصل، وترتيب الاستلام وتحديد مستلم في الوجهة، ليحمل الطفل أمتعة أقل.
+family.seniorTitle	長輩遠行，少一點搬運。	Less lifting for older travellers.	Moins à porter pour les aînés.	Menos cargas para los mayores.	حمل أقل لكبار السن.
+family.seniorText	家人代為整理行李需求、取件時間及接收資料。有行動不便或輔助設備的需要，也可提前諮詢協助。	Family can help organise luggage needs, collection times and recipient details, and ask ahead about mobility or assistive equipment needs.	Les proches peuvent organiser bagages, horaires de collecte et destinataire, et se renseigner à l’avance sur la mobilité ou les équipements d’assistance.	La familia puede organizar el equipaje, el horario de recogida y los datos del destinatario, y consultar las necesidades de movilidad o de equipos de apoyo.	يمكن للأسرة تنظيم احتياجات الأمتعة ومواعيد الاستلام وبيانات المستلم، والاستفسار مسبقاً عن احتياجات الحركة أو الأجهزة المساعدة.
+family.fromHome	人在家中，也能幫上忙。	Help from the comfort of home.	Aidez vos proches depuis chez vous.	Ayuda desde la comodidad de casa.	ساعد أحباءك وأنت في المنزل.
+family.start	幫家人準備行李	Help family prepare	Aider un proche à préparer	Ayudar a mi familia	ساعد أسرتك في التجهيز
+feature.reportShort	填寫件數、重量與尺寸，提早做好準備。	Plan ahead with bag counts, weight and dimensions.	Anticipez : nombre, poids et dimensions.	Indica bultos, peso y medidas con antelación.	أدخل العدد والوزن والأبعاد للاستعداد مبكراً.
+feature.rulesShort	按目的地與物品，了解隨身及托運要求。	Check cabin and checked bag rules by item and destination.	Vérifiez les règles cabine et soute selon l’objet et la destination.	Consulta las normas por artículo y destino.	راجع قواعد المقصورة والشحن حسب الغرض والوجهة.
+feature.deliveryShort	預約上門收取，安排目的地交接與配送。	Arrange collection, handover and delivery at your destination.	Prévoyez collecte, remise et livraison à destination.	Organiza recogida, entrega y reparto en destino.	رتّب الاستلام والتسليم والتوصيل في الوجهة.
+feature.milesShort	現金購買賺里數，或以亞洲萬里通兌換。	Earn miles with cash or redeem Asia Miles.	Gagnez des miles ou utilisez vos Asia Miles.	Gana millas al pagar o canjea Asia Miles.	اكسب الأميال بالدفع النقدي أو استخدم Asia Miles.
+`);
+addCopy(String.raw`
+
+passenger.autoSub	已從本次機票讀取乘機人及免費托運額度，無需重新填寫。	Passenger and included checked allowance are read from your ticket. No entry needed.	Passager et franchise en soute lus sur votre billet, sans saisie.	El pasajero y la franquicia incluida se obtienen del billete, sin rellenar datos.	تُقرأ بيانات المسافر وسماح الأمتعة المسجلة من التذكرة، دون إدخال يدوي.
+passenger.ticketReference	機票預訂編號	Booking reference	Référence du billet	Referencia de reserva	مرجع الحجز
+passenger.flightRoute	本次航段	Flight route	Trajet aérien	Trayecto del vuelo	مسار الرحلة
+passenger.includedAllowance	機票已包含的免費托運行李額	Checked baggage included in your ticket	Franchise en soute incluse	Equipaje facturado incluido en el billete	سماح الأمتعة المسجلة المشمول بالتذكرة
+passenger.autoAllowance	額度隨乘機人及機票讀取，無需填寫或購買。	Read from the passenger’s ticket; nothing to enter or purchase here.	Lu sur le billet du passager ; rien à saisir ni à acheter ici.	Leído del billete del pasajero; aquí no tienes que introducir ni comprar nada.	يُقرأ من تذكرة المسافر؛ لا حاجة لإدخال بيانات أو شراء سماح هنا.
+helper.toggle	由他人（如家人）協助填寫行李與聯絡資料	Someone else, such as family, is helping complete luggage and contact details	Un tiers, par exemple un proche, aide à remplir les données	Otra persona, como un familiar, ayuda con los datos de equipaje y contacto	يساعد شخص آخر، كأحد أفراد الأسرة، في تعبئة بيانات الأمتعة والتواصل
+helper.title	代填人資料	Person completing the form	Personne remplissant le formulaire	Persona que completa el formulario	بيانات الشخص المساعد
+helper.name	代填人姓名（與身份證件一致）	Full name as shown on identity document	Nom complet sur le document d’identité	Nombre completo según el documento de identidad	الاسم الكامل كما يظهر في وثيقة الهوية
+helper.relationship	與乘機人的關係	Relationship to passenger	Lien avec le passager	Relación con el pasajero	صلة القرابة أو العلاقة بالمسافر
+helper.relationship.parent	父／母	Parent	Parent	Padre o madre	أب أو أم
+helper.relationship.child	子／女	Son or daughter	Fils ou fille	Hijo o hija	ابن أو ابنة
+helper.relationship.spouse	配偶	Spouse	Conjoint	Cónyuge	زوج أو زوجة
+helper.relationship.relative	其他親屬	Other relative	Autre proche	Otro familiar	قريب آخر
+helper.relationship.friend	朋友	Friend	Ami	Amigo	صديق
+helper.relationship.other	其他關係	Other relationship	Autre lien	Otra relación	علاقة أخرى
+helper.relationshipOther	請說明與乘機人的關係	Describe the relationship	Précisez le lien	Describe la relación	وضّح العلاقة بالمسافر
+helper.identityType	代填人身份證件類型	Identity document type	Type de document d’identité	Tipo de documento de identidad	نوع وثيقة هوية المساعد
+helper.identity.passport	護照	Passport	Passeport	Pasaporte	جواز سفر
+helper.identity.nationalId	身份證	Identity card	Carte d’identité	Documento de identidad	بطاقة هوية
+helper.identityNumber	代填人身份證件號碼	Identity document number	Numéro du document d’identité	Número del documento de identidad	رقم وثيقة هوية المساعد
+helper.memberNo	代填人的國泰會員號碼（選填）	Helper’s Cathay membership number (optional)	Numéro de membre Cathay du tiers (facultatif)	Número de socio Cathay del ayudante (opcional)	رقم عضوية كاثي للمساعد (اختياري)
+helper.sync	將此行程及 Plume Light 服務資訊同步至代填人的國泰 App	Sync this journey and Plume Light service details to the helper’s Cathay app	Synchroniser le voyage et Plume Light dans l’app Cathay du tiers	Sincronizar el viaje y Plume Light en la app Cathay del ayudante	مزامنة الرحلة وخدمة Plume Light مع تطبيق كاثي لدى المساعد
+helper.syncSub	須提供關係證明並通過人工審核；通過後才會啟用同步。	Relationship evidence and human review are required before syncing is enabled.	Justificatif du lien et vérification humaine requis avant activation.	Se requieren prueba de la relación y revisión humana antes de activar la sincronización.	يلزم إثبات العلاقة ومراجعة بشرية قبل تفعيل المزامنة.
+helper.proof	與乘機人的關係證明	Evidence of relationship	Justificatif du lien	Prueba de la relación	إثبات العلاقة بالمسافر
+helper.proofSub	可提供能證明雙方關係的文件或圖片，交由人工審核。	Provide a document or image showing the relationship for human review.	Fournissez un document ou une image attestant le lien pour vérification humaine.	Aporta un documento o imagen que demuestre la relación para su revisión humana.	قدّم مستنداً أو صورة تثبت العلاقة لإجراء المراجعة البشرية.
+helper.uploadProof	選擇證明文件或圖片	Choose a document or image	Choisir un document ou une image	Elegir documento o imagen	اختر مستنداً أو صورة
+helper.replaceProof	更換證明文件	Replace evidence	Remplacer le justificatif	Cambiar la prueba	استبدال الإثبات
+helper.proofFormats	圖片或 PDF · 最大 10 MB	Image or PDF · Up to 10 MB	Image ou PDF · 10 Mo max.	Imagen o PDF · Máximo 10 MB	صورة أو PDF · حتى 10 MB
+helper.viewProof	查看	View	Voir	Ver	عرض
+helper.review.draft	資料待提交審核	Ready to request review	Prêt pour la demande de vérification	Pendiente de solicitar revisión	بانتظار طلب المراجعة
+helper.review.pending	關係證明待人工審核	Awaiting human review	Vérification humaine en attente	Pendiente de revisión humana	بانتظار المراجعة البشرية
+helper.review.approved	審核已通過 · 模擬同步已啟用	Approved · Demo sync enabled	Approuvé · Synchronisation simulée activée	Aprobado · Sincronización simulada activada	مقبول · تم تفعيل المزامنة التجريبية
+helper.review.rejected	審核未通過	Review not approved	Vérification non approuvée	Revisión no aprobada	لم تتم الموافقة
+helper.reviewDraftText	選擇「下一步」後提交；填寫行李及預訂服務不必等待審核。	Select Continue to submit. You can prepare bags and book while review is pending.	Cliquez sur Continuer pour soumettre. Vous pouvez préparer et réserver pendant la vérification.	Selecciona Continuar para enviar. Puedes preparar y reservar mientras se revisa.	اختر متابعة للإرسال. يمكنك تجهيز الأمتعة والحجز أثناء انتظار المراجعة.
+helper.reviewPendingText	審核通過前，不會向代填人開放行程及服務資訊。	Journey and service details remain unavailable to the helper until approval.	Le tiers n’a pas accès au voyage ni au service avant approbation.	El ayudante no tendrá acceso al viaje ni al servicio hasta la aprobación.	لا تتاح بيانات الرحلة والخدمة للمساعد قبل الموافقة.
+helper.reviewApprovedText	本原型已自動更新代填人的行程及服務資訊預覽。	This prototype has automatically updated the helper’s journey and service preview.	Le prototype a actualisé automatiquement l’aperçu du voyage et du service du tiers.	El prototipo ha actualizado automáticamente la vista del viaje y servicio del ayudante.	حدّث النموذج تلقائياً معاينة الرحلة والخدمة لدى المساعد.
+helper.reviewRejectedText	請核對身份及關係證明，修改後可重新提交審核。	Check the identity details and evidence, then resubmit after updating.	Vérifiez l’identité et le justificatif, puis soumettez à nouveau.	Revisa la identidad y la prueba, actualízalas y vuelve a enviar.	تحقّق من الهوية والإثبات، ثم حدّث البيانات وأعد الإرسال.
+helper.syncPreview	查看同步資訊預覽	Preview shared details	Aperçu des données partagées	Vista previa de datos compartidos	معاينة البيانات المتزامنة
+helper.noServiceYet	行程已同步；預訂成功後自動加入服務資訊。	Journey shared; service details will be added after booking.	Voyage partagé ; les détails du service seront ajoutés après réservation.	Viaje compartido; el servicio se añadirá tras la reserva.	تمت مزامنة الرحلة؛ تُضاف بيانات الخدمة بعد الحجز.
+helper.demoNotice	原型演示：人工審核及國泰 App 同步尚未接入實際系統。	Prototype: human review and Cathay app sync are not connected to live systems.	Prototype : vérification et synchronisation Cathay non reliées aux systèmes réels.	Prototipo: la revisión y la sincronización con Cathay no están conectadas a sistemas reales.	نموذج تجريبي: المراجعة والمزامنة مع كاثي غير متصلتين بالأنظمة الفعلية.
+helper.demoReview	代填授權審核 · 僅用於演示人工處理結果	Helper authorisation · Demonstrate human review outcomes	Autorisation du tiers · Simuler les résultats de vérification	Autorización del ayudante · Simular resultados de revisión	تفويض المساعد · محاكاة نتائج المراجعة البشرية
+helper.demoApprove	模擬人工審核通過	Simulate reviewer approval	Simuler une approbation	Simular aprobación	محاكاة موافقة المراجع
+helper.demoReject	模擬人工審核未通過	Simulate reviewer rejection	Simuler un refus	Simular rechazo	محاكاة رفض المراجع
+information.title	取送資料，提早留好。	Arrange collection and delivery details.	Préparez les coordonnées de collecte et de livraison.	Prepara los datos de recogida y entrega.	جهّز بيانات الاستلام والتسليم.
+information.sub	國家跟隨機票識別，具體取送地址由你填寫。	Countries come from your ticket. Enter the collection and delivery addresses.	Les pays sont lus sur votre billet. Saisissez les adresses de collecte et de livraison.	Los países se obtienen del billete. Completa las direcciones de recogida y entrega.	تُحدّد الدول من تذكرتك. أدخل عنواني الاستلام والتسليم.
+information.deadlineTitle	先確認時間，為取件留足準備。	Check the deadlines before arranging pickup.	Vérifiez les délais avant de prévoir la collecte.	Consulta los plazos antes de organizar la recogida.	تحقّق من المواعيد قبل ترتيب الاستلام.
+information.applicationCutoff	最遲申請：起飛前 {h} 小時 · {time} HKT	Apply by: {h} hours before departure · {time} HKT	Demande au plus tard : {h} h avant départ · {time} HKT	Solicitar hasta: {h} h antes de salir · {time} HKT	آخر موعد للطلب: قبل المغادرة بـ {h} ساعة · {time} HKT
+information.pickupCutoff	最遲取件：起飛前 {h} 小時 · {time} HKT	Latest pickup: {h} hours before departure · {time} HKT	Collecte au plus tard : {h} h avant départ · {time} HKT	Última recogida: {h} h antes de salir · {time} HKT	آخر موعد للاستلام: قبل المغادرة بـ {h} ساعة · {time} HKT
+information.pickupTitle	上門取件	Collection	Collecte	Recogida	الاستلام
+information.pickupSub	先填好出發地的地址及聯絡方式。	Start with the collection address and contact.	Commencez par l’adresse et le contact de collecte.	Empieza por la dirección y el contacto de recogida.	ابدأ بعنوان الاستلام وبيانات التواصل.
+information.deliveryTitle	目的地送件	Destination delivery	Livraison à destination	Entrega en destino	التسليم في الوجهة
+information.deliverySub	填寫接收人與地址，再選擇目的地服務商。	Enter the recipient and address, then choose a destination provider.	Saisissez le destinataire et son adresse, puis choisissez le prestataire.	Completa el destinatario y la dirección, y elige el operador en destino.	أدخل المستلم والعنوان، ثم اختر مزوّد الخدمة في الوجهة.
+information.linkedToTicket	已根據機票識別國家	Country read from your ticket	Pays identifié sur votre billet	País identificado en el billete	تم تحديد الدولة من تذكرتك
+information.provider	第三方取送服務商（演示選項）	Third-party provider (demo options)	Prestataire tiers (options simulées)	Operador externo (opciones de ejemplo)	مزوّد خدمة خارجي (خيارات تجريبية)
+information.sf	順豐 SF Express	SF Express	SF Express	SF Express	SF Express
+information.ems	中國郵政 EMS	China Post EMS	China Post EMS	China Post EMS	البريد الصيني EMS
+information.ebc	EBC UK	EBC UK	EBC UK	EBC UK	EBC UK
+information.providerName	{name}	{name}	{name}	{name}	{name}
+information.recipientPhone	接收人聯絡電話	Recipient phone number	Téléphone du destinataire	Teléfono del destinatario	رقم هاتف المستلم
+location.hk	中國 · 香港	China · Hong Kong	Chine · Hong Kong	China · Hong Kong	الصين · هونغ كونغ
+location.shenzhen	中國 · 深圳	China · Shenzhen	Chine · Shenzhen	China · Shenzhen	الصين · شنتشن
+location.beijing	中國 · 北京	China · Beijing	Chine · Pékin	China · Pekín	الصين · بكين
+location.shanghai	中國 · 上海	China · Shanghai	Chine · Shanghai	China · Shanghái	الصين · شنغهاي
+location.london	英國 · 倫敦	United Kingdom · London	Royaume-Uni · Londres	Reino Unido · Londres	المملكة المتحدة · لندن
+location.melbourne	澳洲 · 墨爾本	Australia · Melbourne	Australie · Melbourne	Australia · Melbourne	أستراليا · ملبورن
+location.sapporo	日本 · 札幌	Japan · Sapporo	Japon · Sapporo	Japón · Sapporo	اليابان · سابورو
+location.delhi	印度 · 新德里	India · New Delhi	Inde · New Delhi	India · Nueva Delhi	الهند · نيودلهي
+location.paris	法國 · 巴黎	France · Paris	France · Paris	Francia · París	فرنسا · باريس
+bag.newSub	逐件填寫名稱、物品類別、重量和尺寸。所有行李填妥後，再到下一步安排運輸。	Enter each bag’s name, contents, weight and dimensions. Arrange transport in the next step.	Indiquez le nom, le contenu, le poids et les dimensions de chaque bagage. Choisissez le transport ensuite.	Completa el nombre, contenido, peso y medidas de cada bulto. Organiza el transporte después.	أدخل اسم كل حقيبة ومحتواها ووزنها وأبعادها. رتّب النقل في الخطوة التالية.
+bag.multiple	可多選	Select multiple	Choix multiples	Selección múltiple	اختيار متعدد
+bag.chooseCategories	選擇物品類別	Choose content categories	Choisir les catégories	Elegir categorías	اختر فئات المحتويات
+bag.categoryHint	這件行李內有甚麼？可勾選多個標籤。	What’s in this bag? Select all that apply.	Que contient ce bagage ? Plusieurs choix possibles.	¿Qué contiene este bulto? Marca todas las que correspondan.	ماذا تحتوي هذه الحقيبة؟ اختر كل ما ينطبق.
+bag.doneCategories	完成選擇	Done	Terminé	Listo	تم الاختيار
+bag.liquids	液體與洗護	Liquids & toiletries	Liquides et toilette	Líquidos y aseo	سوائل ومستحضرات عناية
+bag.medicine	藥品	Medicines	Médicaments	Medicamentos	أدوية
+bag.food	食品	Food	Aliments	Alimentos	مواد غذائية
+bag.fragile	易碎物品	Fragile items	Objets fragiles	Artículos frágiles	أغراض قابلة للكسر
+bag.valuables	貴重物品	Valuables	Objets de valeur	Objetos de valor	مقتنيات ثمينة
+bag.sports	運動用品	Sports equipment	Équipement sportif	Material deportivo	معدات رياضية
+bag.carriageHint	可先選擇取送方案；下一步可拖動行李調整，並即時計價。	Choose a service first. Drag bags between options in the next step to update the price.	Choisissez un service, puis déplacez les bagages à l’étape suivante pour recalculer le prix.	Elige un servicio. En el siguiente paso podrás mover los bultos y actualizar el precio.	اختر خدمة أولاً. في الخطوة التالية انقل الحقائب لتحديث السعر.
+bag.carriage.self	自行攜帶	Carry it myself	Transporter moi-même	Llevarlo yo	أحملها بنفسي
+bag.carriage.flight	服務 · 隨本趟航班	Service · This flight	Service · Ce vol	Servicio · Este vuelo	خدمة · مع هذه الرحلة
+bag.carriage.cargo	服務 · Cargo 貨運	Service · Cargo	Service · Fret	Servicio · Carga	خدمة · شحن جوي
+bag.carriage.selfTiming	自行處理取送	I handle the bags	Je gère mes bagages	Yo me encargo	أتولى نقل أمتعتي
+bag.carriage.flightTiming	時效高 · 較晚取件，較早收件	Faster · Later pickup, earlier delivery	Plus rapide · Collecte tardive, livraison avancée	Más rápido · Recogida más tarde, entrega antes	أسرع · استلام متأخر وتسليم أبكر
+bag.carriage.cargoTiming	提早整理 · 提早送走	Pack early · Send it ahead	Préparez tôt · Expédiez en avance	Prepara antes · Envía con antelación	جهّز مبكراً · أرسل مسبقاً
+bag.carriage.selfText	自行帶往機場及目的地，可選擇托運或隨身。	Take it to the airport and destination yourself, checked or in the cabin.	Apportez-le à l’aéroport puis à destination, en soute ou en cabine.	Llévalo al aeropuerto y al destino, facturado o en cabina.	انقلها بنفسك إلى المطار والوجهة، مسجلة أو في المقصورة.
+bag.carriage.flightText	隨旅客同行，行李更有保障，可攜物品類型較多。	Travels with you, with added baggage assurance and a wider range of eligible items.	Voyage avec vous, avec une meilleure assurance des bagages et davantage de types d’objets admissibles.	Viaja contigo, con mayor protección del equipaje y más tipos de artículos admitidos.	تسافر معك، مع ضمان أكبر للأمتعة وإمكانية حمل أنواع أكثر من الأغراض.
+bag.carriage.cargoText	需更早取件；限制相對較少、運費較低。貨運調度，可能稍晚收件。	Earlier pickup; fewer restrictions and lower freight costs. Cargo scheduling may mean later delivery.	Collecte plus tôt, moins de restrictions et fret moins cher. La planification peut retarder la livraison.	Recogida más temprana, menos restricciones y menor coste de transporte. La entrega puede ser más tarde según la programación.	يتطلب استلاماً أبكر، مع قيود أقل وتكلفة شحن أقل. قد يتأخر التسليم حسب مواعيد الشحن.
+bag.selfMode	自行攜帶方式	How I carry this bag	Transport personnel	Cómo lo llevo	طريقة حمل الحقيبة بنفسي
+service.mixed	按件安排 · 跟機及 Cargo	Per bag · Flight and Cargo	Par bagage · Vol et fret	Por bulto · Vuelo y carga	حسب الحقيبة · رحلة وشحن
+bag.mixedPlan	行李預報已按件選擇不同運輸方式。以下整體方案若重新選擇，將套用至所有服務行李。	Your bags use different transport options. Choosing an overall option below applies it to all service bags.	Vos bagages ont des modes différents. Un choix global ci-dessous s’applique à tous les bagages de service.	Tus bultos usan distintas opciones. Elegir una opción general se aplicará a todos los bultos del servicio.	تستخدم حقائبك طرق نقل مختلفة. اختيار خطة عامة أدناه يطبقها على جميع حقائب الخدمة.
+e.helperIdentity	請補全代填人的姓名、身份證件及與乘機人的關係。	Complete the helper’s name, identity document and relationship.	Complétez nom, identité et lien du tiers.	Completa el nombre, la identidad y la relación del ayudante.	أكمل اسم المساعد ووثيقة هويته وعلاقته بالمسافر.
+e.helperProof	啟用 App 同步須先上傳關係證明，供人工審核。	Upload relationship evidence for human review before enabling app sync.	Importez le justificatif pour vérification avant la synchronisation.	Sube la prueba de la relación para revisión antes de activar la sincronización.	ارفع إثبات العلاقة للمراجعة البشرية قبل تفعيل المزامنة.
+e.helperFile	請選擇圖片或 PDF，檔案不可大於 10 MB。	Choose an image or PDF no larger than 10 MB.	Choisissez une image ou un PDF de 10 Mo maximum.	Elige una imagen o PDF de hasta 10 MB.	اختر صورة أو PDF بحجم لا يتجاوز 10 MB.
+e.helperStorage	未能讀取或保存證明文件，請重新上傳後再提交審核。	Evidence could not be read or saved. Upload it again before requesting review.	Justificatif illisible ou non enregistré. Importez-le à nouveau avant vérification.	No se pudo leer o guardar la prueba. Súbela de nuevo antes de solicitar revisión.	تعذرت قراءة الإثبات أو حفظه. أعد رفعه قبل طلب المراجعة.
+e.routeProviders	此航線的取送地區或服務商未有可用設定，請先核對機票行程。	Collection area or providers are unavailable for this route. Check the ticket itinerary.	Zone ou prestataire indisponible pour ce trajet. Vérifiez le billet.	Zona u operadores no disponibles para esta ruta. Revisa el itinerario.	منطقة الاستلام أو المزوّدون غير متاحين لهذا المسار. تحقّق من التذكرة.
+`);
+addCopy(String.raw`
+
+country.cn	中國	China	Chine	China	الصين
+country.gb	英國	United Kingdom	Royaume-Uni	Reino Unido	المملكة المتحدة
+country.au	澳洲	Australia	Australie	Australia	أستراليا
+country.jp	日本	Japan	Japon	Japón	اليابان
+country.in	印度	India	Inde	India	الهند
+country.fr	法國	France	France	Francia	فرنسا
+information.orderDeadlineTitle	最遲下單時間	Latest booking deadlines	Derniers délais de réservation	Últimos plazos para reservar	آخر مواعيد الحجز
+information.orderDeadlineSub	按上門收取地區，於以下時間前完成下單。	Complete your booking by the deadline for your collection area.	Terminez votre réservation avant le délai de votre zone de collecte.	Completa la reserva antes del plazo de tu zona de recogida.	أكمل الحجز قبل الموعد المحدد لمنطقة الاستلام.
+information.selectedOrderDeadline	目前收取地區最遲下單：{time} HKT	Book by for the selected area: {time} HKT	Réservez pour la zone choisie avant : {time} HKT	Reserva para la zona elegida hasta: {time} HKT	آخر موعد للحجز في المنطقة المختارة: {time} HKT
+information.regionOption	{region} · 起飛前 {h} 小時下單	{region} · Book {h} h before departure	{region} · Réserver {h} h avant départ	{region} · Reservar {h} h antes de salir	{region} · الحجز قبل المغادرة بـ {h} ساعة
+pricing.kicker	你的行李，你來安排	YOUR BAGS. YOUR CHOICE.	VOS BAGAGES, VOTRE CHOIX.	TU EQUIPAJE. TU ELECCIÓN.	حقائبك، اختيارك.
+pricing.title	換個方式，價格即時看。	Move a bag. See the price change.	Déplacez un bagage, voyez le prix.	Mueve un bulto. Mira cambiar el precio.	انقل حقيبة وشاهد تغيّر السعر.
+pricing.sub	在三個泳道之間分配行李，免費額、運輸費與總價即時更新。	Arrange bags across three lanes. Allowances, transport charges and totals update instantly.	Répartissez les bagages dans trois colonnes. Franchise, transport et total se recalculent aussitôt.	Reparte los bultos entre tres columnas. La franquicia, el transporte y el total se actualizan al instante.	وزّع الحقائب على ثلاثة مسارات لتحديث السماح ورسوم النقل والإجمالي فوراً.
+pricing.instructions	拖動行李卡片，在三個泳道間分配；手機可按住卡片右上角的把手。	Drag bag cards between the three lanes. On mobile, hold the grip on the card.	Glissez les fiches entre les colonnes. Sur mobile, maintenez la poignée.	Arrastra las tarjetas entre las columnas. En móvil, mantén pulsado el tirador.	اسحب بطاقات الحقائب بين المسارات. على الهاتف، اضغط مطولاً على المقبض.
+pricing.lane.cabin	隨身攜帶	Cabin luggage	En cabine	En cabina	أمتعة المقصورة
+pricing.lane.flight	Plume Light 隨本次航班	Plume Light · This flight	Plume Light · Ce vol	Plume Light · Este vuelo	Plume Light · مع هذه الرحلة
+pricing.lane.cargo	Plume Light 由 Cargo 調度	Plume Light · Cargo	Plume Light · Fret	Plume Light · Carga	Plume Light · شحن جوي
+pricing.lane.cabinText	自行隨身攜帶，不使用取送服務。	Carry it in the cabin, without collection or delivery.	Gardez-le en cabine, sans collecte ni livraison.	Llévalo en cabina, sin recogida ni entrega.	احملها في المقصورة دون خدمة استلام أو تسليم.
+pricing.lane.flightText	時效高：較晚取件、較早收件。	Faster: later pickup, earlier delivery.	Plus rapide : collecte tardive, livraison avancée.	Más rápido: recogida más tarde, entrega antes.	أسرع: استلام متأخر وتسليم أبكر.
+pricing.lane.cargoText	提早整理，可提早送走。	Pack early and send bags ahead.	Préparez tôt et expédiez en avance.	Prepara antes y envía con antelación.	جهّز مبكراً وأرسل الحقائب مسبقاً.
+pricing.dropHere	將行李拖到這裡	Drop a bag here	Déposez un bagage ici	Suelta un bulto aquí	أفلت حقيبة هنا
+pricing.dragBag	拖動 {name}	Drag {name}	Déplacer {name}	Arrastrar {name}	اسحب {name}
+pricing.moveTo	移至	Move to	Déplacer vers	Mover a	نقل إلى
+pricing.moveBag	調整 {name} 的攜帶方式	Change the travel option for {name}	Changer le transport de {name}	Cambiar el transporte de {name}	غيّر طريقة نقل {name}
+pricing.noServiceFee	取送費	Collection & delivery	Collecte et livraison	Recogida y entrega	الاستلام والتسليم
+pricing.transportOnly	運輸費，不含共用取送套餐	Transport only; shared package separate	Transport seul ; forfait partagé séparé	Solo transporte; paquete compartido aparte	النقل فقط، والباقة المشتركة منفصلة
+pricing.estimate	即時費用預覽	LIVE PRICE ESTIMATE	ESTIMATION EN DIRECT	ESTIMACIÓN EN DIRECTO	تقدير مباشر للسعر
+pricing.total	預計總價	Estimated total	Total estimé	Total estimado	الإجمالي التقديري
+pricing.totalNote	隨行李安排自動更新 · 演示價格	Updates with your choices · Demo pricing	Actualisé selon vos choix · Tarifs simulés	Se actualiza con tus elecciones · Precios de ejemplo	يتحدث حسب اختياراتك · أسعار تجريبية
+pricing.bagCount	已分配行李	Bags assigned	Bagages répartis	Bultos asignados	الحقائب الموزّعة
+pricing.collectionFee	取送及處理套餐	Collection, delivery & handling	Collecte, livraison et gestion	Recogida, entrega y gestión	الاستلام والتسليم والمناولة
+pricing.sharedPackage	取送套餐每單計一次，泳道底部只列各自運輸費。	The shared package is charged once per order. Lane subtotals show transport only.	Le forfait partagé est facturé une fois par commande. Les sous-totaux indiquent le transport seul.	El paquete compartido se cobra una vez por pedido. Los subtotales muestran solo el transporte.	تُحسب الباقة المشتركة مرة واحدة لكل طلب. تعرض المجاميع الفرعية رسوم النقل فقط.
+pricing.allCabin	全部隨身攜帶，無需預訂取送服務。	All bags are in the cabin. No collection or delivery booking is needed.	Tous les bagages sont en cabine. Aucune réservation de collecte ou livraison nécessaire.	Todos los bultos van en cabina. No hace falta reservar recogida ni entrega.	جميع الحقائب في المقصورة. لا حاجة لحجز الاستلام أو التسليم.
+pricing.rulesNote	隨身及運輸限制仍須按物品與承運規則確認；分配方式不代表已獲承運批准。	Cabin and transport rules still depend on the items and carrier. Assigning a lane is not carriage approval.	Les règles dépendent des objets et du transporteur. Une colonne ne vaut pas autorisation de transport.	Las normas dependen del artículo y el transportista. Asignar una columna no autoriza su transporte.	تظل القواعد مرتبطة بالأغراض والناقل. اختيار المسار لا يعني الموافقة على النقل.
+pricing.moved	已將 {name} 移至「{lane}」。目前預計總價：{price}。	Moved {name} to {lane}. Estimated total: {price}.	{name} déplacé vers {lane}. Total estimé : {price}.	{name} movido a {lane}. Total estimado: {price}.	نُقلت {name} إلى {lane}. الإجمالي التقديري: {price}.
+pricing.unknownCount	請先返回行李預報，確認行李件數後再計算價格。	Confirm the bag count in Luggage before calculating a price.	Confirmez le nombre de bagages avant de calculer le prix.	Confirma el número de bultos antes de calcular el precio.	أكّد عدد الحقائب أولاً قبل حساب السعر.
+pricing.finishWithoutService	保存預報並返回首頁	Save declaration and return home	Enregistrer et revenir à l’accueil	Guardar y volver al inicio	احفظ الإقرار وعُد للرئيسية
+`);
+addCopy(String.raw`
+pricing.breakdown	費用明細	Price breakdown	Détail des frais	Desglose de precio	تفاصيل السعر
+pricing.keyboardHint	用方向鍵選擇泳道，按 Enter 放下，按 Esc 取消。	Use arrow keys to choose a lane, Enter to drop, or Escape to cancel.	Choisissez une colonne avec les flèches, Entrée pour déposer, Échap pour annuler.	Elige una columna con las flechas, Enter para soltar o Escape para cancelar.	اختر المسار بالأسهم، واضغط Enter للإفلات أو Escape للإلغاء.
+`);
+addCopy(String.raw`
+tracking.loading	正在取得運單資料…	Loading shipment details…	Chargement du suivi…	Cargando los datos del envío…	جارٍ تحميل بيانات الشحنة…
+tracking.pending	運單資料待承運商提供。	Shipment details are pending.	Le transporteur doit encore fournir le suivi.	Los datos del envío están pendientes.	بيانات الشحنة قيد الانتظار.
+tracking.number	快遞單號	Tracking number	Numéro de suivi	Número de seguimiento	رقم التتبع
+tracking.open	前往承運商查件	Open carrier tracking	Suivre chez le transporteur	Consultar con el transportista	افتح تتبع الناقل
+tracking.linkPending	查件連結待承運商提供。	Carrier tracking link pending.	Lien de suivi du transporteur en attente.	Enlace de seguimiento pendiente.	رابط تتبع الناقل قيد الانتظار.
+tracking.demoNote	此單號供演示使用。實際查件請使用承運商發出的單號。	This is a demo number. Use a carrier-issued number for live tracking.	Ce numéro est fictif. Utilisez un numéro émis par le transporteur pour le suivi réel.	Este número es de demostración. Usa un número emitido por el transportista para el seguimiento real.	هذا رقم تجريبي. استخدم رقماً صادراً عن الناقل للتتبع الفعلي.
+tracking.error	暫時無法取得運單資料。	Shipment details are temporarily unavailable.	Le suivi est momentanément indisponible.	Los datos del envío no están disponibles por ahora.	بيانات الشحنة غير متاحة مؤقتاً.
+tracking.retry	重試查件	Retry tracking	Réessayer le suivi	Reintentar seguimiento	أعد محاولة التتبع
 `);
 function t(key,args={}){const values=COPY[key];if(!values){console.warn('Missing copy:',key);return key;}return values[LOCALES.indexOf(language)].replace(/\\n/g,'\n').replace(/\{(\w+)\}/g,(_,k)=>String(args[k]??'{'+k+'}'));}
 function setLanguage(next){if(!LOCALES.includes(next))return;language=next;try{localStorage.setItem('plume-light-language',next);}catch(_){}document.documentElement.lang=language;document.documentElement.dir=language==='ar'?'rtl':'ltr';}

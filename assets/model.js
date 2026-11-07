@@ -9,7 +9,7 @@ const REGIONS={hk:{hours:24,pickupLead:12,factor:1},gba:{hours:48,pickupLead:24,
 const PEOPLE=[{id:'lin',name:'Lin Chen',type:'student'},{id:'child',name:'Alex Chen',type:'child'}];
 // Demo ticket entitlements and tariffs, independent of live Cathay fare rules.
 const DEMO_BAGGAGE_ALLOWANCE={bookingId:'PL-CX257-DEMO',travellers:{lin:{pieces:2,kgPerPiece:23},child:{pieces:1,kgPerPiece:23}}};
-const SERVICE_RATES={version:3,base:120000,maxBags:3};
+const SERVICE_RATES={version:3,base:120000};
 const TRANSPORT_RATES={extraPiece:60000,cargoUnit:25000,cargoUnitKg:23,volumeDivisor:6000};
 // Normalize legacy partner names in saved demo orders without changing their charges.
 function partnerName(value){return String(value??'').replace(/\bDPD\s+UK\b/g,'EBC UK');}
@@ -31,22 +31,64 @@ function ticketAllowance(){
  const data=state.flight.baggageAllowance,a=data?.travellers?.[state.travellerId];
  return data?.bookingId===state.flight.bookingId&&a&&Number.isInteger(a.pieces)&&a.pieces>=0&&Number.isFinite(a.kgPerPiece)&&a.kgPerPiece>0?clone(a):null;
 }
-function baggagePlan(transport=state.transport){
- const d=draft(),items=checked(d).filter(i=>transport==='flight'||!i.service),allowance=ticketAllowance();
+const BAG_CATEGORIES=['clothes','books','electronics','battery','liquids','medicine','food','fragile','valuables','sports','equipment','other'];
+// Country is the only location inferred for collection/delivery. Cities stay in the itinerary.
+const AIRPORT_COUNTRIES={HKG:'CN',MFM:'CN',SZX:'CN',PEK:'CN',PKX:'CN',PVG:'CN',SHA:'CN',CAN:'CN',CTU:'CN',TFU:'CN',LHR:'GB',LGW:'GB',MAN:'GB',MEL:'AU',SYD:'AU',CTS:'JP',HND:'JP',NRT:'JP',DEL:'IN',BOM:'IN',CDG:'FR',ORY:'FR'};
+const COUNTRY_SERVICE_AREAS={
+ CN:{label:'country.cn',providers:['SF Express','EMS']},
+ GB:{label:'country.gb',providers:['EBC UK','DHL eCommerce UK','Parcelforce Worldwide']},
+ AU:{label:'country.au',providers:['Australia Post','DHL']},
+ JP:{label:'country.jp',providers:['Japan Post','Yamato Transport']},
+ IN:{label:'country.in',providers:['India Post','DHL']},
+ FR:{label:'country.fr',providers:['La Poste','DHL']}
+};
+function flightCountry(airport,explicit){const code=String(explicit?.code||explicit||AIRPORT_COUNTRIES[airport]||'').toUpperCase();return ['CN','HK','MO'].includes(code)?'CN':code;}
+function serviceRoute(){const area=(airport,explicit)=>{const country=flightCountry(airport,explicit),data=COUNTRY_SERVICE_AREAS[country];return {country,label:data?.label||null,regions:country==='CN'?['hk','gba','mainland']:['mainland'],providers:data?.providers||[]};};return {origin:area(state.flight.origin,state.flight.originCountry),destination:area(state.flight.destination,state.flight.destinationCountry)};}
+function newHelper(){return {name:'',identityType:'passport',identityNumber:'',relationship:'parent',relationshipOther:'',memberNo:'',sync:false,proof:null,review:{status:'draft'},sharedTrip:null};}
+function itemCategories(item){return [...new Set((Array.isArray(item.categories)?item.categories:[item.category||'other']).filter(c=>BAG_CATEGORIES.includes(c)))];}
+function carriageFor(item){return !item.service||item.mode==='cabin'?'self':item.carriage==='flight'||item.carriage==='cargo'?item.carriage:state.transport==='cargo'?'cargo':'flight';}
+function refreshTransport(){const modes=[...new Set(checked(draft()).filter(i=>i.service).map(carriageFor))];state.transport=modes.length>1?'mixed':modes[0]||'flight';}
+function migrateBookingState(){
+ state.helper??=newHelper();state.helper.review??={status:'draft'};
+ state.recipientPhone??=state.phone||'';
+ const previous=state.routeLink,route=serviceRoute();
+ const oldOrigin=previous?flightCountry(previous.origin,previous.originCountry):null,oldDestination=previous?flightCountry(previous.destination,previous.destinationCountry):null;
+ if(previous&&oldOrigin!==route.origin.country){state.region=route.origin.country==='CN'?'mainland':route.origin.regions[0];state.pickupPartner=route.origin.providers[0]||'';state.pickupAddress='';}
+ if(previous&&oldDestination!==route.destination.country){state.partner=route.destination.providers[0]||'';state.destinationAddress='';}
+ if(!route.origin.regions.includes(state.region))state.region=route.origin.regions[0];
+ if(!route.origin.providers.includes(state.pickupPartner))state.pickupPartner=route.origin.providers[0]||'';
+ if(!route.destination.providers.includes(state.partner))state.partner=route.destination.providers[0]||'';
+ state.routeLink={origin:state.flight.origin,destination:state.flight.destination,originCountry:route.origin.country,destinationCountry:route.destination.country};
+ for(const declaration of [...Object.values(state.drafts||{}),...Object.values(state.declarations||{})])for(const item of declaration.items||[])item.categories=itemCategories(item);
+}
+function helperFingerprint(){const h=state.helper;return JSON.stringify({traveller:state.travellerId,booking:state.flight.bookingId,leg:state.flight.legId,name:h.name.trim(),identityType:h.identityType,identityNumber:h.identityNumber.trim(),relationship:h.relationship,relationshipOther:h.relationshipOther.trim(),memberNo:h.memberNo.trim(),sync:h.sync,proof:h.proof?.id});}
+function validateHelper(){const h=state.helper;if(!state.family)return null;if(!h.name.trim()||!h.identityNumber.trim()||!['passport','nationalId'].includes(h.identityType)||!['parent','child','spouse','relative','friend','other'].includes(h.relationship)||h.relationship==='other'&&!h.relationshipOther.trim())return 'e.helperIdentity';if(h.sync&&!h.proof)return 'e.helperProof';return null;}
+function submitHelperReview(){const error=validateHelper();if(error)return error;const h=state.helper;if(!state.family||!h.sync)return null;const fingerprint=helperFingerprint();if(['pending','approved'].includes(h.review.status)&&h.review.fingerprint===fingerprint)return null;h.review={status:'pending',fingerprint,submittedAt:iso(state.clock),travellerId:state.travellerId};h.sharedTrip=null;persist();return null;}
+function syncHelperJourney(){
+ const h=state.helper;if(!h)return;
+ if(h.review.fingerprint&&h.review.fingerprint!==helperFingerprint()){h.review={status:'draft'};h.sharedTrip=null;}
+ if(!state.family||!h.sync||h.review.status!=='approved'||h.review.travellerId!==state.travellerId){h.sharedTrip=null;return;}
+ const order=state.orders.find(o=>o.travellerId===state.travellerId&&o.status!=='cancelled'&&o.flight?.legId===state.flight.legId);
+ h.sharedTrip={demo:true,flight:clone(state.flight),passenger:state.travellerId,order:order?{id:order.id,status:order.status,pickup:order.pickup,destination:order.destination,itemIds:clone(order.itemIds),events:clone(state.events.filter(e=>e.orderId===order.id))}:null,updatedAt:iso(state.clock)};
+}
+function reviewHelperRequest(approved){const h=state.helper;if(!state.family||!h.sync||h.review.status!=='pending'||validateHelper()||h.review.fingerprint!==helperFingerprint())return false;h.review.status=approved?'approved':'rejected';h.review.reviewedAt=iso(state.clock);persist();return true;}
+function validateInformation(){const r=serviceRoute();if(!r.origin.regions.includes(state.region)||!r.origin.providers.includes(state.pickupPartner)||!r.destination.providers.includes(state.partner))return 'e.routeProviders';if([state.pickupAddress,state.destinationAddress,state.contact,state.phone,state.recipient,state.recipientPhone].some(v=>!String(v||'').trim()))return 'e.contacts';if(!checkApplicationDeadline().valid)return 'e.deadline';const pickup=new Date(state.pickup+':00+08:00').getTime(),latest=new Date(state.flight.departure).getTime()-REGIONS[state.region].pickupLead*3600000;return !Number.isFinite(pickup)||pickup<new Date(state.clock).getTime()||pickup>latest?'e.pickup':null;}
+function baggagePlan(transport){
+ const d=draft(),items=checked(d).filter(i=>!i.service||(transport||carriageFor(i))!=='cargo'),allowance=ticketAllowance();
  const required=allowance?Math.max(0,items.length-allowance.pieces):0,requested=items.length?(state.extraBags?.[state.travellerId]??0):0;
  // Only the shortfall is billable; old add-ons cannot create a charge after bags are removed.
  const purchased=Number.isSafeInteger(requested)&&requested>=0?Math.min(requested,required):0;
  return {allowance,items:clone(items),required,requested,purchased,quoted:required,missing:Math.max(0,required-purchased),weight:items.reduce((n,i)=>n+(Number(i.weight)||0),0)};
 }
 
-function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map((i,index)=>({...i,mode:'checked',service:index<SERVICE_RATES.maxBags,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
+function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map((i,index)=>({...i,mode:'checked',service:index!==3,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,helper:newHelper(),pickupPartner:'SF Express',recipientPhone:'+852 00000000',assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
 
 let state,storageOK=true;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');state=saved?.schema===1?saved:initial();if(!state.drafts?.lin||!state.agent||!Array.isArray(state.orders))throw Error('invalid');state.processing=false;state.pendingPayment=null;state.frozenMiles=0;}catch(_){state=initial();}
 // Existing saved bookings predate the transport choice and used the passenger flight.
 if(state.transport==null)state.transport='flight';
-migratePricingState();
-function persist(){try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){storageOK=false;}}
+migratePricingState();migrateBookingState();
+function persist(){syncHelperJourney();try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){storageOK=false;}}
 const draft=()=>state.drafts[state.travellerId],person=()=>PEOPLE.find(p=>p.id===state.travellerId)||PEOPLE[0],activeOrder=()=>state.orders.find(o=>o.travellerId===state.travellerId&&o.status!=='cancelled');
 const checked=d=>d.zero||d.countUnknown?[]:d.items.filter(i=>i.mode==='checked');
 const displayValue=value=>typeof value==='string'&&value.startsWith('@sample.')?t(value.slice(1)):String(value??'');
@@ -56,32 +98,54 @@ function validateDeclaration(d){if(d.zero||d.countUnknown)return null;if(!d.item
 function aggregateBaggage(){const records=Object.values(state.declarations).filter(d=>d.legId===state.flight.legId&&d.status==='submitted'&&!d.countUnknown),reported=79+records.length,unreported=100-reported;let known=1140,imputed=unreported*30,pieces=114,volume=7+unreported*.15,missing=false,reviews=0;for(const d of records){const q=demand(d);known+=q.weight-q.imputed;imputed+=q.imputed;pieces+=q.count;reviews+=q.review;if(q.volume==null)missing=true;else volume+=q.volume;}return {reported,unreported,coverage:reported,known,imputed,weight:known+imputed,pieces,volume:missing?null:volume,reviews};}
 function forecastCapacity(){const a=aggregateBaggage(),o=state.ops;return {...a,weightRemaining:[o.budget,o.otherWeight,o.buffer].some(v=>v==null)?null:o.budget-a.weight-o.otherWeight-o.buffer,spaceRemaining:[o.spaceBudget,o.otherSpace,o.spaceBuffer,a.volume].some(v=>v==null)?null:o.spaceBudget-a.volume-o.otherSpace-o.spaceBuffer,expired:o.expired};}
 function checkApplicationDeadline(region=state.region,departure=state.flight.departure,now=state.clock){const r=REGIONS[region],dep=new Date(departure).getTime(),n=new Date(now).getTime();if(!r||!Number.isFinite(dep)||!Number.isFinite(n))return {valid:false,deadline:null,hours:null};return {valid:n<=dep-r.hours*3600000,deadline:iso(dep-r.hours*3600000),hours:r.hours};}
-function quoteService(transport=state.transport){
- const d=draft(),items=d.items.filter(i=>!d.zero&&!d.countUnknown&&i.mode==='checked'&&i.service),plan=baggagePlan(transport);
- if(!['flight','cargo'].includes(transport))return {valid:false,error:'e.transport'};
+function quoteService(transport){
+ const override=transport,d=draft(),items=d.items.filter(i=>!d.zero&&!d.countUnknown&&i.mode==='checked'&&i.service),plan=baggagePlan(override);
+ const modes=[...new Set(items.map(i=>override||carriageFor(i)))];transport=modes.length>1?'mixed':modes[0]||state.transport;
+ if(override&&!['flight','cargo'].includes(override)||!['flight','cargo','mixed'].includes(transport))return {valid:false,error:'e.transport'};
  if(!REGIONS[state.region])return {valid:false,error:'e.region'};
  if(!items.length)return {valid:false,error:'e.serviceBags'};
- if(items.length>SERVICE_RATES.maxBags)return {valid:false,error:'e.serviceLimit'};
  if(items.some(i=>[i.weight,i.l,i.w,i.h].some(v=>v==null||!Number.isFinite(Number(v))||Number(v)<=0)))return {valid:false,error:'e.fullSpecs'};
  if(plan.items.length&&!plan.allowance)return {valid:false,error:'e.allowance'};
- if(!Number.isSafeInteger(plan.requested)||plan.requested<0||plan.requested>99)return {valid:false,error:'e.extraQuantity'};
+ if(!Number.isSafeInteger(plan.requested)||plan.requested<0)return {valid:false,error:'e.extraQuantity'};
  if(plan.items.some(i=>i.weight==null||!Number.isFinite(Number(i.weight))||Number(i.weight)<=0))return {valid:false,error:'e.flightWeight'};
  if(plan.items.some(i=>Number(i.weight)>plan.allowance.kgPerPiece))return {valid:false,error:'e.pieceWeight'};
  const weight=items.reduce((n,i)=>n+Number(i.weight),0);
  const serviceFee=Math.round(SERVICE_RATES.base*REGIONS[state.region].factor);
  const priority=0,extraFee=plan.required*TRANSPORT_RATES.extraPiece;
- const chargeableWeight=transport==='cargo'?items.reduce((n,i)=>n+Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor),0):0;
- const cargoUnits=transport==='cargo'?items.reduce((n,i)=>n+Math.ceil(Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor)/TRANSPORT_RATES.cargoUnitKg),0):0;
+ const cargoItems=items.filter(i=>(override||carriageFor(i))==='cargo');
+ const chargeableWeight=cargoItems.reduce((n,i)=>n+Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor),0);
+ const cargoUnits=cargoItems.reduce((n,i)=>n+Math.ceil(Math.max(Number(i.weight),i.l*i.w*i.h/TRANSPORT_RATES.volumeDivisor)/TRANSPORT_RATES.cargoUnitKg),0);
  const cargoFee=cargoUnits*TRANSPORT_RATES.cargoUnit,total=serviceFee+priority+extraFee+cargoFee;
  if(!Number.isSafeInteger(total)||!Number.isFinite(chargeableWeight))return {valid:false,error:'e.fullSpecs'};
  return {valid:true,pricingVersion:SERVICE_RATES.version,transport,serviceFee,priority,extraFee,cargoFee,cargoUnits,chargeableWeight,plan,total,miles:Math.ceil(total/100*25),earn:Math.floor(total/1000),count:items.length,weight,
- signature:JSON.stringify({flight:state.flight,travellerId:state.travellerId,region:state.region,items,airlineItems:plan.items,extraPieces:plan.purchased,requestedExtraPieces:plan.requested,rates:TRANSPORT_RATES,serviceRates:SERVICE_RATES,partner:state.partner,transport,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,contact:state.contact,recipient:state.recipient,phone:state.phone})};
+ signature:JSON.stringify({flight:state.flight,travellerId:state.travellerId,region:state.region,items,airlineItems:plan.items,extraPieces:plan.purchased,requestedExtraPieces:plan.requested,rates:TRANSPORT_RATES,serviceRates:SERVICE_RATES,partner:state.partner,pickupPartner:state.pickupPartner,transport,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,contact:state.contact,recipient:state.recipient,phone:state.phone,recipientPhone:state.recipientPhone})};
+}
+
+const PRICING_LANES=['cabin','flight','cargo'];
+function pricingItems(){const d=draft();return d.zero||d.countUnknown?[]:d.items;}
+function pricingLane(item){return item.mode==='cabin'||!item.service?'cabin':carriageFor(item);}
+function preparePricingBoard(){
+ // Older drafts allowed self-handled checked bags. This board has exactly three lanes.
+ let changed=false;for(const item of pricingItems())if(!item.service&&item.mode!=='cabin'){item.mode='cabin';item.carriage='self';changed=true;}
+ if(changed){refreshTransport();state.agreed=false;invalidateAgent();persist();}return changed;
+}
+function setPricingLane(id,lane){
+ if(state.processing||activeOrder()||!PRICING_LANES.includes(lane)||draft().zero||draft().countUnknown)return false;
+ const item=draft().items.find(i=>i.id===id);if(!item)return false;
+ item.mode=lane==='cabin'?'cabin':'checked';item.service=lane!=='cabin';item.carriage=lane==='cabin'?'self':lane;
+ refreshTransport();state.agreed=false;invalidateAgent();persist();return true;
+}
+function pricingQuote(){
+ const d=draft();if(d.countUnknown)return {valid:false,error:'pricing.unknownCount'};
+ if(!d.zero&&!d.items.length)return {valid:false,error:'e.addBaggage'};
+ if(!pricingItems().some(i=>i.service&&i.mode==='checked'))return {valid:true,transport:'cabin',count:0,weight:0,serviceFee:0,priority:0,extraFee:0,cargoFee:0,cargoUnits:0,chargeableWeight:0,total:0,miles:0,earn:0,plan:baggagePlan()};
+ return quoteService();
 }
 
 function isDirty(){const s=state.declarations[state.travellerId];return !s||s.legId!==state.flight.legId||JSON.stringify({items:s.items,zero:s.zero,countUnknown:s.countUnknown})!==JSON.stringify(draft());}
 function invalidateAgent(){if(state.agent.answer){state.agent.stale=true;state.agent.answer.stale=true;}}
 function saveDeclaration(silent=false){const error=validateDeclaration(draft());if(error){toast(error);return false;}if(!isDirty()){if(!silent)toast('notice.same');return true;}const old=state.declarations[state.travellerId];state.declarations[state.travellerId]={...clone(draft()),version:(old?.version||0)+1,legId:state.flight.legId,status:'submitted',updatedAt:iso(state.clock)};state.lastSavedAt=iso(state.clock);persist();if(!silent)toast('notice.saved');return true;}
-function validateService(){if(!['flight','cargo'].includes(state.transport))return 'e.transport';const q=quoteService();if(!q.valid)return q.error;if(q.plan.missing)return 'e.buyAllowance';const err=validateDeclaration(draft());if(err)return err;if(!checkApplicationDeadline().valid)return 'e.deadline';if([state.pickupAddress,state.destinationAddress,state.contact,state.recipient,state.phone].some(v=>!v.trim()))return 'e.contacts';const pickup=new Date(state.pickup+':00+08:00').getTime(),latest=new Date(state.flight.departure).getTime()-REGIONS[state.region].pickupLead*3600000;if(!Number.isFinite(pickup)||pickup<new Date(state.clock).getTime()||pickup>latest)return 'e.pickup';return null;}
+function validateService(){if(!['flight','cargo','mixed'].includes(state.transport))return 'e.transport';const q=quoteService();if(!q.valid)return q.error;if(q.plan.missing)return 'e.buyAllowance';return validateDeclaration(draft())||validateHelper()||validateInformation();}
 function eventCounts(o){const ids=o?.itemIds||[],events=state.events.filter(e=>e.orderId===o?.id),counts={};for(const type of ['airport','loaded','handover'])counts[type]=new Set(events.filter(e=>e.type===type).flatMap(e=>e.itemIds).filter(id=>ids.includes(id))).size;return counts;}
 const DEMO_RULE_ROUTES=['GB','AU','IN'];
 function serviceIntent(text){
@@ -108,14 +172,14 @@ function sendQuestion(question){
  if(needsClarify){a.pending={type:category};a.answer=null;a.messages.push({role:'assistant',key:category==='battery'?'ai.clarifyBattery':'qa.clarify'+category[0].toUpperCase()+category.slice(1)});persist();render();return;}
  const reason=!DEMO_RULE_ROUTES.includes(a.route)?'ai.gapRoute':a.quality==='expired'?'ai.gapExpired':a.quality==='conflict'?'ai.gapConflict':a.quality==='missing'?'ai.gapMissing':category==='unknown'?'ai.gapItem':null;
  const item=draft().items.find(i=>i.id===a.itemId);
- a.answer={kind:'rules',category,route:a.route,reason,attributes:text,energy:energy?.[1]||null,sourceIds:reason?[]:['ENTRY','CARRIER','SECURITY'],retrievedAt:iso(state.clock),advice:!reason&&item&&a.route==='GB'?{itemId:item.id,type:category==='battery'&&item.category==='battery'?'cabin':'review'}:null};
+ a.answer={kind:'rules',category,route:a.route,reason,attributes:text,energy:energy?.[1]||null,sourceIds:reason?[]:['ENTRY','CARRIER','SECURITY'],retrievedAt:iso(state.clock),advice:!reason&&item&&a.route==='GB'?{itemId:item.id,type:category==='battery'&&itemCategories(item).includes('battery')?'cabin':'review'}:null};
  a.pending=null;a.messages.push({role:'assistant',key:'ai.resultMessage'});persist();render();
 }
 function reviewAdvice(){const advice=state.agent.answer?.advice;if(!advice||state.agent.stale)return;const item=draft().items.find(i=>i.id===advice.itemId);if(!item)return;modal(t('ai.adviceTitle'),t(advice.type==='cabin'?'ai.adviceCabin':'ai.adviceReview',{name:displayValue(item.name)}),[{text:t('ai.apply'),action:'apply-advice'},{text:t('common.cancel'),action:'close-dialog',light:true}]);}
-function applyAdvice(){const a=state.agent.answer;if(!a?.advice||state.agent.stale)return;const item=draft().items.find(i=>i.id===a.advice.itemId);if(!item)return;if(activeOrder()){toast('e.orderChange');return;}item.review=true;if(a.advice.type==='cabin'){item.mode='cabin';item.service=false;}state.agreed=false;if(!saveDeclaration(true))return;a.advice=null;closeModal();persist();render();toast('notice.applied');}
+function applyAdvice(){const a=state.agent.answer;if(!a?.advice||state.agent.stale)return;const item=draft().items.find(i=>i.id===a.advice.itemId);if(!item)return;if(activeOrder()){toast('e.orderChange');return;}item.review=true;if(a.advice.type==='cabin'){item.mode='cabin';item.service=false;refreshTransport();}state.agreed=false;if(!saveDeclaration(true))return;a.advice=null;closeModal();persist();render();toast('notice.applied');}
 async function pay(){
  if(state.processing||activeOrder())return;const error=validateService(),q=quoteService();if(error||!q.valid){toast(error||q.error);return;}if(!state.agreed){toast('e.agree');return;}if(state.payment==='miles'&&state.milesBalance<q.miles){toast('e.miles');return;}if(!saveDeclaration(true))return;
- const snapshot={travellerId:state.travellerId,declaration:clone(draft()),flight:clone(state.flight),quote:clone(q),payment:state.payment,extraPieces:q.plan.purchased,allowance:clone(q.plan.allowance),contact:state.contact,phone:state.phone,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,recipient:state.recipient,partner:state.partner,transport:state.transport,region:state.region,itemIds:checked(draft()).filter(i=>i.service).map(i=>i.id)};
+ const snapshot={travellerId:state.travellerId,declaration:clone(draft()),flight:clone(state.flight),quote:clone(q),payment:state.payment,extraPieces:q.plan.purchased,allowance:clone(q.plan.allowance),contact:state.contact,phone:state.phone,pickup:state.pickup,pickupAddress:state.pickupAddress,destination:state.destinationAddress,recipient:state.recipient,partner:state.partner,pickupPartner:state.pickupPartner,recipientPhone:state.recipientPhone,transport:q.transport,region:state.region,itemIds:checked(draft()).filter(i=>i.service).map(i=>i.id)};
  state.processing=true;state.pendingPayment=snapshot;state.frozenMiles=state.payment==='miles'?q.miles:0;persist();render();await new Promise(r=>setTimeout(r,650));if(!state.processing||state.pendingPayment!==snapshot)return;
  const changed=quoteService().signature!==q.signature||state.travellerId!==snapshot.travellerId||state.payment!==snapshot.payment,insufficient=snapshot.payment==='miles'&&state.milesBalance<q.miles;
  if(state.forceFail||changed||insufficient||!checkApplicationDeadline().valid){state.processing=false;state.pendingPayment=null;state.frozenMiles=0;state.forceFail=false;persist();render();toast('notice.failed');return;}
@@ -126,4 +190,4 @@ async function pay(){
 function recordHandover(kind){const o=activeOrder();if(!o){toast('e.orderFirst');return;}let type=kind,ids=o.itemIds;const c=eventCounts(o),n=ids.length;if(kind==='partial'){type='loaded';ids=ids.slice(0,Math.max(0,n-1));}if(type==='loaded'&&c.airport<n){toast('e.airportFirst');return;}if(type==='handover'&&c.loaded<n){toast('e.loadedFirst');return;}if(!ids.length){toast('e.partial');return;}const eventId=o.id+':'+type+':'+ids.join(',');if(state.events.some(e=>e.eventId===eventId)){toast('notice.duplicate');return;}state.events.push({eventId,orderId:o.id,type,itemIds:clone(ids),legId:o.flight.legId,confirmedAt:iso(state.clock)});persist();render();toast('notice.event');}
 function completeService(){const o=activeOrder();if(!o)return;if(o.status==='completed'){toast('notice.duplicate');return;}if(eventCounts(o).handover<o.itemIds.length){toast('e.localFirst');return;}o.status='completed';if(o.payment==='cash'&&!o.earned){state.milesBalance+=o.quote.earn;o.earned=true;}persist();render();toast('notice.complete');}
 function cancelOrder(id,confirmed=false){const o=state.orders.find(o=>o.id===id);if(!o||o.refunded)return;if(!confirmed){modal(t('dialog.cancelTitle'),t('dialog.cancelBody',{id}),[{text:t('dialog.cancelConfirm'),action:'confirm-cancel',id},{text:t('common.cancel'),action:'close-dialog',light:true}]);return;}if(o.earned&&state.milesBalance<o.quote.earn){toast('e.reverse');return;}if(o.payment==='miles')state.milesBalance+=o.quote.miles;if(o.earned){state.milesBalance-=o.quote.earn;o.earned=false;}o.refunded=true;o.status='cancelled';o.cancelledAt=iso(state.clock);persist();closeModal();render();toast('notice.cancelled');}
-function resetDemo(scenario){if(state.processing){toast('e.processing');return;}const oldLarge=state.large;state=initial();state.large=oldLarge;let target='home',step=1;if(scenario==='family'){state.travellerId='child';state.profile='child';state.family=true;state.contact='@sample.parent';target='book';}if(scenario==='late'){state.clock='2026-11-14T09:30:01+08:00';target='book';step=4;}if(scenario==='unknown'){state.drafts.lin.items[0].weight=null;state.drafts.lin.items[0].l=null;saveDeclaration(true);target='ops';}persist();go(target,step);}
+function resetDemo(scenario){if(state.processing){toast('e.processing');return;}const oldLarge=state.large;state=initial();migrateBookingState();state.large=oldLarge;let target='home',step=1;if(scenario==='family'){state.travellerId='child';state.profile='child';state.family=true;state.contact='@sample.parent';target='book';}if(scenario==='late'){state.clock='2026-11-14T09:30:01+08:00';target='book';step=2;}if(scenario==='unknown'){state.drafts.lin.items[0].weight=null;state.drafts.lin.items[0].l=null;saveDeclaration(true);target='ops';}persist();go(target,step);}
