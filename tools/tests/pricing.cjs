@@ -43,7 +43,7 @@ function model(saved){
  run("state.transport='flight'");assert.equal(run('quoteService().error'),'e.pieceWeight');
  run('draft().items[0].weight=20;state.extraBags.lin=-1');assert.equal(run('quoteService().error'),'e.extraQuantity');
  run('state.extraBags.lin=1.5');assert.equal(run('quoteService().error'),'e.extraQuantity');
- run('state.extraBags.lin=100');assert.equal(run('quoteService().error'),'e.extraQuantity');
+ run('state.extraBags.lin=100');assert.equal(run('quoteService().valid'),true);assert.equal(run('quoteService().plan.purchased'),2);
  run("state.extraBags.lin=2;state.flight.bookingId='another-ticket'");assert.equal(run('quoteService().error'),'e.allowance');
  run("state.transport='cargo';draft().items=draft().items.slice(0,3)");assert.equal(run('quoteService().valid'),true);
  const legacy=model()('initial()');delete legacy.flight.baggageAllowance;delete legacy.extraBags;
@@ -73,7 +73,7 @@ function model(saved){
  run=model();run("state.transport='cargo';state.agreed=true");await run('pay()');
  assert.equal(run('state.orders[0].quote.cargoFee'),75000);assert.equal(run('state.orders[0].extraPieces'),0);
 
- // Proposed door-to-door package is per move, with a hard three-bag boundary.
+ // Proposed door-to-door package is per move, without a piece cap.
  const packageQuote=model();
  for(const count of [1,2,3]){
   // Restore the sample between counts to exercise each size independently.
@@ -83,8 +83,12 @@ function model(saved){
   assert.equal(packageQuote('quoteService().miles'),packageQuote('Math.ceil(quoteService().total/100*25)'));
  }
  packageQuote('state=initial();draft().items.forEach(i=>i.service=true)');
- assert.equal(packageQuote('quoteService().error'),'e.serviceLimit');
- assert.equal(packageQuote('validateService()'),'e.serviceLimit');
+ assert.equal(packageQuote('quoteService().total'),240000);
+ packageQuote('state.extraBags.lin=2');assert.equal(packageQuote('validateService()'),null);
+ packageQuote("draft().items=Array.from({length:102},(_,i)=>({...draft().items[0],id:'bag-'+i}));state.extraBags.lin=100");
+ assert.equal(packageQuote('quoteService().count'),102);
+ assert.equal(packageQuote('quoteService().total'),6120000);
+ assert.equal(packageQuote('validateService()'),null);
  packageQuote("state=initial();state.region='gba'");assert.equal(packageQuote('quoteService().serviceFee'),168000);
  packageQuote("state.region='mainland'");assert.equal(packageQuote('quoteService().serviceFee'),216000);
  const oldAnswer=model()('initial()');oldAnswer.agent.answer={kind:'service',quote:{valid:true,pricingVersion:2}};
