@@ -1,0 +1,128 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px 16px;
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 16px;
+  margin-bottom: 8px;
+}
+
+.head h3 { margin: 0; font-size: 15px; }
+.note { color: var(--muted); font-size: 12px; }
+
+.plots {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.plot {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  min-height: 330px;
+  position: relative;
+  overflow-x: auto;
+}
+
+.axis {
+  position: relative;
+}
+
+.axis span {
+  position: absolute;
+  right: 6px;
+  transform: translateY(50%);
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.grid {
+  position: relative;
+  min-height: 320px;
+}
+
+.grid i {
+  position: absolute;
+  left: 0;
+  right: 70px;
+  border-top: 1px solid #e6eceb;
+}
+
+.line90,
+.line100 {
+  position: absolute;
+  left: 0;
+  right: 70px;
+  height: 0;
+  pointer-events: none;
+}
+
+.line90 {
+  bottom: calc(0.9 / 1.2 * 250px + 46px);
+  border-top: 1.5px dashed var(--warn);
+}
+
+.line100 {
+  bottom: calc(1 / 1.2 * 250px + 46px);
+  border-top: 1.8px solid var(--bad);
+}
+
+.cap90,
+.cap100 {
+  position: absolute;
+  right: 0;
+  font-size: 11px;
+  font-style: normal;
+  transform: translateY(50%);
+}
+
+.cap90 { bottom: calc(0.9 / 1.2 * 250px + 46px); color: #a07000; }
+.cap100 { bottom: calc(1 / 1.2 * 250px + 46px); color: var(--bad); font-weight: 700; }
+
+.cols {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  padding: 0 88px 0 8px;
+  position: relative;
+  z-index: 0;
+  min-width: 720px;
+  column-gap: 10px;
+}
+
+.slot { min-width: 0; }
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  margin-top: 4px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.legend i {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border-radius: 2px;
+  margin-right: 5px;
+  vertical-align: middle;
+}
+
+.cargo { background: var(--seg-cargo); }
+.pax { background: var(--seg-pax); }
+.plume { background: var(--seg-plume); }
+.defer {
+  background: repeating-linear-gradient(45deg, #2f6fb5 0 3px, #fff 3px 6px);
+  border: 1.5px solid #2f6fb5;
+}
+
+.legend span:last-child { margin-left: auto; }

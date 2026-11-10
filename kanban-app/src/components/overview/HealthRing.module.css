@@ -1,0 +1,102 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+  min-width: 0;
+  height: 100%;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease;
+}
+
+.critical {
+  border-color: var(--bad);
+  box-shadow: 0 0 0 1px rgba(214, 69, 61, 0.2);
+  animation: health-pulse 2.4s ease-in-out infinite;
+}
+.stressed { border-color: #e08a86; }
+.watch { border-color: var(--warn); }
+.clear { border-color: var(--ok); }
+
+.title {
+  color: var(--muted);
+  font-size: 12px;
+  margin-bottom: 6px;
+}
+
+.body {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.svg { width: 150px; height: 150px; display: block; }
+
+.slice {
+  animation: slice-in 0.7s ease both;
+}
+
+.pct {
+  font-size: 22px;
+  font-weight: 700;
+  fill: var(--ink);
+  font-variant-numeric: tabular-nums;
+}
+.cap {
+  font-size: 10px;
+  font-weight: 700;
+  fill: var(--muted);
+  letter-spacing: 0.04em;
+}
+
+.health {
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.critical .health { color: var(--bad); }
+.stressed .health { color: var(--bad); }
+.watch .health { color: #a07000; }
+.clear .health { color: var(--ok); }
+
+.meta {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 4px;
+  font-variant-numeric: tabular-nums;
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--muted);
+}
+.legend i {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 5px;
+}
+.over { background: var(--bad); }
+.caution { background: var(--warn); }
+.ok { background: var(--ok); }
+.unk { background: var(--off); }
+
+@keyframes slice-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes health-pulse {
+  0%, 100% { box-shadow: 0 0 0 1px rgba(214, 69, 61, 0.15); }
+  50% { box-shadow: 0 0 0 6px rgba(214, 69, 61, 0.08); }
+}
+
+@media (max-width: 720px) {
+  .body { grid-template-columns: 1fr; justify-items: center; text-align: center; }
+  .legend { justify-content: center; }
+}

@@ -1,0 +1,43 @@
+.nav {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.nav button {
+  border: 0;
+  background: transparent;
+  color: var(--muted);
+  padding: 0;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 16px 20px;
+}
+
+.over { border-color: var(--bad); border-width: 2px; }
+
+.flight {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.flight b { font-size: 26px; }
+.k { color: var(--muted); font-size: 12px; }
+.count { margin-left: auto; text-align: right; }
+.count b { font-size: 20px; }
+
+@media (max-width: 900px) {
+  .nav { flex-wrap: wrap; gap: 6px; }
+  .count { margin-left: 0; text-align: left; }
+}
