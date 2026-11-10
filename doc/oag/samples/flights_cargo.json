@@ -1,0 +1,95 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:38.535764+00:00",
+  "product": "flights",
+  "url": "https://api.oag.com/flight-instances/?version=v2&Limit=1&DepartureDateTime=2026-11-10&DepartureAirport=HKG&CarrierCode=CX&CodeType=IATA&ServiceType=Cargo",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "carrier": {
+          "iata": "CX",
+          "icao": "CPA"
+        },
+        "serviceSuffix": "",
+        "flightNumber": 2023,
+        "sequenceNumber": 1,
+        "flightType": "Scheduled",
+        "departure": {
+          "airport": {
+            "iata": "HKG",
+            "icao": "VHHH"
+          },
+          "terminal": "",
+          "country": {
+            "code": "HK"
+          },
+          "date": {
+            "local": "2026-11-10",
+            "utc": "2026-11-09"
+          },
+          "time": {
+            "local": "00:20",
+            "utc": "16:20"
+          }
+        },
+        "arrival": {
+          "airport": {
+            "iata": "MEL",
+            "icao": "YMML"
+          },
+          "terminal": "",
+          "country": {
+            "code": "AU"
+          },
+          "date": {
+            "local": "2026-11-10",
+            "utc": "2026-11-10"
+          },
+          "time": {
+            "local": "16:00",
+            "utc": "05:00"
+          }
+        },
+        "elapsedTime": 760,
+        "cargoTonnage": 137.75,
+        "aircraftType": {
+          "iata": "74N",
+          "icao": "B748"
+        },
+        "serviceType": {
+          "iata": "F"
+        },
+        "segmentInfo": {
+          "numberOfStops": 1,
+          "intermediateAirports": {
+            "iata": [
+              {
+                "sequenceNumber": 0,
+                "station": "SYD"
+              }
+            ]
+          }
+        },
+        "distance": {
+          "accumulatedGreatCircleKilometers": 8099.0,
+          "accumulatedGreatCircleMiles": 5032.0,
+          "accumulatedGreatCircleNauticalMiles": 4373.0,
+          "greatCircleKilometers": 7413.0,
+          "greatCircleMiles": 4606.0,
+          "greatCircleNauticalMiles": 4002.0
+        },
+        "codeshare": {
+          "jointOperationAirlineDesignators": [],
+          "marketingFlights": []
+        },
+        "scheduleInstanceKey": "5d8a278221c9e0281280ed33647eb851aa48adaa16ed7d7ddd91f181b17e3314"
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 98,
+      "totalPages": 98,
+      "next": "https://api.oag.com/flight-instances?version=v2&Limit=1&DepartureDateTime=2026-11-10&DepartureAirport=HKG&CarrierCode=CX&CodeType=IATA&ServiceType=Cargo&After=D202611100020-1788761372865000000-5d8a278221c9e0281280ed33647eb851aa48adaa16ed7d7ddd91f181b17e3314"
+    }
+  }
+}

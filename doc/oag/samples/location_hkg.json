@@ -1,0 +1,67 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:13.188592+00:00",
+  "product": "locations",
+  "url": "https://api.oag.com/locations/?version=v1&Limit=1&AirportCode=HKG&CodeType=IATA",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "code": {
+          "iata": "HKG",
+          "icao": "VHHH"
+        },
+        "type": "AIRPORT",
+        "name": "HONG KONG INTERNATIONAL APT",
+        "alternativeName": {
+          "iata": "HONG KONG INTL.",
+          "icao": "HONG KONG/INTERNATIONAL"
+        },
+        "terminals": [
+          {
+            "code": "0",
+            "name": "NOT PRE-DETERMINED"
+          },
+          {
+            "code": "1",
+            "name": "TERMINAL 1"
+          },
+          {
+            "code": "2",
+            "name": "TERMINAL 2"
+          }
+        ],
+        "place": {
+          "city": {
+            "code": "HKG",
+            "name": "HONG KONG"
+          },
+          "country": {
+            "code": "HK",
+            "name": "HONG KONG (SAR), CHINA"
+          },
+          "latitude": {
+            "degreesMinutesSeconds": "22:18:32N",
+            "decimalDegrees": 22.30888
+          },
+          "longitude": {
+            "degreesMinutesSeconds": "113:54:53E",
+            "decimalDegrees": 113.91472
+          }
+        },
+        "timeZone": {
+          "code": {
+            "iata": "01"
+          },
+          "standardUtcVariation": "+0800",
+          "daylightSavingTimes": []
+        }
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}

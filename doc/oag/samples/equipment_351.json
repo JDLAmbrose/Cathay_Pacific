@@ -1,0 +1,119 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:14.679509+00:00",
+  "product": "equipment",
+  "url": "https://api.oag.com/equipment/?version=v1&Limit=1&AircraftCode=351&CodeType=IATA",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "code": {
+          "iata": "351",
+          "icao": "A35K"
+        },
+        "iataGroup": "350",
+        "class": {
+          "icao": "LANDPLANE"
+        },
+        "engine": {
+          "type": "JET",
+          "count": 2
+        },
+        "bodyCode": "W",
+        "freightClasses": [
+          "LL",
+          "PP"
+        ],
+        "category": {
+          "iata": {
+            "code": "2J",
+            "description": "JET-ENGINED AIRCRAFT"
+          },
+          "icao": {
+            "code": "L2J"
+          }
+        },
+        "specification": {
+          "iata": {
+            "manufacturer": {
+              "name": "AIRBUS"
+            },
+            "model": "A350-1000"
+          },
+          "icao": [
+            {
+              "manufacturer": {
+                "name": "AIRBUS"
+              },
+              "model": {
+                "number": "A-350-1000 XWB"
+              },
+              "wakeTurbulence": {
+                "category": "H",
+                "group": "B"
+              }
+            },
+            {
+              "manufacturer": {
+                "name": "AIRBUS"
+              },
+              "model": {
+                "number": "A-350-1000 XWB PRESTIGE"
+              },
+              "wakeTurbulence": {
+                "category": "H",
+                "group": "B"
+              }
+            },
+            {
+              "manufacturer": {
+                "name": "AIRBUS"
+              },
+              "model": {
+                "number": "ACJ-350-1000"
+              },
+              "wakeTurbulence": {
+                "category": "H",
+                "group": "B"
+              }
+            },
+            {
+              "manufacturer": {
+                "name": "AIRBUS"
+              },
+              "model": {
+                "number": "PRESTIGE (A-350-1000)"
+              },
+              "wakeTurbulence": {
+                "category": "H",
+                "group": "B"
+              }
+            }
+          ],
+          "faa": [
+            {
+              "manufacturer": {
+                "fullNames": []
+              }
+            }
+          ]
+        },
+        "validServiceTypes": [
+          "A",
+          "C",
+          "F",
+          "G",
+          "H",
+          "J",
+          "L",
+          "S"
+        ]
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}

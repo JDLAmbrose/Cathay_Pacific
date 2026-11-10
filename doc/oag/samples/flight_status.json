@@ -1,0 +1,181 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:09.517079+00:00",
+  "product": "flights",
+  "url": "https://api.oag.com/flight-instances/?version=v2&Limit=1&DepartureDateTime=2026-11-09&CarrierCode=CX&FlightNumber=257&CodeType=IATA&Content=Status",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "carrier": {
+          "iata": "CX",
+          "icao": "CPA"
+        },
+        "serviceSuffix": "",
+        "flightNumber": 257,
+        "sequenceNumber": 1,
+        "flightType": "Scheduled",
+        "departure": {
+          "airport": {
+            "iata": "HKG",
+            "icao": "VHHH"
+          },
+          "terminal": "1",
+          "country": {
+            "code": "HK"
+          },
+          "date": {
+            "local": "2026-11-09",
+            "utc": "2026-11-09"
+          },
+          "time": {
+            "local": "08:10",
+            "utc": "00:10"
+          }
+        },
+        "arrival": {
+          "airport": {
+            "iata": "LHR",
+            "icao": "EGLL"
+          },
+          "terminal": "3",
+          "country": {
+            "code": "GB"
+          },
+          "date": {
+            "local": "2026-11-09",
+            "utc": "2026-11-09"
+          },
+          "time": {
+            "local": "15:00",
+            "utc": "15:00"
+          }
+        },
+        "elapsedTime": 890,
+        "cargoTonnage": 0.0,
+        "aircraftType": {
+          "iata": "351",
+          "icao": "A35K"
+        },
+        "serviceType": {
+          "iata": "J"
+        },
+        "segmentInfo": {
+          "numberOfStops": 0,
+          "intermediateAirports": {
+            "iata": []
+          }
+        },
+        "distance": {
+          "accumulatedGreatCircleKilometers": 9630.0,
+          "accumulatedGreatCircleMiles": 5984.0,
+          "accumulatedGreatCircleNauticalMiles": 5200.0,
+          "greatCircleKilometers": 9630.0,
+          "greatCircleMiles": 5984.0,
+          "greatCircleNauticalMiles": 5200.0
+        },
+        "codeshare": {
+          "cockpitCrewEmployer": {
+            "code": "CX",
+            "name": "",
+            "number": "4"
+          },
+          "jointOperationAirlineDesignators": [],
+          "marketingFlights": []
+        },
+        "scheduleInstanceKey": "983748cc1a284d81db8e2b2b4e1bc3b923ea931ee2ed0576f37d83b6aecef4f2",
+        "statusKey": "75f3c2a69dfb72ec759e0acf9bbe18ea7d93fc04de7e98b188ce377794df2c93",
+        "statusDetails": [
+          {
+            "state": "InGate",
+            "updatedAt": "2026-11-09T15:24:45.994",
+            "legsTotal": 1,
+            "equipment": {
+              "aircraftRegistrationNumber": "BLXP",
+              "actualAircraftType": {
+                "iata": "351",
+                "icao": "A35K"
+              }
+            },
+            "departure": {
+              "estimatedTime": {
+                "outGateTimeliness": "Delayed",
+                "outGateVariation": "00:35:00",
+                "outGate": {
+                  "local": "2026-11-09T08:45:00+08:00",
+                  "utc": "2026-11-09T00:45:00+00:00"
+                },
+                "offGround": {
+                  "local": "2026-11-09T09:04:00+08:00",
+                  "utc": "2026-11-09T01:04:00+00:00"
+                }
+              },
+              "actualTime": {
+                "outGateTimeliness": "Delayed",
+                "outGateVariation": "00:31:00",
+                "outGate": {
+                  "local": "2026-11-09T08:41:00+08:00",
+                  "utc": "2026-11-09T00:41:00+00:00"
+                },
+                "offGround": {
+                  "local": "2026-11-09T09:00:00+08:00",
+                  "utc": "2026-11-09T01:00:00+00:00"
+                }
+              },
+              "airport": {
+                "iata": "HKG",
+                "icao": "VHHH"
+              },
+              "actualTerminal": "T1",
+              "gate": "50",
+              "checkInCounter": "C",
+              "country": {
+                "code": "HK"
+              }
+            },
+            "arrival": {
+              "estimatedTime": {
+                "inGateTimeliness": "Early",
+                "inGateVariation": "-00:05:00",
+                "onGround": {
+                  "local": "2026-11-09T14:45:00+00:00",
+                  "utc": "2026-11-09T14:45:00+00:00"
+                },
+                "inGate": {
+                  "local": "2026-11-09T14:55:00+00:00",
+                  "utc": "2026-11-09T14:55:00+00:00"
+                }
+              },
+              "actualTime": {
+                "inGateTimeliness": "Delayed",
+                "inGateVariation": "00:03:00",
+                "onGround": {
+                  "local": "2026-11-09T14:48:00+00:00",
+                  "utc": "2026-11-09T14:48:00+00:00"
+                },
+                "inGate": {
+                  "local": "2026-11-09T15:03:00+00:00",
+                  "utc": "2026-11-09T15:03:00+00:00"
+                }
+              },
+              "airport": {
+                "iata": "LHR",
+                "icao": "EGLL"
+              },
+              "actualTerminal": "T3",
+              "baggage": "9",
+              "country": {
+                "code": "GB"
+              }
+            }
+          }
+        ]
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}

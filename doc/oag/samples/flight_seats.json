@@ -1,0 +1,106 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:09.516995+00:00",
+  "product": "flights",
+  "url": "https://api.oag.com/flight-instances/?version=v2&Limit=1&DepartureDateTime=2026-11-09&CarrierCode=CX&FlightNumber=257&CodeType=IATA&Content=Seats",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "carrier": {
+          "iata": "CX",
+          "icao": "CPA"
+        },
+        "serviceSuffix": "",
+        "flightNumber": 257,
+        "sequenceNumber": 1,
+        "flightType": "Scheduled",
+        "departure": {
+          "airport": {
+            "iata": "HKG",
+            "icao": "VHHH"
+          },
+          "terminal": "1",
+          "country": {
+            "code": "HK"
+          },
+          "date": {
+            "local": "2026-11-09",
+            "utc": "2026-11-09"
+          },
+          "time": {
+            "local": "08:10",
+            "utc": "00:10"
+          }
+        },
+        "arrival": {
+          "airport": {
+            "iata": "LHR",
+            "icao": "EGLL"
+          },
+          "terminal": "3",
+          "country": {
+            "code": "GB"
+          },
+          "date": {
+            "local": "2026-11-09",
+            "utc": "2026-11-09"
+          },
+          "time": {
+            "local": "15:00",
+            "utc": "15:00"
+          }
+        },
+        "elapsedTime": 890,
+        "cargoTonnage": 0.0,
+        "aircraftType": {
+          "iata": "351",
+          "icao": "A35K"
+        },
+        "serviceType": {
+          "iata": "J"
+        },
+        "segmentInfo": {
+          "numberOfStops": 0,
+          "intermediateAirports": {
+            "iata": []
+          }
+        },
+        "distance": {
+          "accumulatedGreatCircleKilometers": 9630.0,
+          "accumulatedGreatCircleMiles": 5984.0,
+          "accumulatedGreatCircleNauticalMiles": 5200.0,
+          "greatCircleKilometers": 9630.0,
+          "greatCircleMiles": 5984.0,
+          "greatCircleNauticalMiles": 5200.0
+        },
+        "codeshare": {
+          "cockpitCrewEmployer": {
+            "code": "CX",
+            "name": "",
+            "number": "4"
+          },
+          "jointOperationAirlineDesignators": [],
+          "marketingFlights": []
+        },
+        "scheduleInstanceKey": "983748cc1a284d81db8e2b2b4e1bc3b923ea931ee2ed0576f37d83b6aecef4f2",
+        "statusKey": "75f3c2a69dfb72ec759e0acf9bbe18ea7d93fc04de7e98b188ce377794df2c93",
+        "seatingCapacity": {
+          "predicted": {
+            "firstClass": 0,
+            "businessClass": 46,
+            "premiumEconomyClass": 32,
+            "economyPlusClass": 0,
+            "economyClass": 256,
+            "totalSeats": 334
+          }
+        }
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}
