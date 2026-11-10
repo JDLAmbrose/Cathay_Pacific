@@ -27,8 +27,8 @@ function migratePricingState(){
  if(state.agent?.answer?.kind==='service'&&state.agent.answer.quote?.valid&&state.agent.answer.quote.pricingVersion!==SERVICE_RATES.version){state.agent.stale=true;state.agent.answer.stale=true;}
  if(state.flight?.bookingId===DEMO_BAGGAGE_ALLOWANCE.bookingId&&!Object.prototype.hasOwnProperty.call(state.flight,'baggageAllowance'))state.flight.baggageAllowance=clone(DEMO_BAGGAGE_ALLOWANCE);
 }
-function ticketAllowance(){
- const data=state.flight.baggageAllowance,a=data?.travellers?.[state.travellerId];
+function ticketAllowance(travellerId=state.travellerId){
+ const data=state.flight.baggageAllowance,a=data?.travellers?.[travellerId];
  return data?.bookingId===state.flight.bookingId&&a&&Number.isInteger(a.pieces)&&a.pieces>=0&&Number.isFinite(a.kgPerPiece)&&a.kgPerPiece>0?clone(a):null;
 }
 const BAG_CATEGORIES=['clothes','books','electronics','battery','liquids','medicine','food','fragile','valuables','sports','equipment','other'];
@@ -44,12 +44,156 @@ const COUNTRY_SERVICE_AREAS={
 };
 function flightCountry(airport,explicit){const code=String(explicit?.code||explicit||AIRPORT_COUNTRIES[airport]||'').toUpperCase();return ['CN','HK','MO'].includes(code)?'CN':code;}
 function serviceRoute(){const area=(airport,explicit)=>{const country=flightCountry(airport,explicit),data=COUNTRY_SERVICE_AREAS[country];return {country,label:data?.label||null,regions:country==='CN'?['hk','gba','mainland']:['mainland'],providers:data?.providers||[]};};return {origin:area(state.flight.origin,state.flight.originCountry),destination:area(state.flight.destination,state.flight.destinationCountry)};}
-function newHelper(){return {name:'',identityType:'passport',identityNumber:'',relationship:'parent',relationshipOther:'',memberNo:'',sync:false,proof:null,review:{status:'draft'},sharedTrip:null};}
+// Family hub. The demo directory maps only the two supplied sample accounts to booked travellers.
+const FAMILY_METHODS=['member','mobile','email'],FAMILY_RELATIONSHIPS=['parent','guardian','other'],FAMILY_STATUSES=['draft','pending','linked','declined'];
+const FAMILY_FIELDS={member:'memberNo',mobile:'mobile',email:'email'},FAMILY_MEMBER_ID='lin',FAMILY_PARENT={name:'Mei Chen',tier:'silver',memberNo:'9876543210',mobile:'+852 0000 0001',email:'mei.chen@example.com'};
+const MEMBERSHIP_TIERS=['green','silver','gold','diamond','diamondExec'],FAMILY_MILESTONE_TARGET=3;
+function newFamilyLink(){return {method:'member',memberNo:'1234567890',mobile:'+852 0000 0000',email:'lin.chen@example.com',surname:'Chen',givenName:'Lin',relationship:'parent',status:'draft',shareProgress:false,invitedAt:null,respondedAt:null,changeRequest:null};}
+function newFamilyContact(method='member'){return {...newFamilyLink(),method,memberNo:'',mobile:'',email:'',surname:'',givenName:''};}
+function passengerFamilyLink(travellerId){
+ return state.passengerLinks[travellerId]??=newFamilyContact('email');
+}
+function alexFamilyLink(){return {...newFamilyLink(),memberNo:'1600654321',mobile:'+852 59876543',email:'alex.chen@example.com',givenName:'Alex'};}
+function familyAccountKey(method,value){
+ const text=String(value??'').trim().toLowerCase();
+ return method==='email'?text:text.replace(/[\s()-]/g,'');
+}
+function familyTravellerId(link){
+ const method=link.method,key=FAMILY_FIELDS[method],identifier=familyAccountKey(method,link[key]);
+ if(!identifier)return null;
+ for(const [id,sample] of [[FAMILY_MEMBER_ID,newFamilyLink()],['child',alexFamilyLink()]]){
+  if(identifier===familyAccountKey(method,sample[key]))return id;
+ }
+ if((method==='member'&&identifier==='1600123456')||(method==='mobile'&&identifier==='+85251234567'))return FAMILY_MEMBER_ID;
+ return null;
+}
+function familyMemberId(link){
+ return familyTravellerId(link)||link.method+':'+familyAccountKey(link.method,familyIdentifier(link));
+}
+function linkedFamilyMembers(){
+ if(familyDemoUnlinked(FAMILY_MEMBER_ID))return [];
+ return [state.familyLink,...state.familyMembers].filter(link=>link.status==='linked');
+}
+function linkedFamilyMember(id){return linkedFamilyMembers().find(link=>familyMemberId(link)===id);}
+function inviteAnotherFamilyMember(){
+ if(!familyLinkedRecord(state.familyLink))return false;
+ state.familyMembers.push(state.familyLink);
+ state.familyLink=newFamilyContact();
+ persist();
+ return true;
+}
+function familyLinkedRecord(link){return link?.status==='linked'&&!familyDemoUnlinked(FAMILY_MEMBER_ID);}
+function setFamilyProgress(id,action){
+ const link=linkedFamilyMember(id);
+ if(!link||link.shareProgress)return false;
+ if(action==='request')link.progressRequested=true;
+ else{
+  if(!link.progressRequested)return false;
+  link.progressRequested=false;
+  link.shareProgress=action==='grant';
+ }
+ persist();
+ return true;
+}
+function migrateFamilyState(){
+ state.passengerLinks??={};
+ if(!Array.isArray(state.familyMembers))state.familyMembers=[];
+ const saved=state.familyLink,fresh=newFamilyLink();
+ state.familyLink=saved&&typeof saved==='object'?{...fresh,...saved}:fresh;
+ if(!FAMILY_STATUSES.includes(state.familyLink.status))state.familyLink={...fresh};
+}
+function familyIdentifier(link=state.familyLink){return String(link[FAMILY_FIELDS[link.method]]??'').trim();}
+function familyMemberName(link=state.familyLink){const surname=String(link.surname||'').trim(),given=String(link.givenName||'').trim();return /[\u3400-\u9fff\uf900-\ufaff]/.test(surname+given)?surname+given:[given,surname].filter(Boolean).join(' ');}
+function validateFamilyLink(link=state.familyLink,allContacts=false){
+ if(!String(link.surname||'').trim()||!String(link.givenName||'').trim())return 'e.familyName';
+ if(!FAMILY_METHODS.includes(link.method))return 'e.familyMethod';
+ const memberNo=String(link.memberNo??'').trim(),mobile=String(link.mobile??'').trim(),email=String(link.email??'').trim();
+ if((allContacts||link.method==='member')&&!/^\d{8,12}$/.test(memberNo.replace(/[\s-]/g,'')))return 'e.familyMember';
+ if((allContacts||link.method==='mobile')&&(!/^\+?[\d\s()-]+$/.test(mobile)||!/^\d{8,15}$/.test(mobile.replace(/\D/g,''))))return 'e.familyMobile';
+ if((allContacts||link.method==='email')&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))return 'e.familyEmail';
+ if(!FAMILY_RELATIONSHIPS.includes(link.relationship))return 'e.familyRelationship';
+ if(link===state.familyLink&&link.status==='draft'&&linkedFamilyMember(familyMemberId(link)))return 'e.familyDuplicate';
+ return null;
+}
+// Once the parent confirms, the declared relationship is locked; later changes go to manual review.
+function sendFamilyInvite(link=state.familyLink,allContacts=false){if(link.status!=='draft')return 'e.familyLocked';const error=validateFamilyLink(link,allContacts);if(error)return error;Object.assign(link,{status:'pending',invitedAt:iso(state.clock),respondedAt:null,changeRequest:null});if(link===state.familyLink)link.owner={...FAMILY_PARENT};persist();return null;}
+function respondFamilyInvite(accepted,share=true,link=state.familyLink){if(link.status!=='pending')return false;Object.assign(link,{status:accepted?'linked':'declined',shareProgress:!!(accepted&&share),respondedAt:iso(state.clock)});persist();return true;}
+function restartFamilyInvite(link=state.familyLink){if(link.status!=='declined')return false;Object.assign(link,{status:'draft',invitedAt:null,respondedAt:null,changeRequest:null});persist();return true;}
+function requestFamilyChange(link=state.familyLink){if(!['pending','linked'].includes(link.status)||link.changeRequest?.status==='pending')return false;link.changeRequest={status:'pending',submittedAt:iso(state.clock)};persist();return true;}
+function familyDemoUnlinked(travellerId){return state.familyDemoUnlinked?.[travellerId]===true;}
+function setFamilyDemoUnlinked(travellerId,active){
+ state.familyDemoUnlinked??={};
+ if(active)state.familyDemoUnlinked[travellerId]=true;
+ else delete state.familyDemoUnlinked[travellerId];
+ persist();
+}
+function canAddDemoAlex(link){
+ return link===state.familyLink&&familyLinkedRecord(link)&&familyTravellerId(link)===FAMILY_MEMBER_ID&&
+  !state.familyMembers.some(member=>familyTravellerId(member)==='child');
+}
+function addDemoAlex(now){
+ state.familyMembers.push({...alexFamilyLink(),owner:{...FAMILY_PARENT},status:'linked',shareProgress:true,invitedAt:now,respondedAt:now});
+}
+function simulateFamilyLink(link,travellerId){
+ if(link.status==='linked'&&familyDemoUnlinked(travellerId)){
+  setFamilyDemoUnlinked(travellerId,false);
+  return true;
+ }
+ if(canAddDemoAlex(link)){
+  addDemoAlex(iso(state.clock));
+  persist();
+  return true;
+ }
+ if(link.status!=='draft')return false;
+ const fromParent=link===state.familyLink,now=iso(state.clock);
+ if(fromParent&&state.familyMembers.length){
+  if(!familyDemoUnlinked(travellerId))return false;
+  setFamilyDemoUnlinked(travellerId,false);
+  return true;
+ }
+ const sample=fromParent?newFamilyLink():{
+  method:'email',memberNo:FAMILY_PARENT.memberNo,mobile:FAMILY_PARENT.mobile,email:FAMILY_PARENT.email,
+  surname:'Chen',givenName:'Mei',relationship:'parent'
+ };
+ Object.assign(link,sample,{status:'linked',invitedAt:now,respondedAt:now,shareProgress:false,changeRequest:null});
+ if(fromParent){
+  link.owner={...FAMILY_PARENT};
+  addDemoAlex(now);
+ }
+ setFamilyDemoUnlinked(travellerId,false);
+ return true;
+}
+function familyBenefitMember(){
+ const members=linkedFamilyMembers();
+ return members.find(link=>familyTravellerId(link)===FAMILY_MEMBER_ID)||members[0];
+}
+const familyLinked=()=>!!familyBenefitMember();
+function familyOrder(link=familyBenefitMember()){
+ const id=link&&familyTravellerId(link);
+ return id?state.orders.filter(order=>order.travellerId===id&&order.status!=='cancelled').at(-1)||null:null;
+}
+// Sharing permission is separate from the family connection and any service order.
+function familyProgressAccess(link=familyBenefitMember()){
+ if(!familyLinkedRecord(link))return 'unlinked';
+ if(!link.shareProgress)return link.progressRequested?'requested':'denied';
+ return familyOrder(link)?'ready':'waiting';
+}
+function familyMilestones(){
+ const order=familyLinked()?familyOrder():null,current=order?.status==='completed'?'counted':order?'inProgress':'notBooked';
+ return {target:FAMILY_MILESTONE_TARGET,completed:current==='counted'?1:0,order,moves:[{key:'current',status:current},{key:'next',status:'notStarted'},{key:'final',status:'notStarted'}]};
+}
+// A move counts only after the order completes; the code is a fixed demo value, never a live offer.
+function familyPromoCode(){
+ const order=familyLinked()?familyOrder():null;if(order?.status!=='completed')return null;
+ const link=familyBenefitMember(),initials=(String(link.givenName).trim()[0]||'F')+(String(link.surname).trim()[0]||'M');
+ return `FAMILY-${/^[A-Za-z]{2}$/.test(initials)?initials.toUpperCase():'PL'}${String(order.flight?.flightNo||'').slice(-2)}-${(order.id.split('-').at(-1).replace(/\D/g,'')||'1').padStart(4,'0').slice(-4)}`;
+}
 function itemCategories(item){return [...new Set((Array.isArray(item.categories)?item.categories:[item.category||'other']).filter(c=>BAG_CATEGORIES.includes(c)))];}
 function carriageFor(item){return !item.service||item.mode==='cabin'?'self':item.carriage==='flight'||item.carriage==='cargo'?item.carriage:state.transport==='cargo'?'cargo':'flight';}
 function refreshTransport(){const modes=[...new Set(checked(draft()).filter(i=>i.service).map(carriageFor))];state.transport=modes.length>1?'mixed':modes[0]||'flight';}
 function migrateBookingState(){
- state.helper??=newHelper();state.helper.review??={status:'draft'};
+ if(!state.helper||typeof state.helper!=='object'||'review' in state.helper)state.helper={};
+ migrateFamilyState();
  state.recipientPhone??=state.phone||'';
  const previous=state.routeLink,route=serviceRoute();
  const oldOrigin=previous?flightCountry(previous.origin,previous.originCountry):null,oldDestination=previous?flightCountry(previous.destination,previous.destinationCountry):null;
@@ -61,17 +205,61 @@ function migrateBookingState(){
  state.routeLink={origin:state.flight.origin,destination:state.flight.destination,originCountry:route.origin.country,destinationCountry:route.destination.country};
  for(const declaration of [...Object.values(state.drafts||{}),...Object.values(state.declarations||{})])for(const item of declaration.items||[])item.categories=itemCategories(item);
 }
-function helperFingerprint(){const h=state.helper;return JSON.stringify({traveller:state.travellerId,booking:state.flight.bookingId,leg:state.flight.legId,name:h.name.trim(),identityType:h.identityType,identityNumber:h.identityNumber.trim(),relationship:h.relationship,relationshipOther:h.relationshipOther.trim(),memberNo:h.memberNo.trim(),sync:h.sync,proof:h.proof?.id});}
-function validateHelper(){const h=state.helper;if(!state.family)return null;if(!h.name.trim()||!h.identityNumber.trim()||!['passport','nationalId'].includes(h.identityType)||!['parent','child','spouse','relative','friend','other'].includes(h.relationship)||h.relationship==='other'&&!h.relationshipOther.trim())return 'e.helperIdentity';if(h.sync&&!h.proof)return 'e.helperProof';return null;}
-function submitHelperReview(){const error=validateHelper();if(error)return error;const h=state.helper;if(!state.family||!h.sync)return null;const fingerprint=helperFingerprint();if(['pending','approved'].includes(h.review.status)&&h.review.fingerprint===fingerprint)return null;h.review={status:'pending',fingerprint,submittedAt:iso(state.clock),travellerId:state.travellerId};h.sharedTrip=null;persist();return null;}
-function syncHelperJourney(){
- const h=state.helper;if(!h)return;
- if(h.review.fingerprint&&h.review.fingerprint!==helperFingerprint()){h.review={status:'draft'};h.sharedTrip=null;}
- if(!state.family||!h.sync||h.review.status!=='approved'||h.review.travellerId!==state.travellerId){h.sharedTrip=null;return;}
- const order=state.orders.find(o=>o.travellerId===state.travellerId&&o.status!=='cancelled'&&o.flight?.legId===state.flight.legId);
- h.sharedTrip={demo:true,flight:clone(state.flight),passenger:state.travellerId,order:order?{id:order.id,status:order.status,pickup:order.pickup,destination:order.destination,itemIds:clone(order.itemIds),events:clone(state.events.filter(e=>e.orderId===order.id))}:null,updatedAt:iso(state.clock)};
+function helperContacts(){
+ if(familyDemoUnlinked(state.travellerId))return [];
+ const contacts=[],link=state.passengerLinks[state.travellerId];
+ if(link?.status==='linked')contacts.push({...link,id:'member',name:familyMemberName(link)});
+ // In the parent-side flow the passenger is the invitee, so the helper is the linking account owner.
+ const member=linkedFamilyMembers().find(link=>familyTravellerId(link)===state.travellerId);
+ if(member){
+  const owner=member.owner||FAMILY_PARENT;
+  if(!contacts.some(contact=>contact.email===owner.email))contacts.push({...owner,id:'parent',relationship:member.relationship});
+ }
+ return contacts;
 }
-function reviewHelperRequest(approved){const h=state.helper;if(!state.family||!h.sync||h.review.status!=='pending'||validateHelper()||h.review.fingerprint!==helperFingerprint())return false;h.review.status=approved?'approved':'rejected';h.review.reviewedAt=iso(state.clock);persist();return true;}
+function helperTrip(){
+ const trip=state.helper[state.travellerId];
+ return trip&&trip.bookingId===state.flight.bookingId&&trip.legId===state.flight.legId?trip:null;
+}
+function selectedHelper(){
+ const id=helperTrip()?.contactId;
+ return helperContacts().find(contact=>contact.id===id);
+}
+function selectHelper(id){
+ if(!state.family||pendingHelperRequest())return;
+ const contact=helperContacts().find(entry=>entry.id===id);
+ state.helper[state.travellerId]={bookingId:state.flight.bookingId,legId:state.flight.legId,requests:helperTrip()?.requests||[],contactId:contact?.id||''};
+ persist();
+}
+function pendingHelperRequest(){
+ return Object.values(helperTrip()?.requests||{}).filter(request=>request.status!=='superseded').at(-1);
+}
+function startNewHelperApplication(){
+ if(!pendingHelperRequest())return false;
+ const trip=helperTrip();
+ for(const request of Object.values(trip.requests))request.status='superseded';
+ trip.contactId='';
+ state.family=false;
+ state.agreed=false;
+ persist();
+ return true;
+}
+function validateHelper(){
+ if(!state.family)return null;
+ if(pendingHelperRequest())return 'helper.waiting';
+ if(!helperContacts().length)return 'helper.noContactsTitle';
+ if(!selectedHelper())return 'helper.select';
+ return 'helper.send';
+}
+function sendHelperRequest(){
+ if(!state.family||pendingHelperRequest())return false;
+ const contact=selectedHelper();
+ if(!contact)return false;
+ const trip=helperTrip();
+ trip.requests=[...Object.values(trip.requests),{contactId:contact.id,recipient:String(contact.email).trim(),requestedAt:iso(state.clock),status:'pending'}];
+ persist();
+ return true;
+}
 function validateInformation(){const r=serviceRoute();if(!r.origin.regions.includes(state.region)||!r.origin.providers.includes(state.pickupPartner)||!r.destination.providers.includes(state.partner))return 'e.routeProviders';if([state.pickupAddress,state.destinationAddress,state.contact,state.phone,state.recipient,state.recipientPhone].some(v=>!String(v||'').trim()))return 'e.contacts';if(!checkApplicationDeadline().valid)return 'e.deadline';const pickup=new Date(state.pickup+':00+08:00').getTime(),latest=new Date(state.flight.departure).getTime()-REGIONS[state.region].pickupLead*3600000;return !Number.isFinite(pickup)||pickup<new Date(state.clock).getTime()||pickup>latest?'e.pickup':null;}
 function baggagePlan(transport){
  const d=draft(),items=checked(d).filter(i=>!i.service||(transport||carriageFor(i))!=='cargo'),allowance=ticketAllowance();
@@ -81,14 +269,16 @@ function baggagePlan(transport){
  return {allowance,items:clone(items),required,requested,purchased,quoted:required,missing:Math.max(0,required-purchased),weight:items.reduce((n,i)=>n+(Number(i.weight)||0),0)};
 }
 
-function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map((i,index)=>({...i,mode:'checked',service:index!==3,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,helper:newHelper(),pickupPartner:'SF Express',recipientPhone:'+852 00000000',assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
+function initial(){const items=[{id:'bag-1',name:'@sample.suitcaseA',category:'clothes',weight:20,l:70,w:45,h:30},{id:'bag-2',name:'@sample.suitcaseB',category:'clothes',weight:20,l:70,w:45,h:30},{id:'box-1',name:'@sample.books',category:'books',weight:10,l:60,w:40,h:40},{id:'box-2',name:'@sample.clothes',category:'clothes',weight:10,l:60,w:40,h:40}].map((i,index)=>({...i,mode:'checked',service:index!==3,review:false})),d={items,zero:false,countUnknown:false};return {schema:1,view:'home',step:1,large:false,travellerId:'lin',profile:'student',family:false,helper:{},passengerLinks:{},familyLink:newFamilyLink(),pickupPartner:'SF Express',recipientPhone:'+852 00000000',assistance:'lifting',flight:{bookingId:'PL-CX257-DEMO',legId:'CX257-20261115',flightNo:'CX257',departure:'2026-11-15T09:30:00+08:00',origin:'HKG',destination:'LHR',terminal:'T3',baggageAllowance:clone(DEMO_BAGGAGE_ALLOWANCE)},extraBags:{},clock:'2026-11-10T09:30:00+08:00',drafts:{lin:clone(d),child:{items:[{...clone(items[0]),id:'child-bag',weight:10}],zero:false,countUnknown:false}},declarations:{lin:{...clone(d),version:1,legId:'CX257-20261115',status:'submitted',updatedAt:'2026-11-09T10:00:00+08:00'}},region:'hk',pickup:'2026-11-12T09:00',pickupAddress:'@sample.address',destinationAddress:'LSE Student Dormitory 6',contact:'Lin Chen',recipient:'Lin Chen',phone:'+852 00000000',partner:'EBC UK',transport:'flight',payment:'cash',agreed:false,milesBalance:100000,frozenMiles:0,orders:[],events:[],nextOrder:1,processing:false,pendingPayment:null,forceFail:false,lastSavedAt:null,ops:{budget:5000,spaceBudget:22,otherWeight:1200,buffer:300,otherSpace:5,spaceBuffer:2,expired:false},agent:{route:'GB',itemId:'bag-1',messages:[],pending:null,answer:null,quality:'current',stale:false}};}
 
 let state,storageOK=true;
 try{const saved=JSON.parse(localStorage.getItem(KEY)||'null');state=saved?.schema===1?saved:initial();if(!state.drafts?.lin||!state.agent||!Array.isArray(state.orders))throw Error('invalid');state.processing=false;state.pendingPayment=null;state.frozenMiles=0;}catch(_){state=initial();}
 // Existing saved bookings predate the transport choice and used the passenger flight.
 if(state.transport==null)state.transport='flight';
 migratePricingState();migrateBookingState();
-function persist(){syncHelperJourney();try{localStorage.setItem(KEY,JSON.stringify(state));}catch(_){storageOK=false;}}
+// Assistance is opt-in for each visit to the passenger page.
+state.family=false;
+function persist(){try{localStorage.setItem(KEY,JSON.stringify({...state,family:false}));}catch(_){storageOK=false;}}
 const draft=()=>state.drafts[state.travellerId],person=()=>PEOPLE.find(p=>p.id===state.travellerId)||PEOPLE[0],activeOrder=()=>state.orders.find(o=>o.travellerId===state.travellerId&&o.status!=='cancelled');
 const checked=d=>d.zero||d.countUnknown?[]:d.items.filter(i=>i.mode==='checked');
 const displayValue=value=>typeof value==='string'&&value.startsWith('@sample.')?t(value.slice(1)):String(value??'');
@@ -145,7 +335,7 @@ function pricingQuote(){
 function isDirty(){const s=state.declarations[state.travellerId];return !s||s.legId!==state.flight.legId||JSON.stringify({items:s.items,zero:s.zero,countUnknown:s.countUnknown})!==JSON.stringify(draft());}
 function invalidateAgent(){if(state.agent.answer){state.agent.stale=true;state.agent.answer.stale=true;}}
 function saveDeclaration(silent=false){const error=validateDeclaration(draft());if(error){toast(error);return false;}if(!isDirty()){if(!silent)toast('notice.same');return true;}const old=state.declarations[state.travellerId];state.declarations[state.travellerId]={...clone(draft()),version:(old?.version||0)+1,legId:state.flight.legId,status:'submitted',updatedAt:iso(state.clock)};state.lastSavedAt=iso(state.clock);persist();if(!silent)toast('notice.saved');return true;}
-function validateService(){if(!['flight','cargo','mixed'].includes(state.transport))return 'e.transport';const q=quoteService();if(!q.valid)return q.error;if(q.plan.missing)return 'e.buyAllowance';return validateDeclaration(draft())||validateHelper()||validateInformation();}
+function validateService(){if(!['flight','cargo','mixed'].includes(state.transport))return 'e.transport';const q=quoteService();if(!q.valid)return q.error;if(q.plan.missing)return 'e.buyAllowance';return validateDeclaration(draft())||validateInformation();}
 function eventCounts(o){const ids=o?.itemIds||[],events=state.events.filter(e=>e.orderId===o?.id),counts={};for(const type of ['airport','loaded','handover'])counts[type]=new Set(events.filter(e=>e.type===type).flatMap(e=>e.itemIds).filter(id=>ids.includes(id))).size;return counts;}
 const DEMO_RULE_ROUTES=['GB','AU','IN'];
 function serviceIntent(text){
@@ -190,4 +380,4 @@ async function pay(){
 function recordHandover(kind){const o=activeOrder();if(!o){toast('e.orderFirst');return;}let type=kind,ids=o.itemIds;const c=eventCounts(o),n=ids.length;if(kind==='partial'){type='loaded';ids=ids.slice(0,Math.max(0,n-1));}if(type==='loaded'&&c.airport<n){toast('e.airportFirst');return;}if(type==='handover'&&c.loaded<n){toast('e.loadedFirst');return;}if(!ids.length){toast('e.partial');return;}const eventId=o.id+':'+type+':'+ids.join(',');if(state.events.some(e=>e.eventId===eventId)){toast('notice.duplicate');return;}state.events.push({eventId,orderId:o.id,type,itemIds:clone(ids),legId:o.flight.legId,confirmedAt:iso(state.clock)});persist();render();toast('notice.event');}
 function completeService(){const o=activeOrder();if(!o)return;if(o.status==='completed'){toast('notice.duplicate');return;}if(eventCounts(o).handover<o.itemIds.length){toast('e.localFirst');return;}o.status='completed';if(o.payment==='cash'&&!o.earned){state.milesBalance+=o.quote.earn;o.earned=true;}persist();render();toast('notice.complete');}
 function cancelOrder(id,confirmed=false){const o=state.orders.find(o=>o.id===id);if(!o||o.refunded)return;if(!confirmed){modal(t('dialog.cancelTitle'),t('dialog.cancelBody',{id}),[{text:t('dialog.cancelConfirm'),action:'confirm-cancel',id},{text:t('common.cancel'),action:'close-dialog',light:true}]);return;}if(o.earned&&state.milesBalance<o.quote.earn){toast('e.reverse');return;}if(o.payment==='miles')state.milesBalance+=o.quote.miles;if(o.earned){state.milesBalance-=o.quote.earn;o.earned=false;}o.refunded=true;o.status='cancelled';o.cancelledAt=iso(state.clock);persist();closeModal();render();toast('notice.cancelled');}
-function resetDemo(scenario){if(state.processing){toast('e.processing');return;}const oldLarge=state.large;state=initial();migrateBookingState();state.large=oldLarge;let target='home',step=1;if(scenario==='family'){state.travellerId='child';state.profile='child';state.family=true;state.contact='@sample.parent';target='book';}if(scenario==='late'){state.clock='2026-11-14T09:30:01+08:00';target='book';step=2;}if(scenario==='unknown'){state.drafts.lin.items[0].weight=null;state.drafts.lin.items[0].l=null;saveDeclaration(true);target='ops';}persist();go(target,step);}
+function resetDemo(scenario){if(state.processing){toast('e.processing');return;}const oldLarge=state.large;state=initial();migrateBookingState();state.large=oldLarge;let target='home',step=1;if(scenario==='family'){state.travellerId='child';state.profile='child';state.contact='@sample.parent';target='book';}if(scenario==='late'){state.clock='2026-11-14T09:30:01+08:00';target='book';step=2;}if(scenario==='unknown'){state.drafts.lin.items[0].weight=null;state.drafts.lin.items[0].l=null;saveDeclaration(true);target='ops';}persist();go(target,step);}
