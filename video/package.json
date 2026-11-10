@@ -1,0 +1,15 @@
+{
+  "name": "plume-light-demo-video",
+  "private": true,
+  "type": "module",
+  "description": "Plume Light 120 秒演示视频：JS 时间轴动画 + 旁白，可导出 MP4",
+  "scripts": {
+    "audio": "python3 tools/build_audio.py",
+    "render": "node tools/render.mjs",
+    "build": "npm run audio && npm run render"
+  },
+  "devDependencies": {
+    "ffmpeg-static": "^5.2.0",
+    "playwright-core": "^1.56.0"
+  }
+}

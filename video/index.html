@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plume Light 演示视频</title>
+<!--
+  Plume Light · 120 秒演示视频（JS 时间轴动画）
+  依据 doc/Plume_Light_PRD.md 第 13 节分镜。所有画面由 engine.js 按时间 t 确定性渲染：
+  - 直接打开即可播放（空格播放/暂停，←/→ 快退快进，C 字幕，M 静音，F 全屏）
+  - ?render 模式供 tools/render.mjs 逐帧导出 MP4
+  元素动效约定（时间均为相对所在场景开始的秒数）：
+    data-at / data-fx / data-out   入场时间、方式（up|down|left|right|fade|scale|pop|drop）、出场时间
+    data-cls="类名@a | 类名@a-b | 类名@<b"   按时间切换类名
+    data-num="值@t,值@t"   数字关键帧；data-k="属性|单位|值@t,…"   样式关键帧
+    data-type="开始,结束"   打字效果
+-->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.5l4.5 4.5L19 7.5" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="i-plane" viewBox="0 0 24 24"><path transform="rotate(90 12 12)" fill="currentColor" d="M21 16v-2l-8-5V3.5a1.5 1.5 0 0 0-3 0V9l-8 5v2l8-2.5V19l-2 1.5V22l3.5-1 3.5 1v-1.5L13 19v-5.5l8 2.5z"/></symbol>
+  <symbol id="i-suitcase" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="7" width="14" height="13" rx="2.5"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M9.5 10.5v6M14.5 10.5v6"/></g></symbol>
+  <symbol id="i-box" viewBox="0 0 24 24"><path d="M3.5 7.5L12 4l8.5 3.5v9L12 20l-8.5-3.5zM3.5 7.5L12 11l8.5-3.5M12 11v9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2.5l1.9 5.6 5.6 1.9-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.9zM18.5 15l.9 2.6 2.6.9-2.6.9-.9 2.6-.9-2.6-2.6-.9 2.6-.9z"/></symbol>
+  <symbol id="i-pin" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.6" fill="currentColor"/></symbol>
+  <symbol id="i-building" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M3 20.5h18M5 20.5V9.5l7-5 7 5v11M9.5 20.5v-5h5v5"/></symbol>
+  <symbol id="i-truck" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round" d="M2.5 6.5h11v9h-11zM13.5 9.5h4l3 3v3h-7z"/><circle cx="6.5" cy="17.5" r="1.8" fill="currentColor"/><circle cx="17" cy="17.5" r="1.8" fill="currentColor"/></symbol>
+  <symbol id="i-send" viewBox="0 0 24 24"><path fill="currentColor" d="M3.4 20.4l17.5-7.5a1 1 0 0 0 0-1.8L3.4 3.6a.99.99 0 0 0-1.39.91L2 9.12c0 .5.37.93.87.99L17 12 2.87 13.880c-.5.07-.87.5-.87 1l.01 4.61c0 .71.73 1.2 1.39.91z"/></symbol>
+  <symbol id="i-warn" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" d="M12 3.5l9.5 16.5h-19zM12 10v4.5"/><circle cx="12" cy="17.2" r="1.2" fill="currentColor"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path fill="currentColor" d="M7 4.5v15l13-7.5z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path fill="currentColor" d="M6 4.5h4.2v15H6zM13.8 4.5H18v15h-4.2z"/></symbol>
+  <symbol id="i-restart" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4.5 12a7.5 7.5 0 1 0 2.2-5.3M4.5 4v4.5H9"/></symbol>
+  <symbol id="i-vol" viewBox="0 0 24 24"><path fill="currentColor" d="M3 9v6h4l5 4.5v-15L7 9z"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M15.5 8.5a5 5 0 0 1 0 7M18.5 5.5a9 9 0 0 1 0 13"/></symbol>
+  <symbol id="i-cc" viewBox="0 0 24 24"><rect x="2.5" y="5" width="19" height="14" rx="3" fill="none" stroke="currentColor" stroke-width="2"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="M10.5 10.2a2.4 2.4 0 1 0 0 3.6M17 10.2a2.4 2.4 0 1 0 0 3.6"/></symbol>
+  <symbol id="i-full" viewBox="0 0 24 24"><path fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></symbol>
+  <!-- 行李插画 -->
+  <symbol id="lug-case" viewBox="0 0 64 104"><rect x="20" y="0" width="24" height="16" rx="5" fill="none" stroke="#2f4f4b" stroke-width="5"/><rect x="0" y="12" width="64" height="84" rx="11" fill="#0b7a70"/><rect x="0" y="12" width="64" height="84" rx="11" fill="url(#shine)"/><path d="M18 26v56M46 26v56" stroke="#00615e" stroke-width="5" stroke-linecap="round"/><circle cx="14" cy="99" r="5" fill="#2f4f4b"/><circle cx="50" cy="99" r="5" fill="#2f4f4b"/></symbol>
+  <symbol id="lug-box" viewBox="0 0 84 66"><rect x="0" y="0" width="84" height="66" rx="4" fill="#c9a26b"/><rect x="36" y="0" width="12" height="66" fill="#e5c995"/><path d="M0 14h84" stroke="#b58c55" stroke-width="2"/><rect x="58" y="36" width="18" height="12" rx="2" fill="#fff" opacity=".8"/></symbol>
+  <linearGradient id="shine" x1="0" x2="1"><stop offset="0" stop-color="#fff" stop-opacity=".18"/><stop offset=".5" stop-color="#fff" stop-opacity="0"/></linearGradient>
+</svg>
+
+<div id="stage">
+
+  <!-- ============ 01 出行痛点 0–11.5s ============ -->
+  <section class="scene light" id="s-pain" data-start="0" data-end="11.5">
+    <div class="center-head">
+      <div class="kicker" data-at="0.2">01 · 出行痛点</div>
+      <h1 class="title" data-at="0.35">一次飞行的困难，常从<em>行李</em>开始</h1>
+    </div>
+    <div class="personas">
+      <div class="persona" data-at="0.7">
+        <div class="ill">
+          <svg viewBox="0 0 440 300">
+            <ellipse cx="220" cy="272" rx="190" ry="14" fill="#00615e" opacity=".08"/>
+            <g transform="translate(100,40)">
+              <circle cx="0" cy="44" r="30" fill="#f2c9a5"/>
+              <path d="M-31 42 C-33 6, 33 6, 31 42 C 24 24, -24 24, -31 42Z" fill="#2b2b2b"/>
+              <rect x="-40" y="80" width="80" height="102" rx="32" fill="#00615e"/>
+              <rect x="-31" y="88" width="9" height="66" rx="4.5" fill="#c98f2d"/>
+              <rect x="-27" y="172" width="21" height="58" rx="9" fill="#2f4f4b"/>
+              <rect x="6" y="172" width="21" height="58" rx="9" fill="#2f4f4b"/>
+            </g>
+            <g transform="translate(170,130)"><g data-at="1.2" data-fx="drop"><use href="#lug-case" width="74" height="120" y="12"/></g></g>
+            <g transform="translate(252,150)"><g data-at="1.6" data-fx="drop"><use href="#lug-case" width="62" height="102" y="10"/></g></g>
+            <g transform="translate(320,196)"><g data-at="2.0" data-fx="drop"><use href="#lug-box" width="94" height="74"/></g></g>
+            <g transform="translate(330,128)"><g data-at="2.4" data-fx="drop"><use href="#lug-box" width="80" height="63"/></g></g>
+          </svg>
+        </div>
+        <div class="p-name">留学生 · Lin</div>
+        <div class="p-tags"><span>独自前往机场</span><span>4 件行李 · 60 kg</span><span>不熟悉跨境规则</span></div>
+      </div>
+      <div class="persona" data-at="2.6">
+        <div class="ill">
+          <svg viewBox="0 0 440 300">
+            <ellipse cx="220" cy="272" rx="190" ry="14" fill="#00615e" opacity=".08"/>
+            <g transform="translate(170,40)">
+              <circle cx="0" cy="44" r="30" fill="#f0c7a4"/>
+              <path d="M-31 44 C-33 4, 33 4, 31 44 C 28 22, -28 22, -31 44Z" fill="#c9cfcd"/>
+              <rect x="-40" y="80" width="80" height="100" rx="32" fill="#c98f2d"/>
+              <rect x="-26" y="170" width="21" height="60" rx="9" fill="#55625f"/>
+              <rect x="5" y="170" width="21" height="60" rx="9" fill="#55625f"/>
+              <path d="M52 120 L64 232" stroke="#6b4f2c" stroke-width="7" stroke-linecap="round"/>
+              <path d="M40 118 q12 -8 14 4" stroke="#6b4f2c" stroke-width="7" fill="none" stroke-linecap="round"/>
+            </g>
+            <g transform="translate(270,140)"><use href="#lug-case" width="72" height="118"/></g>
+            <g transform="translate(300,96)"><g data-float="6,2.4,0"><text font-size="38" font-weight="800" fill="#c25e00">?</text></g></g>
+          </svg>
+        </div>
+        <div class="p-name">长者</div>
+        <div class="p-tags"><span>提拿搬运吃力</span><span>表单与规则难理解</span></div>
+      </div>
+      <div class="persona" data-at="4.0">
+        <div class="ill">
+          <svg viewBox="0 0 440 300">
+            <ellipse cx="220" cy="272" rx="190" ry="14" fill="#00615e" opacity=".08"/>
+            <g transform="translate(130,36)">
+              <path d="M-31 44 C-34 2, 34 2, 31 44 C 30 60, 36 70, 26 80 L-26 80 C-36 70,-30 60,-31 44Z" fill="#5a3b2a"/>
+              <circle cx="0" cy="44" r="25" fill="#f2c9a5"/>
+              <rect x="-40" y="80" width="80" height="104" rx="32" fill="#0b7a70"/>
+              <rect x="-27" y="174" width="21" height="58" rx="9" fill="#2f4f4b"/>
+              <rect x="6" y="174" width="21" height="58" rx="9" fill="#2f4f4b"/>
+            </g>
+            <g transform="translate(222,118)">
+              <circle cx="0" cy="30" r="22" fill="#f6d1b0"/>
+              <path d="M-22 28 C-22 2, 22 2, 22 28 C 16 16, -16 16, -22 28Z" fill="#2b2b2b"/>
+              <rect x="-27" y="54" width="54" height="66" rx="22" fill="#e2b25c"/>
+              <rect x="-17" y="112" width="14" height="40" rx="6" fill="#2f4f4b"/>
+              <rect x="3" y="112" width="14" height="40" rx="6" fill="#2f4f4b"/>
+            </g>
+            <path d="M168 168 Q 186 178 196 186" stroke="#f2c9a5" stroke-width="10" stroke-linecap="round" fill="none"/>
+            <g transform="translate(276,142)"><use href="#lug-case" width="70" height="114"/></g>
+            <g transform="translate(340,190)"><use href="#lug-box" width="84" height="66"/></g>
+          </svg>
+        </div>
+        <div class="p-name">带儿童的家庭</div>
+        <div class="p-tags"><span>要照顾孩子</span><span>兼顾多件行李</span></div>
+      </div>
+    </div>
+    <div class="qb" style="left:420px;top:268px" data-at="6.2" data-fx="pop"><div class="in" data-float="7,3.2,0">充电宝能托运吗？</div></div>
+    <div class="qb" style="left:196px;top:582px" data-at="6.9" data-fx="pop"><div class="in" data-float="7,2.8,1.2">这些能带进英国吗？</div></div>
+    <div class="qb" style="left:960px;top:300px" data-at="7.6" data-fx="pop"><div class="in" data-float="7,3.4,2.1">表单好多，看不懂…</div></div>
+    <div class="qb" style="left:1450px;top:268px" data-at="8.3" data-fx="pop"><div class="in" data-float="7,3.0,0.6">何时要预约取件？</div></div>
+    <div class="also" data-at="9.0">同样需要帮助：<span>残障旅客</span><span>无人陪伴儿童</span></div>
+  </section>
+
+  <!-- ============ 品牌 11.5–15s ============ -->
+  <section class="scene dark" id="s-brand" data-start="11.5" data-end="15">
+    <svg class="flightpath" viewBox="0 0 1920 1080">
+      <path d="M 140 1000 C 640 740, 1280 740, 1780 1000" fill="none" stroke="#ffe9bd" stroke-opacity=".55" stroke-width="3"
+            pathLength="1000" stroke-dasharray="1000 1000" data-k="stroke-dashoffset||1000@0.1,0@2.4"/>
+      <g transform="translate(1780,1000)"><g data-at="2.3" data-fx="pop"><circle r="10" fill="#ffe9bd"/></g></g>
+      <g transform="translate(140,1000)"><circle r="8" fill="#ffe9bd" opacity=".7"/></g>
+    </svg>
+    <div class="brand-center">
+      <img class="br-logo" src="../assets/cathay-brushwing-white.png" alt="" data-at="0.15" data-fx="pop">
+      <div class="br-word" data-at="0.45" data-fx="fade" data-k="letter-spacing|em|0.6@0.45,0.28@1.7">PLUME LIGHT</div>
+      <div class="br-tag" data-at="1.0">为乘坐国泰航班的旅客，出发前把行李安排好</div>
+      <div class="br-chips">
+        <span data-at="1.5">行李预报</span><span data-at="1.7">AI 规则问答</span><span data-at="1.9">首末程协助</span><span data-at="2.1">航司规划参考</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 02 航班确认 15–30s ============ -->
+  <section class="scene light" id="s-flight" data-start="15" data-end="30">
+    <div class="copy">
+      <div class="kicker" data-at="0.2">02 · 航班确认</div>
+      <h2 class="title" data-at="0.35">从国泰机票<br>开始准备</h2>
+      <p class="lead" data-at="0.6">同一航班场景里，安排乘机人与行李协助</p>
+      <ul class="points">
+        <li data-at="1.2" data-fx="left"><i><svg><use href="#i-check"/></svg></i>自动带入 CX257 与乘机人</li>
+        <li data-at="7.3" data-fx="left"><i><svg><use href="#i-check"/></svg></i>家人可在家协助填写</li>
+        <li data-at="9.8" data-fx="left"><i><svg><use href="#i-check"/></svg></i>行李按实际乘机人关联</li>
+        <li data-at="10.9" data-fx="left"><i><svg><use href="#i-check"/></svg></i>无需代办账户或授权审批</li>
+        <li data-at="11.9" data-fx="left"><i><svg><use href="#i-check"/></svg></i>大字显示 · 键盘可操作</li>
+      </ul>
+    </div>
+    <div class="device" data-at="0.25" data-fx="right" data-d="90">
+      <div class="dv-bar"><i></i><i></i><i></i><span>Plume Light · 演示原型</span></div>
+      <div class="dv-nav">
+        <div class="lg"><img src="../assets/cathay-brushwing.png" alt="">Plume Light</div>
+        <span class="tab on">行程</span><span class="tab">行李预报</span><span class="tab">AI Agent</span><span class="tab">首末程</span><span class="tab">结算</span>
+      </div>
+      <div class="dv-body">
+        <div class="panel" data-at="0.5" data-out="6.3" data-fx="fade">
+          <div class="bk-head"><span class="muted">预订编号</span><b class="num">PL-BK-0257</b><span class="chip-ok">已出票 · 演示</span></div>
+          <div class="flight-hero">
+            <div class="fh-top"><span class="fh-air">国泰航空 Cathay Pacific</span><span class="fh-no num">CX257</span></div>
+            <div class="fh-route">
+              <div class="fh-end"><b class="num">HKG</b><span>香港国际机场</span></div>
+              <div class="fh-mid"><div class="fh-line"></div><div class="fh-plane" data-k="left|%|0@1.0,100@3.6"><svg><use href="#i-plane"/></svg></div></div>
+              <div class="fh-end r"><b class="num">LHR</b><span>伦敦希思罗 · T3</span></div>
+            </div>
+            <div class="fh-meta">10月28日 23:30 起飞（演示时刻）· 目的地 LSE Student Dormitory 6</div>
+          </div>
+          <div class="sub-h">本次乘机人</div>
+          <div class="pax-row" data-at="2.0">
+            <div class="av">L</div>
+            <div class="grow"><b>Lin</b> · 留学生<br><span class="muted">行李协助：香港上门取件 · 伦敦宿舍配送</span></div>
+            <span class="chip-wait">待申报</span>
+          </div>
+          <button class="btn-primary" id="fl-start" data-at="3.2">开始准备本次出行 →</button>
+        </div>
+        <div class="panel" data-at="6.7" data-fx="right">
+          <div class="fam-banner">
+            <div class="av gold">敏</div>
+            <div><b>王敏（女儿）</b>正在家中协助填写<br><span class="muted">订单 PL-BK-0311 · 同一航班 CX257</span></div>
+            <span class="chip-ok"><svg width="16" height="16"><use href="#i-check"/></svg>无需授权</span>
+          </div>
+          <div class="pax-tabs">
+            <button class="ptab" id="fl-tab-elder" data-cls="on@<9.6">王婆婆 · 长者</button>
+            <button class="ptab" id="fl-tab-kid" data-cls="on@9.6">小乐 · 儿童 8 岁</button>
+            <button class="toggle" id="fl-bigmode" data-cls="on@11.6"><span class="knob"></span>大字显示</button>
+          </div>
+          <div class="form-card" data-k="font-size|px|19@11.6,23@12.0">
+            <div data-cls="gone@9.6">
+              <div class="frow"><span>托运行李</span><b>1 件 · 约 20 kg · 72×48×28 cm</b></div>
+              <div class="frow"><span>协助需求</span><div><span class="tg">上门取件</span><span class="tg">少搬运</span></div></div>
+              <div class="frow"><span>联系人</span><b>王敏（女儿）· +852 •••• 2168</b></div>
+              <div class="frow"><span>关联乘机人</span><b>王婆婆 · CX257 HKG → LHR</b></div>
+            </div>
+            <div data-cls="gone@<9.6">
+              <div class="frow"><span>托运行李</span><b>1 件 · 约 12 kg · 55×40×23 cm</b></div>
+              <div class="frow"><span>协助需求</span><div><span class="tg">上门取件</span></div></div>
+              <div class="frow"><span>联系人</span><b>王敏（家长）· +852 •••• 2168</b></div>
+              <div class="frow"><span>关联乘机人</span><b>小乐 · CX257 HKG → LHR</b></div>
+              <div class="fnote">儿童乘机及特殊协助服务，仍按航司既有流程衔接</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 03 行李预报 30–48s ============ -->
+  <section class="scene light" id="s-lug" data-start="30" data-end="48">
+    <div class="copy">
+      <div class="kicker" data-at="0.2">03 · 行李预报</div>
+      <h2 class="title" data-at="0.35">提前申报<br>航司提前知道</h2>
+      <p class="lead" data-at="0.6">此次预计托运的全部行李，都计入航班预报</p>
+      <ul class="points">
+        <li data-at="1.0" data-fx="left"><i><svg><use href="#i-check"/></svg></i>件数 · 重量 · 尺寸 · 类别</li>
+        <li data-at="5.0" data-fx="left"><i><svg><use href="#i-check"/></svg></i>未填写保留“待补充”，不当作 0</li>
+        <li data-at="9.4" data-fx="left"><i><svg><use href="#i-check"/></svg></i>按取件地区校验申请截止</li>
+        <li data-at="14.6" data-fx="left"><i><svg><use href="#i-check"/></svg></i>保存生成版本，同步航司预报</li>
+      </ul>
+    </div>
+    <div class="device" data-at="0.25" data-fx="right" data-d="90">
+      <div class="dv-bar"><i></i><i></i><i></i><span>Plume Light · 演示原型</span></div>
+      <div class="dv-nav">
+        <div class="lg"><img src="../assets/cathay-brushwing.png" alt="">Plume Light</div>
+        <span class="tab">行程</span><span class="tab on">行李预报</span><span class="tab">AI Agent</span><span class="tab">首末程</span><span class="tab">结算</span>
+      </div>
+      <div class="dv-body">
+        <div class="lg-head"><b>托运行李申报</b><span class="muted">Lin · CX257 HKG → LHR</span>
+          <span class="ver chip-wait" data-cls="gone@14.4">草稿</span><span class="ver chip-ok" data-cls="gone@<14.4">已保存 · v1</span></div>
+        <div class="lg-table">
+          <div class="lg-row hdr"><span>物品</span><span>类别</span><span>重量</span><span>尺寸 (cm)</span></div>
+          <div class="lg-row" data-at="0.8"><span class="it"><svg style="color:#0b7a70"><use href="#i-suitcase"/></svg>行李箱 A</span><span class="cat">衣物</span><span class="w num">20 kg</span><span class="num">76×52×30</span></div>
+          <div class="lg-row" data-at="1.6"><span class="it"><svg style="color:#0b7a70"><use href="#i-suitcase"/></svg>行李箱 B</span><span class="cat">衣物 · 日用品</span><span class="w num">18 kg</span><span class="num">70×48×28</span></div>
+          <div class="lg-row" data-at="2.4"><span class="it"><svg style="color:#a9761c"><use href="#i-box"/></svg>纸箱 A</span><span class="cat">书籍</span><span class="w num">12 kg</span><span class="num">50×40×40</span></div>
+          <div class="lg-row" data-at="3.2"><span class="it"><svg style="color:#a9761c"><use href="#i-box"/></svg>纸箱 B</span><span class="cat">厨具 · 杂物</span><span class="w num">10 kg</span><span class="num">45×35×35</span></div>
+        </div>
+        <div class="lg-sum" data-at="1.0">
+          <div><span>件数</span><b class="num" data-num="0@0.8,4@3.4">4</b></div>
+          <div><span>总重</span><b class="num"><span data-num="0@0.8,60@3.8">60</span> kg</b></div>
+          <div><span>估计外形体积</span><b class="num"><span data-num="0@0.8,0.35@3.8" data-dec="2">0.35</span> m³</b></div>
+          <div><span>委托 Plume Light 收取</span><b class="num">4 / 4</b></div>
+        </div>
+        <div class="lg-grid">
+          <div data-at="7.6">
+            <div class="sub-h">上门取件地区</div>
+            <div class="seg">
+              <button id="lg-region-hk" data-cls="on@9.2">香港境内</button>
+              <button>大湾区其他地区</button>
+              <button>中国大陆其他地区</button>
+            </div>
+          </div>
+          <div class="deadline" data-at="9.6">
+            <div class="dl-top">
+              <div><span class="muted">最迟申请</span><b>起飞前 1 天 · 24 小时</b><span class="num muted">截止 10月27日 23:30 HKT</span></div>
+              <div class="dl-count"><span class="muted">距申请截止</span><b class="num" id="lg-countdown">2 天 06:12:40</b></div>
+            </div>
+            <div class="dl-bar"><i data-k="width|%|0@9.8,69.3@10.8"></i><span class="dot" style="left:0"></span><span class="dot dl" style="left:69.3%"></span><span class="dot" style="left:100%"></span></div>
+            <div class="dl-labels"><span>现在</span><b>申请截止</b><span>CX257 起飞</span></div>
+            <div class="dl-tiers"><span class="on">香港境内 24h</span><span>大湾区 48h</span><span>大陆其他 120h</span></div>
+          </div>
+        </div>
+        <div class="lg-actions" data-at="12.4"><span class="muted">截止前可随时修改 · 预报与服务申请分开计算</span><button class="btn-primary" id="lg-save">保存申报</button></div>
+        <div class="toast" data-at="14.5" data-out="17.3" data-tf="translateX(-50%)"><svg><use href="#i-check"/></svg>已保存 · PL-D-0001 · 版本 v1 · 已同步航司行李预报</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 04 AI Agent 48–72s ============ -->
+  <section class="scene light" id="s-agent" data-start="48" data-end="72">
+    <div class="copy">
+      <div class="kicker" data-at="0.2">04 · AI Agent</div>
+      <h2 class="title" data-at="0.35">按本次行程<br>解释携带规则</h2>
+      <ul class="points">
+        <li data-at="1.0" data-fx="left"><i><svg><use href="#i-check"/></svg></i>自动带入航线与物品</li>
+        <li data-at="4.4" data-fx="left"><i><svg><use href="#i-check"/></svg></i>信息不足，先追问</li>
+        <li data-at="9.6" data-fx="left"><i><svg><use href="#i-check"/></svg></i>入境 · 随身 · 托运 分开结论</li>
+        <li data-at="12.9" data-fx="left"><i><svg><use href="#i-check"/></svg></i>每条结论都显示依据</li>
+        <li data-at="17.6" data-fx="left"><i><svg><use href="#i-check"/></svg></i>用户确认后才回写清单</li>
+      </ul>
+    </div>
+    <div class="device" data-at="0.25" data-fx="right" data-d="90">
+      <div class="dv-bar"><i></i><i></i><i></i><span>Plume Light · 演示原型</span></div>
+      <div class="dv-nav">
+        <div class="lg"><img src="../assets/cathay-brushwing.png" alt="">Plume Light</div>
+        <span class="tab">行程</span><span class="tab">行李预报</span><span class="tab on">AI Agent</span><span class="tab">首末程</span><span class="tab">结算</span>
+      </div>
+      <div class="dv-body">
+        <div class="ctx" data-at="0.5">
+          <span class="c">CX257</span><span class="c">HKG → LHR T3</span><span class="c">目的地 英国</span><span class="c gold">物品 · 充电宝（纸箱 B）</span><span class="edit">修改</span>
+        </div>
+        <div class="ag-grid">
+          <div class="chat">
+            <div class="msgs">
+              <div class="bub u" data-at="2.8">纸箱 B 里的充电宝可以带吗？</div>
+              <div class="dots" data-at="3.0" data-out="3.6" data-fx="fade" data-cls="gone@3.95"><i></i><i></i><i></i></div>
+              <div class="bub a" data-at="4.0"><div class="who"><svg><use href="#i-spark"/></svg>AI AGENT</div>需要先确认两点：充电宝的容量，以及数量。</div>
+              <div class="qr" data-at="4.5">
+                <button>10000 mAh × 1</button>
+                <button id="ag-qr-20k" data-cls="on@6.6">20000 mAh × 1</button>
+                <button>不确定</button>
+              </div>
+              <div class="bub u" data-at="6.9">20000 mAh，1 个（约 74 Wh）</div>
+              <div class="retr" data-at="7.3">
+                <div class="rt">检索适用资料…</div>
+                <div class="r" data-cls="done@7.8"><i></i>英国入境 · 个人物品</div>
+                <div class="r" data-cls="done@8.3"><i></i>香港机场安检 · 随身物品</div>
+                <div class="r" data-cls="done@8.8"><i></i>锂电池航空运输 · 承运要求</div>
+              </div>
+            </div>
+            <div class="chat-input">
+              <div class="fill"><span class="ph" data-cls="gone@1.0-2.7">问问这次行程能带什么…</span><span class="tx" id="ag-typed" data-type="1.0,2.3" data-cls="gone@<1.0 gone@2.7">纸箱 B 里的充电宝可以带吗？</span></div>
+              <span class="send" id="ag-send"><svg><use href="#i-send"/></svg></span>
+            </div>
+            <div id="ag-input" style="position:absolute;left:14px;right:70px;bottom:14px;height:52px"></div>
+          </div>
+          <div class="results">
+            <div class="res-h" data-at="9.0">分层结论 <span class="mock">模拟规则 · 演示资料</span></div>
+            <div class="concl" data-at="9.2"><div class="lay">入境与海关<b>英国</b></div><div class="v"><span class="tagv ok">可携带</span><br>个人自用电子配件，一般无需申报</div></div>
+            <div class="concl" data-at="9.7"><div class="lay">随身携带<b>CX257 客舱</b></div><div class="v"><span class="tagv cond">附条件</span><br>≤100 Wh 可随身；需做好防短路保护</div></div>
+            <div class="concl" data-at="10.2"><div class="lay">托运行李<b>承运要求</b></div><div class="v"><span class="tagv no">不可托运</span><br>锂电池充电宝不可放入托运行李</div></div>
+            <div class="srcs" data-at="12.8">
+              <span class="lbl">依据</span>
+              <div class="src"><b>英国入境 · 个人物品</b><span>模拟规则 · 检索 10-25 17:20</span></div>
+              <div class="src"><b>HKG 安检 · 随身物品</b><span>模拟规则 · 检索 10-25 17:20</span></div>
+              <div class="src"><b>锂电池航空运输</b><span>模拟规则 · 检索 10-25 17:20</span></div>
+            </div>
+            <div class="sugg" data-at="15.6">
+              建议更新清单：把充电宝从「纸箱 B」移到「随身物品」
+              <div class="acts" data-cls="gone@18.6"><button class="btn-primary" id="ag-confirm">确认更新</button><button class="btn-line">暂不</button></div>
+              <div data-cls="gone@<18.6">
+                <div class="done"><svg width="20" height="20"><use href="#i-check"/></svg>已回写清单 · 申报版本 v2</div>
+                <div class="diff">纸箱 B：<s>充电宝</s>　→　随身物品：<ins>+ 充电宝 20000 mAh</ins></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="ag-note">规则问答演示 · 有限规则集 · 非实时全球检索 · 未经确认不改动申报</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 05 运营看板 72–97s ============ -->
+  <section class="scene light" id="s-ops" data-start="72" data-end="97">
+    <div class="ops-head">
+      <div>
+        <div class="kicker" data-at="0.2">05 · 运营看板</div>
+        <div class="flowchips">
+          <span data-at="0.5" data-cls="hl@0.8">旅客申报</span><i data-at="0.9">→</i>
+          <span data-at="1.0" data-cls="hl@1.6">需求预测</span><i data-at="1.4">→</i>
+          <span data-at="1.5" data-cls="hl@2.4">规划参考</span>
+        </div>
+      </div>
+      <div class="ops-meta" data-at="0.5">
+        <span class="chip">CX257 · HKG → LHR · 10月28日</span>
+        <span class="badge-demo">规划参考 · 演示数据</span>
+        <span class="muted">更新于 <b class="num" id="op-clock">17:24:05</b></span>
+      </div>
+    </div>
+    <div class="kpis">
+      <div class="kpi" data-at="1.2"><span>预计乘机人</span><b data-num="0@1.2,100@2.4">100</b><small>本航段 · 演示数据</small></div>
+      <div class="kpi" data-at="1.5"><span>已申报 / 未申报</span><b><span data-num="0@1.5,80@2.7">80</span> <small>/ <span data-num="0@1.5,20@2.7">20</span> 人</small></b><small>未申报按基线补估，不当作 0</small></div>
+      <div class="kpi" data-at="1.8"><span>申报覆盖率</span><b><span data-num="0@1.8,80@3.0">80</span><small>%</small></b><small>持续提醒未申报旅客</small>
+        <svg class="ring" viewBox="0 0 102 102"><circle cx="51" cy="51" r="44" stroke="#d9efe8"/>
+          <circle cx="51" cy="51" r="44" stroke="#00615e" stroke-linecap="round" stroke-dasharray="276.46" transform="rotate(-90 51 51)" data-k="stroke-dashoffset||276.46@1.8,55.29@3.0"/></svg></div>
+      <div class="kpi hl" data-at="2.1"><span>行李重量预测</span><b><span data-num="2400@2.1,2400@10.0,1800@11.5,1800@21.6,1810@22.4" data-sep="1">2,400</span> <small style="color:rgba(255,255,255,.75)">kg</small></b>
+        <small data-cls="gone@10.6">初始：行李基线估计</small><small data-cls="gone@<10.6">已申报 1,200 + 补估 600<span data-cls="gone@<22.4"> + Lin 更新 10</span></small></div>
+    </div>
+    <div class="plan" data-at="4.0">
+      <div class="plan-head"><b>重量规划 · 本航段预算 5,000 kg</b><span class="muted">运营侧演示输入，非真实机型容量</span>
+        <span class="phase base" data-cls="gone@10.4">初始规划参考（基线）</span><span class="phase fc" data-cls="gone@<10.4">更新后规划参考（预测）</span></div>
+      <div class="bar">
+        <div class="bseg bag" data-k="width|%|0@4.4,48@5.4,48@10.0,36@11.5,36@21.6,36.2@22.4">行李 <span class="num" style="margin-left:6px" data-num="0@4.4,2400@5.4,2400@10.0,1800@11.5,1800@21.6,1810@22.4" data-sep="1">2,400</span></div>
+        <div class="bseg cargo" data-k="width|%|0@4.6,24@5.6">其他货物 1,200</div>
+        <div class="bseg buf" data-k="width|%|0@4.8,6@5.8">缓冲 300</div>
+        <div class="bseg free" data-k="width|%|0@5.0,22@6.0,22@10.0,34@11.5,34@21.6,33.8@22.4">规划余量 <span class="num" style="margin-left:6px" data-num="0@5.0,1100@6.0,1100@10.0,1700@11.5,1700@21.6,1690@22.4" data-sep="1">1,700</span> kg</div>
+      </div>
+      <div class="ticks"><span>0</span><span>1,000</span><span>2,000</span><span>3,000</span><span>4,000</span><span>5,000 kg</span></div>
+      <div class="plan-foot">
+        <div class="formula"><span data-type="12.5,13.7" data-cls="gone@22.4">5000 − 1800 − 1200 − 300 = 1700 kg</span><span data-cls="gone@<22.4">5000 − 1810 − 1200 − 300 = 1690 kg</span></div>
+        <div class="delta" data-at="11.6" data-fx="pop">+600 kg 规划余量 · 来自预测更新</div>
+        <div class="warn" data-at="14.4"><svg><use href="#i-warn"/></svg>不等于货舱扩容 · 最终由航司装载流程确认</div>
+      </div>
+    </div>
+    <div class="ops-row3">
+      <div class="card" data-at="2.6">
+        <div class="card-h">实时申报 <span class="live"><i></i>同步中</span></div>
+        <div class="feed-i hot" data-at="21.0" data-cls="gone@<20.6"><span class="num">17:31</span><b>Lin</b>纸箱 A 实际 22 kg · 总重 60 → 70 kg<span class="v">申报 v3</span></div>
+        <div class="feed-i"><span class="num">17:21</span><b>Lin</b>充电宝改为随身（AI Agent 建议，已确认）<span class="v">v2</span></div>
+        <div class="feed-i"><span class="num">17:20</span><b>小乐</b>1 件 · 12 kg<span class="v">v1</span></div>
+        <div class="feed-i"><span class="num">17:19</span><b>王婆婆</b>1 件 · 20 kg<span class="v">v1</span></div>
+        <div class="feed-i" data-cls="gone@20.6"><span class="num">17:18</span><b>Lin</b>4 件 · 60 kg<span class="v">v1</span></div>
+      </div>
+      <div class="card" data-at="3.0">
+        <div class="card-h">数据来源</div>
+        <div class="src-row"><i style="background:#00615e"></i>旅客估计（已申报 80 人）<b><span data-num="1200@3.0,1200@21.6,1210@22.4" data-sep="1">1,200</span> kg</b></div>
+        <div class="src-row"><i style="background:#9fc9bf"></i>系统补估（未申报 20 人）<b>600 kg</b></div>
+        <div class="src-row"><i style="background:#c98f2d"></i>实测（机场称重后更新）<b>待称重</b></div>
+        <div class="src-row pending"><svg width="18" height="18"><use href="#i-warn"/></svg>体积预算待运营输入 · 暂不显示已确定可用空间</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 06 结算与交接 97–110s ============ -->
+  <section class="scene light" id="s-pay" data-start="97" data-end="110">
+    <div class="pay-head">
+      <div class="kicker" data-at="0.2">06 · 结算与交接</div>
+      <h2 class="title sm" data-at="0.35">现金或里数结算，只确认关键交接</h2>
+    </div>
+    <div class="checkout" data-at="0.4">
+      <div class="dest"><svg><use href="#i-pin"/></svg><div><b>送达 LSE Student Dormitory 6</b><span>伦敦末程：DPD UK（拟合作示例）· 4 件 · 60 kg</span></div></div>
+      <div class="qline"><span>香港首程上门取件及服务处理</span><b>HKD 600</b></div>
+      <div class="qline"><span>伦敦段 · 机场至宿舍<small>GBP 100 × 演示汇率 10</small></span><b>HKD 1,000</b></div>
+      <div class="qline total"><span>合计（演示报价）</span><b>HKD 1,600</b></div>
+      <div class="paymode">
+        <button id="py-cash" data-cls="on@<3.0 on@5.0">现金 · HKD 1,600</button>
+        <button id="py-miles" data-cls="on@3.0-5.0">亚洲万里通 · 40,000 里数</button>
+      </div>
+      <div class="payinfo">
+        <span data-cls="gone@3.0-5.0">本单预计可赚 <b>+160</b> 里数（服务完成后入账）</span>
+        <span data-cls="gone@<3.0 gone@5.0">以 <b>40,000</b> 里数兑换 · 余额 50,000 · 现金 HKD 0 · 本单赚 0</span>
+      </div>
+      <div class="pay-act">
+        <button class="btn-primary" id="py-pay"><span data-cls="gone@3.0-5.0">模拟现金支付</span><span data-cls="gone@<3.0 gone@5.0">模拟里数兑换</span></button>
+        <div class="pay-ok" data-at="6.3"><svg><use href="#i-check"/></svg>模拟支付成功 · 订单 PL-O-1024 · 预计赚 160 里数</div>
+      </div>
+      <div class="pay-note">演示参数：每 HKD 1 = 25 里数兑换（向上取整）；现金每 HKD 10 赚 1 里数；全额里数兑换不重复赚取。报价与汇率为演示值，额外托运费与关税未计。</div>
+    </div>
+    <div class="overview" data-at="6.6" data-fx="right">
+      <div class="ov-h"><img src="../assets/cathay-brushwing.png" alt=""><b>Plume Light 行程概览</b></div>
+      <div class="ov-sum">CX257 · HKG → LHR T3 · Lin · 4 件行李 · 仅显示三类关键节点</div>
+      <div class="nodes">
+        <div class="node" data-cls="ok@7.4">
+          <div class="ic"><svg><use href="#i-building"/></svg></div>
+          <div class="nt"><b>到达机场</b><span>香港国际机场 HKG · 确认方：机场行李柜台</span></div>
+          <div class="st"><span class="w" data-cls="gone@7.4">等待确认</span><span class="k" data-cls="gone@<7.4"><b>4 / 4</b>已确认 19:40</span></div>
+        </div>
+        <div class="node" data-cls="part@8.6-9.4 ok@9.4">
+          <div class="ic"><svg><use href="#i-plane"/></svg></div>
+          <div class="nt"><b>装入飞机</b><span>CX257 · HKG → LHR · 来自装机确认</span></div>
+          <div class="st"><span class="w" data-cls="gone@8.6">等待确认</span><span class="p" data-cls="gone@<8.6 gone@9.4"><b>3 / 4</b>1 件等待确认</span><span class="k" data-cls="gone@<9.4"><b>4 / 4</b>已确认 22:55</span></div>
+        </div>
+        <div class="node" data-cls="ok@10.3">
+          <div class="ic"><svg><use href="#i-truck"/></svg></div>
+          <div class="nt"><b>航司与当地物流交接</b><span>伦敦希思罗 T3 · 国泰 → DPD UK（拟合作示例）</span></div>
+          <div class="st"><span class="w" data-cls="gone@10.3">等待确认</span><span class="k" data-cls="gone@<10.3"><b>4 / 4</b>已交接 06:10</span></div>
+        </div>
+        <div class="ov-dest" data-at="10.6"><svg><use href="#i-pin"/></svg>最终送往 LSE Student Dormitory 6</div>
+      </div>
+      <div class="ov-foot">支付成功 ≠ 已装机：节点只由实物交接事件确认 · 时刻与事件为演示数据</div>
+    </div>
+  </section>
+
+  <!-- ============ 结尾 110–120s ============ -->
+  <section class="scene dark" id="s-end" data-start="110" data-end="120">
+    <div class="end-center">
+      <img class="br-logo" src="../assets/cathay-brushwing-white.png" alt="" data-at="0.2" data-fx="pop">
+      <div class="br-word" data-at="0.4" data-fx="fade" data-k="letter-spacing|em|0.5@0.4,0.28@1.6">PLUME LIGHT</div>
+      <div class="end-tag" data-at="1.0">让旅客<em>轻松出行</em>，让航司<em>提前了解</em>行李需求</div>
+      <div class="end-pills">
+        <span data-at="2.0">留学生</span><span data-at="2.2">长者</span><span data-at="2.4">儿童与家庭</span><span data-at="2.6">残障旅客</span><span data-at="2.8">无人陪伴儿童</span>
+      </div>
+      <div class="end-chain" data-at="3.6">提前申报<i>→</i>AI 规则问答<i>→</i>首末程协助<i>→</i>航司规划参考</div>
+    </div>
+    <div class="end-disc" data-at="5.0">演示说明：航班时刻、运力、费用、汇率、里数、支付、物流事件与规则资料均为演示数据；DPD UK 为拟合作示例，不代表已签约；<br>AI Agent 为有限规则集演示，非实时全球检索。Cathay Hackathon 2026 · 团队原型</div>
+    <div class="blackout" data-k="opacity||0@8.8,1@9.9"></div>
+  </section>
+
+  <!-- ============ 常驻元素 ============ -->
+  <div id="chrome-top">
+    <div class="logo"><img src="../assets/cathay-brushwing.png" alt=""><b>PLUME LIGHT</b></div>
+    <span class="sep"></span><span class="desc">国泰航班行李协助 · 演示原型</span>
+    <span class="sp"></span>
+    <span class="chip-route"><svg><use href="#i-plane"/></svg>CX257 · HKG → LHR T3</span>
+    <span class="badge-demo">演示数据</span>
+  </div>
+  <div id="subtitle"></div>
+  <div id="chapters"></div>
+  <div id="cursor">
+    <div class="ripple"></div>
+    <svg viewBox="0 0 40 40"><path d="M8 4 L8 31 L15 25 L20 36 L25 34 L20 23 L29 23 Z" fill="#fff" stroke="#17322e" stroke-width="2.2" stroke-linejoin="round"/></svg>
+  </div>
+</div>
+
+<div id="startover"><div class="pb"><i><svg><use href="#i-play"/></svg></i><b>Plume Light 演示视频</b><span>120 秒 · 含旁白 · 点击播放</span></div></div>
+<div id="controls">
+  <button id="btn-play" title="播放/暂停（空格）"><svg><use href="#i-play"/></svg></button>
+  <button id="btn-restart" title="从头播放"><svg><use href="#i-restart"/></svg></button>
+  <span id="time">00:00 / 02:00</span>
+  <input id="scrub" type="range" min="0" max="120" step="0.01" value="0" aria-label="进度">
+  <button id="btn-cc" title="字幕（C）"><svg><use href="#i-cc"/></svg></button>
+  <button id="btn-mute" title="静音（M）"><svg><use href="#i-vol"/></svg></button>
+  <button id="btn-full" title="全屏（F）"><svg><use href="#i-full"/></svg></button>
+</div>
+<audio id="soundtrack" src="audio/soundtrack.m4a" preload="auto"></audio>
+
+<script src="data/timeline.js"></script>
+<script src="data/timing.js" onerror="window.TIMING={}"></script>
+<script src="engine.js"></script>
+</body>
+</html>
