@@ -1,0 +1,36 @@
+.sync {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 2px 9px;
+  border-radius: 10px;
+  font-size: 12px;
+  color: #c8f5df;
+  background: rgba(47, 158, 107, 0.28);
+  border: 1px solid #6fd6a3;
+}
+
+.pulse {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #4be39a;
+  animation: sync-pulse 1.4s ease-in-out infinite;
+}
+
+.live {
+  color: #fff4c4;
+  background: rgba(217, 154, 18, 0.28);
+  border-color: #e4b46c;
+}
+
+.live .pulse {
+  background: #ffd479;
+  animation: sync-pulse 0.8s ease-in-out infinite;
+}
+
+@keyframes sync-pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}

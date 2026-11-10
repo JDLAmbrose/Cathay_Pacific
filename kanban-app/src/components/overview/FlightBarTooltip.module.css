@@ -1,0 +1,33 @@
+.tip {
+  background: #17302e;
+  color: #fff;
+  font-size: 12px;
+  line-height: 1.5;
+  padding: 9px 12px;
+  border-radius: 8px;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.32);
+  width: min(248px, calc(100vw - 24px));
+}
+
+.row {
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font-variant-numeric: tabular-nums;
+}
+
+.meta {
+  color: #b8c7c5;
+  font-size: 11px;
+  margin-top: 2px;
+}
+
+.tip hr {
+  border: 0;
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+  margin: 6px 0;
+}
+
+.plume { color: #8ec2ff; }
+.defer { color: #ffd479; }
+.bad { color: #ff9b96; }

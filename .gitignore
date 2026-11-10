@@ -6,3 +6,6 @@ __pycache__/
 !.env.example
 .venv/
 node_modules/
+
+# Hold-pressure kanban (Vite)
+kanban-app/node_modules/

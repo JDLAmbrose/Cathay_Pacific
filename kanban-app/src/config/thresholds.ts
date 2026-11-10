@@ -1,0 +1,10 @@
+export const CAUTION_RATIO = 0.9;
+export const OVER_RATIO = 1;
+export const DEFAULT_PAX_BAG_KG = 23;
+export const DEFAULT_PAX_BAG_M3 = 0.227;
+export const CARGO_KG_PER_M3 = 160;
+export const DEFAULT_PLUME_BAG_M3 = 0.19;
+export const LOAD_CUTOFF_HOURS = 3;
+export const HKT_TIME_ZONE = "Asia/Hong_Kong";
+export const LANGUAGE_STORAGE_KEY = "plume-light-language";
+export const TRAVELLER_STATE_KEY = "plume-light-multipage-v2";

@@ -1,0 +1,3291 @@
+{
+  "asOf": "2026-11-15T05:30:00+08:00",
+  "sector": "HKG-LHR",
+  "windowDays": 2,
+  "nearHours": 6,
+  "aircraftSpecs": {
+    "A350-900": {
+      "capKg": 22050,
+      "capM3": 172,
+      "seats": 280
+    },
+    "A350-1000": {
+      "capKg": 26660,
+      "capM3": 208,
+      "seats": 334
+    },
+    "777-300ER": {
+      "capKg": 27410,
+      "capM3": 213.8,
+      "seats": 368
+    }
+  },
+  "flights": [
+    {
+      "id": "CX257",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-15T09:30:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 334,
+      "capOverride": null,
+      "cargoKg": 17400,
+      "cargoM3": 108.75,
+      "plumePax": 20,
+      "plumeBags": [
+        {
+          "bagId": "PL-257-A-001",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-A-002",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-A-003",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-A-004",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-A-005",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-A-006",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-257-F-001",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-002",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-003",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-004",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-005",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-006",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-007",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-008",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-009",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-010",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-011",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-012",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-013",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-014",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-015",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-016",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-017",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-018",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-019",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-020",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-021",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-022",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-023",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-024",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-025",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-026",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-027",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-028",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-029",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-030",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-031",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-032",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-033",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-034",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-035",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-036",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-037",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-038",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-039",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-040",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-041",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-042",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-043",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-044",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-045",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-046",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-047",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-048",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-049",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-257-F-050",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX251",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-15T23:40:00+08:00",
+      "aircraft": "777-300ER",
+      "seats": 368,
+      "capOverride": null,
+      "cargoKg": 19600,
+      "cargoM3": 122.5,
+      "plumePax": 28,
+      "plumeBags": [
+        {
+          "bagId": "PL-251-A-001",
+          "kg": 28,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-A-002",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-A-003",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-A-004",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-A-005",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-A-006",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-251-D-001",
+          "kg": 32,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-002",
+          "kg": 29,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-003",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-004",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-005",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-006",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-007",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-008",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-009",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-010",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-011",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-012",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-013",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-014",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-015",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-016",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-017",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-D-018",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-001",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-002",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-003",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-004",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-005",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-006",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-007",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-008",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-009",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-010",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-011",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-012",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-013",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-014",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-015",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-016",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-017",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-018",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-019",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-020",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-021",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-022",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-023",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-024",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-025",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-026",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-027",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-028",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-029",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-030",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-031",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-032",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-033",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-034",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-035",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-036",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-037",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-038",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-039",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-040",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-041",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-251-F-042",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX253",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-16T09:30:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 280,
+      "capOverride": null,
+      "cargoKg": 14850,
+      "cargoM3": 92.8125,
+      "plumePax": 16,
+      "plumeBags": [
+        {
+          "bagId": "PL-253-D-001",
+          "kg": 31,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-002",
+          "kg": 29,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-003",
+          "kg": 28,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-004",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-005",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-006",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-007",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-008",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-009",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-010",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-011",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-012",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-013",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-014",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-015",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-016",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-017",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-018",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-019",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-020",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-021",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-022",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-023",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-024",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-025",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-026",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-027",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-028",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-029",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-030",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-031",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-032",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-033",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-034",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-035",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-036",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-037",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-038",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-039",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-040",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-041",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-042",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-043",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-044",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-045",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-D-046",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-001",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-002",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-003",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-004",
+          "kg": 30,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-005",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-006",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-007",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-008",
+          "kg": 30,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-009",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-010",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-011",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-012",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-013",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-014",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-015",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-016",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-017",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-018",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-019",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-253-F-020",
+          "kg": 25,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX255",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-16T23:55:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 300,
+      "capOverride": null,
+      "cargoKg": null,
+      "cargoM3": null,
+      "plumePax": 12,
+      "plumeBags": [
+        {
+          "bagId": "PL-255-A-001",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-255-A-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-255-A-003",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-255-A-004",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-255-F-001",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-002",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-003",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-004",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-005",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-006",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-007",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-008",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-009",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-010",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-011",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-012",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-013",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-014",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-015",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-016",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-017",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-018",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-019",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-020",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-021",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-022",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-023",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-024",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-025",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-255-F-026",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX259",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-17T09:30:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 260,
+      "capOverride": null,
+      "cargoKg": 13200,
+      "cargoM3": 100.7,
+      "plumePax": 10,
+      "plumeBags": [
+        {
+          "bagId": "PL-259-F-001",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-002",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-003",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-004",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-005",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-006",
+          "kg": 28,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-007",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-008",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-009",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-010",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-011",
+          "kg": 28,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-012",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-013",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-014",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-015",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-016",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-017",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-018",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-019",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-020",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-021",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-259-F-022",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX261",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-17T23:40:00+08:00",
+      "aircraft": "777-300ER",
+      "seats": 294,
+      "capOverride": null,
+      "cargoKg": 14900,
+      "cargoM3": 93.125,
+      "plumePax": 14,
+      "plumeBags": [
+        {
+          "bagId": "PL-261-A-001",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-261-A-002",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-261-A-003",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-261-A-004",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-261-A-005",
+          "kg": 12,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-261-F-001",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-002",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-003",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-004",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-005",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-006",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-007",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-008",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-009",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-010",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-011",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-012",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-013",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-014",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-015",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-016",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-017",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-018",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-019",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-020",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-021",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-022",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-023",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-024",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-025",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-026",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-027",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-261-F-028",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX263",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-18T09:30:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 334,
+      "capOverride": null,
+      "cargoKg": null,
+      "cargoM3": null,
+      "plumePax": 6,
+      "plumeBags": [
+        {
+          "bagId": "PL-263-F-001",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-002",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-003",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-004",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-005",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-006",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-007",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-008",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-009",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-010",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-011",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-012",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-013",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-014",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-015",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-016",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-017",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-018",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-019",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-263-F-020",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX239",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-15T08:15:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 280,
+      "capOverride": null,
+      "cargoKg": 14100,
+      "cargoM3": 86.2,
+      "plumePax": 8,
+      "plumeBags": [
+        {
+          "bagId": "PL-239-A-001",
+          "kg": 23,
+          "m3": 0.21,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-239-A-002",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-239-F-001",
+          "kg": 31,
+          "m3": 0.24,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-239-F-002",
+          "kg": 17,
+          "m3": 0.14,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-239-F-003",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-239-F-004",
+          "kg": 14,
+          "m3": 0.12,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-239-F-005",
+          "kg": 26,
+          "m3": 0.22,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-239-F-006",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX237",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-15T14:20:00+08:00",
+      "aircraft": "777-300ER",
+      "seats": 312,
+      "capOverride": null,
+      "cargoKg": 14800,
+      "cargoM3": 96.8,
+      "plumePax": 15,
+      "plumeBags": [
+        {
+          "bagId": "PL-237-A-001",
+          "kg": 24,
+          "m3": 0.22,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-237-A-002",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-237-A-003",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-237-A-004",
+          "kg": 16,
+          "m3": 0.14,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-237-F-001",
+          "kg": 32,
+          "m3": 0.26,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-002",
+          "kg": 28,
+          "m3": 0.23,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-003",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-004",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-005",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-006",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-007",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-008",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-009",
+          "kg": 17,
+          "m3": 0.15,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-010",
+          "kg": 16,
+          "m3": 0.14,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-011",
+          "kg": 15,
+          "m3": 0.13,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-012",
+          "kg": 14,
+          "m3": 0.12,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-013",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-237-F-014",
+          "kg": 27,
+          "m3": 0.22,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX249",
+      "sector": "HKG-LHR",
+      "dep": "2026-11-15T21:10:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 334,
+      "capOverride": null,
+      "cargoKg": 19250,
+      "cargoM3": 118.7,
+      "plumePax": 17,
+      "plumeBags": [
+        {
+          "bagId": "PL-249-A-001",
+          "kg": 25,
+          "m3": 0.22,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-249-A-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-249-A-003",
+          "kg": 18,
+          "m3": 0.15,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-249-D-001",
+          "kg": 29,
+          "m3": 0.24,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-002",
+          "kg": 27,
+          "m3": 0.23,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-003",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-004",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-005",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-006",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-007",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-008",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-009",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-D-010",
+          "kg": 16,
+          "m3": 0.14,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-001",
+          "kg": 32,
+          "m3": 0.27,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-002",
+          "kg": 26,
+          "m3": 0.22,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-003",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-004",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-005",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-006",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-007",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-008",
+          "kg": 17,
+          "m3": 0.15,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-009",
+          "kg": 15,
+          "m3": 0.14,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-010",
+          "kg": 14,
+          "m3": 0.13,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-249-F-011",
+          "kg": 13,
+          "m3": 0.12,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX105",
+      "sector": "HKG-MEL",
+      "dep": "2026-11-15T19:05:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 334,
+      "capOverride": null,
+      "cargoKg": 19400,
+      "cargoM3": 118.4,
+      "plumePax": 11,
+      "plumeBags": [
+        {
+          "bagId": "PL-105-A-001",
+          "kg": 22,
+          "m3": 0.2,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-105-A-002",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-105-D-001",
+          "kg": 28,
+          "m3": 0.24,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-002",
+          "kg": 26,
+          "m3": 0.23,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-003",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-004",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-005",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-006",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-007",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-008",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-009",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-D-010",
+          "kg": 19,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-001",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-003",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-004",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-005",
+          "kg": 16,
+          "m3": 0.15,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-006",
+          "kg": 15,
+          "m3": 0.14,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-007",
+          "kg": 14,
+          "m3": 0.13,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-105-F-008",
+          "kg": 10,
+          "m3": 0.12,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX139",
+      "sector": "HKG-MEL",
+      "dep": "2026-11-16T08:40:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 280,
+      "capOverride": null,
+      "cargoKg": 14200,
+      "cargoM3": 94.2,
+      "plumePax": 6,
+      "plumeBags": [
+        {
+          "bagId": "PL-139-F-001",
+          "kg": 32,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-139-F-002",
+          "kg": 28,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-139-F-003",
+          "kg": 27,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-139-F-004",
+          "kg": 26,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-139-F-005",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-139-F-006",
+          "kg": 23,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX163",
+      "sector": "HKG-MEL",
+      "dep": "2026-11-16T20:20:00+08:00",
+      "aircraft": "777-300ER",
+      "seats": 312,
+      "capOverride": null,
+      "cargoKg": 14600,
+      "cargoM3": 94.8,
+      "plumePax": 8,
+      "plumeBags": [
+        {
+          "bagId": "PL-163-A-001",
+          "kg": 20,
+          "m3": 0.18,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-163-A-002",
+          "kg": 16,
+          "m3": 0.14,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-163-F-001",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-003",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-004",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-005",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-006",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-007",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-163-F-008",
+          "kg": 13,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX165",
+      "sector": "HKG-MEL",
+      "dep": "2026-11-17T08:40:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 280,
+      "capOverride": null,
+      "cargoKg": null,
+      "cargoM3": null,
+      "plumePax": 5,
+      "plumeBags": [
+        {
+          "bagId": "PL-165-F-001",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-002",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-003",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-004",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-005",
+          "kg": 30,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-006",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-007",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-008",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-009",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-010",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-011",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-165-F-012",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX161",
+      "sector": "HKG-SYD",
+      "dep": "2026-11-15T09:55:00+08:00",
+      "aircraft": "A350-900",
+      "seats": 280,
+      "capOverride": null,
+      "cargoKg": 14080,
+      "cargoM3": 86.4,
+      "plumePax": 7,
+      "plumeBags": [
+        {
+          "bagId": "PL-161-A-001",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-161-A-002",
+          "kg": 17,
+          "m3": 0.15,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-161-F-001",
+          "kg": 28,
+          "m3": 0.23,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-161-F-002",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-161-F-003",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-161-F-004",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-161-F-005",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-161-F-006",
+          "kg": 16,
+          "m3": 0.14,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX111",
+      "sector": "HKG-SYD",
+      "dep": "2026-11-15T21:40:00+08:00",
+      "aircraft": "777-300ER",
+      "seats": 368,
+      "capOverride": null,
+      "cargoKg": 19210,
+      "cargoM3": 119.5,
+      "plumePax": 14,
+      "plumeBags": [
+        {
+          "bagId": "PL-111-A-001",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-111-A-002",
+          "kg": 19,
+          "m3": 0.17,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-111-A-003",
+          "kg": 17,
+          "m3": 0.15,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-111-D-001",
+          "kg": 32,
+          "m3": 0.26,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-002",
+          "kg": 29,
+          "m3": 0.24,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-003",
+          "kg": 27,
+          "m3": 0.23,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-004",
+          "kg": 26,
+          "m3": 0.22,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-005",
+          "kg": 24,
+          "m3": 0.21,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-006",
+          "kg": 23,
+          "m3": 0.2,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-007",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-008",
+          "kg": 21,
+          "m3": 0.18,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-009",
+          "kg": 20,
+          "m3": 0.17,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-D-010",
+          "kg": 26,
+          "m3": 0.22,
+          "mode": "cargo",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-001",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-003",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-004",
+          "kg": 20,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-005",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-006",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-007",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-008",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-009",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-010",
+          "kg": 14,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-011",
+          "kg": 13,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-111-F-012",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    },
+    {
+      "id": "CX101",
+      "sector": "HKG-SYD",
+      "dep": "2026-11-16T20:55:00+08:00",
+      "aircraft": "A350-1000",
+      "seats": 300,
+      "capOverride": null,
+      "cargoKg": 15200,
+      "cargoM3": 98.1,
+      "plumePax": 9,
+      "plumeBags": [
+        {
+          "bagId": "PL-101-A-001",
+          "kg": 22,
+          "m3": 0.2,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-101-A-002",
+          "kg": 18,
+          "m3": 0.16,
+          "mode": "cargo",
+          "state": "arrived"
+        },
+        {
+          "bagId": "PL-101-F-001",
+          "kg": 24,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-002",
+          "kg": 22,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-003",
+          "kg": 21,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-004",
+          "kg": 19,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-005",
+          "kg": 18,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-006",
+          "kg": 17,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-007",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-008",
+          "kg": 15,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        },
+        {
+          "bagId": "PL-101-F-009",
+          "kg": 16,
+          "m3": 0.19,
+          "mode": "on_flight",
+          "state": "staged"
+        }
+      ]
+    }
+  ]
+}
