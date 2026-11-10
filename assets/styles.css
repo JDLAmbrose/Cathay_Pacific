@@ -233,3 +233,12 @@
   .brand .brand-tagline {padding-inline-start:6px;font-size:calc(11px * var(--text-scale,1));letter-spacing:0}
   .ops-aircraft {border-radius:15px}
 }
+
+/* Assistant replies remain escaped plain text; preserve paragraphs on every screen. */
+.agent-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.message-text{white-space:pre-wrap;overflow-wrap:anywhere}
+.message-source{display:block;font-size:.75em;opacity:.75;margin-block:4px 8px}
+.agent-next-steps{display:flex;flex-direction:column;gap:10px;margin-top:20px}
+.agent-loading{opacity:.7}
+.chatinput .input{min-width:0}
+.chatinput button:disabled{opacity:.55;cursor:wait}

@@ -1,0 +1,156 @@
+{
+  "checkedAtUtc": "2026-11-09T16:24:51.716990+00:00",
+  "product": "connections",
+  "url": "https://api.oag.com/flight-connections/?version=v1&Limit=1&DepartureDate=2026-11-15&DepartureAirport=PEK&ArrivalAirport=LHR&ViaPoint=HKG&Leg1CarrierCode=CX&Leg2CarrierCode=CX&Service=p",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "departure": {
+          "cityCode": "BJS",
+          "airport": {
+            "iata": "PEK"
+          }
+        },
+        "arrival": {
+          "cityCode": "LON",
+          "airport": {
+            "iata": "LHR"
+          }
+        },
+        "effectivePeriod": {
+          "local": {
+            "startDate": "2026-11-14",
+            "endDate": "2026-11-15"
+          }
+        },
+        "daysOfOperation": [
+          "saturday",
+          "sunday"
+        ],
+        "arrivalIntervalDays": 1,
+        "elapsedTime": 1335,
+        "qsi": "140.0",
+        "frequency": 2,
+        "circuity": 142,
+        "isSelfConnection": false,
+        "connectionType": "O",
+        "leg1": {
+          "departure": {
+            "cityCode": "BJS",
+            "airport": {
+              "iata": "PEK"
+            },
+            "terminalCode": "3",
+            "localTime": "16:45:00",
+            "country": "CN"
+          },
+          "arrival": {
+            "cityCode": "HKG",
+            "airport": {
+              "iata": "HKG"
+            },
+            "terminalCode": "1",
+            "localTime": "20:30:00",
+            "country": "HK"
+          },
+          "carrierCode": {
+            "iata": "CX"
+          },
+          "flightNumber": 331,
+          "effectivePeriod": {
+            "local": {
+              "startDate": "2026-11-12",
+              "endDate": "2026-11-19"
+            }
+          },
+          "daysOfOperation": [
+            "monday",
+            "tuesday",
+            "wednesday",
+            "thursday",
+            "saturday",
+            "sunday"
+          ],
+          "arrivalIntervalDays": "0",
+          "distance": 1964,
+          "elapsedTime": 225,
+          "numberOfStops": 0,
+          "equipment": {
+            "aircraftType": "333",
+            "typeBody": "JW"
+          },
+          "connectionTime": 235,
+          "isLowCost": false,
+          "mctStatus": "II",
+          "isDomicileCarrier": false,
+          "isInAlliance": true,
+          "serviceType": "J",
+          "codeshare": {
+            "comments010": [
+              "CA6501"
+            ]
+          },
+          "intermediateAirportsIata": []
+        },
+        "leg2": {
+          "departure": {
+            "cityCode": "HKG",
+            "airport": {
+              "iata": "HKG"
+            },
+            "terminalCode": "1",
+            "localTime": "00:25:00",
+            "country": "HK"
+          },
+          "arrival": {
+            "cityCode": "LON",
+            "airport": {
+              "iata": "LHR"
+            },
+            "terminalCode": "3",
+            "localTime": "07:00:00",
+            "country": "GB"
+          },
+          "carrierCode": {
+            "iata": "CX"
+          },
+          "flightNumber": 237,
+          "effectivePeriod": {
+            "local": {
+              "startDate": "1899-12-31",
+              "endDate": "2027-03-22"
+            }
+          },
+          "daysOfOperation": [
+            "monday",
+            "sunday"
+          ],
+          "arrivalIntervalDays": "0",
+          "distance": 9615,
+          "elapsedTime": 875,
+          "numberOfStops": 0,
+          "equipment": {
+            "aircraftType": "359",
+            "typeBody": "JW"
+          },
+          "isLowCost": false,
+          "isDomicileCarrier": true,
+          "isInAlliance": true,
+          "serviceType": "J",
+          "codeshare": {
+            "comments010": []
+          },
+          "intermediateAirportsIata": []
+        },
+        "connectionId": "1816007178"
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 42,
+      "totalPages": 42,
+      "next": "https://api.oag.com/flight-connections?version=v1&limit=1&departuredate=2026-11-15&departureairport=PEK&arrivalairport=LHR&viapoint=HKG&leg1carriercode=CX&leg2carriercode=CX&service=p&cursor=1816007178"
+    }
+  }
+}

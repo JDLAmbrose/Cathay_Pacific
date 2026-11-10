@@ -77,7 +77,7 @@ function helper(run){run("state.family=true;Object.assign(state.helper,{name:'De
  assert.equal(run('quoteService().plan.required'),0);assert.equal(run('quoteService().total'),170000);
  const saved=run('clone(state)'),restored=app(saved);
  assert.equal(restored('quoteService().total'),170000);
- run=app();run("draft().items[0].categories=['books','battery'];sendQuestion('power bank 74 Wh')");
+ run=app();run("state.agent.mode='local';draft().items[0].categories=['books','battery'];sendQuestion('power bank 74 Wh')");
  assert.equal(run('state.agent.answer.advice.type'),'cabin');
 
  // Render every new panel in every supported language and catch missing copy keys.

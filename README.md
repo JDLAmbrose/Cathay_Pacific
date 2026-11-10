@@ -20,7 +20,7 @@
 
 項目使用原生 HTML、CSS 和 JavaScript，採用多頁面結構，無需安裝前端依賴或執行構建。**根目錄的 `index.html` 是唯一主入口。** 本說明位於根目錄 `README.md`。
 
-> 當前為靜態交互演示，沒有接入真實訂票、付款、會員、物流或大模型服務。頁面中的價格、里數、時間、規則和交接事件均為演示數據。
+> 當前為靜態交互演示，沒有接入真實訂票、付款、會員或物流服務。AI 助手可透過本地 Python 服務接入 GLM；需要有效 API key 和可用額度。頁面中的價格、里數、時間、規則和交接事件均為演示數據。
 
 ## 界面預覽
 
@@ -85,6 +85,14 @@ python3 tools/serve.py --port 8000
 ```
 
 然後訪問 <http://127.0.0.1:8000/>。按 `Ctrl+C` 結束服務器。
+
+啟用 GLM 出行助手（密鑰文件不放在網站目錄）：
+
+```sh
+python3 tools/serve.py --port 8000 --api-key-file /Users/rtxon/Desktop/1.txt
+```
+
+打開 <http://127.0.0.1:8000/pages/assistant.html>。支援多輪對話、行程/行李/報價工具、重試、取消等待及離線規則演示。完整配置、API 和 Google Cloud Run 部署見 [AI Agent 接入指南](doc/AI_AGENT.md)。
 
 請在演示過程中使用同一個瀏覽器、網址和端口。`localhost`、`127.0.0.1`、不同端口及本地文件屬於不同的存儲環境，數據不會自動互通。
 
@@ -181,7 +189,9 @@ Cathay_Pacific/
 ├── archive/                    # 保留的舊版原型
 │   ├── index-original.html
 │   └── index-prd-single.html
-└── tools/                      # 輔助腳本與驗證，非網站運行依賴
+└── tools/                      # 本地 / Cloud Run 服務端與驗證
+    ├── serve.py                # 靜態頁面、助手及演示查件 API
+    ├── assistant.py            # GLM adapter、工具循環及上下文白名單
     ├── test.py
     └── tests/pricing.cjs       # 行李額度、計價與訂單回歸驗證
 ```
@@ -240,7 +250,9 @@ Cathay_Pacific/
 
 ## AI 助手與案例
 
-助手由本地意圖識別、屬性追問和確定性規則樣本驅動，沒有調用大模型 API 或實時官方檢索。覆蓋衣物書籍、電池、輔助設備、液體、藥品、食品、電子與易碎品，以及截止、價格、里數、交接、家人協助和配送等服務問題。
+助手預設使用服務端 GLM agent，支援多輪對話及四個只讀工具，查詢目前行程、行李、確定性報價和項目服務規則。模型可以解釋方案、規劃準備清單及追問物品屬性，不能自行付款、更改訂單或確認行李交接。密鑰只在 Python 服務端讀取。
+
+可切換「離線規則演示」，沿用本地意圖識別和確定性規則樣本；直接用 `file://` 打開時亦使用離線模式。兩種模式明確區分，API 失敗顯示原因並允許重試，不會把模擬答案當成 GLM 回覆。目前兩種模式均未接入實時官方規則檢索。
 
 英國、澳洲及印度提供有限規則樣本，法國作為未覆蓋目的地示例。缺失、過期、衝突及未覆蓋結果會保留待確認提示。諮詢其他目的地不會修改當前機票；可回寫的行李建議需要用戶確認，且不能靜默更改已有服務訂單。
 
@@ -288,6 +300,8 @@ node tools/tests/pricing.cjs
 node tools/tests/pricing-board.cjs
 node tools/tests/booking-flow.cjs
 node tools/tests/home-state.cjs
+node tools/tests/assistant.cjs
+python3 -m unittest discover -s tools/tests -p 'test_*.py'
 ```
 
 修改後應手動檢查首頁與全部八個功能頁、返回首頁、五步預訂、代填授權、證明文件與審核狀態、現金及里數模擬支付、取消訂單、按件運輸方式保存、交接狀態、語言切換和手機佈局。語法檢查不能替代瀏覽器中的交互驗證。
@@ -303,9 +317,9 @@ pages/
 README.md                      # 建議附帶
 ```
 
-`archive/`、`tools/`、其餘開發文檔及 `.git/` 不需要隨運行版分發。修改網站或本說明後，請重新生成分享包；舊壓縮包不會自動更新。
+純靜態離線分享不需要 `archive/`、`tools/`、其餘開發文檔及 `.git/`；GLM 模式需要部署 `tools/serve.py`、`tools/assistant.py` 及服務端密鑰配置。修改網站或本說明後，請重新生成分享包；舊壓縮包不會自動更新。
 
-也可將上述目錄原樣部署到支持靜態文件的託管服務。無需構建，入口設為 `index.html`，並保留 `pages/` 和 `assets/` 的相對路徑。當前沒有配置公開訪問網址或自動部署流程。
+也可將上述目錄原樣部署到支持靜態文件的託管服務。無需構建，入口設為 `index.html`，並保留 `pages/` 和 `assets/` 的相對路徑。靜態託管只提供離線演示；GLM 助手需要 Python API 服務。本項目已提供 Dockerfile 和 [Cloud Run 部署指引](doc/AI_AGENT.md)，尚未實際部署或配置公開網址。
 
 ## 常見問題
 
