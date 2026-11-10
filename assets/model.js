@@ -421,7 +421,7 @@ function ruleCategory(text){
  return checks.find(([,pattern])=>pattern.test(text))?.[0]||'unknown';
 }
 function answerRouteScope(route){return route==='AU'?'CX105 · HKG → MEL':route==='IN'?'HKG → DEL':'CX257 · HKG → LHR T3';}
-function sendQuestion(question){
+function sendLocalQuestion(question){
  const a=state.agent,text=String(question).trim();if(!text)return;
  a.messages.push({role:'user',text});a.messages=a.messages.slice(-24);a.stale=false;
  const service=serviceIntent(text);

@@ -1,0 +1,154 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:38.535823+00:00",
+  "product": "connections",
+  "url": "https://api.oag.com/flight-connections/?version=v1&Limit=1&DepartureDate=2026-11-10&DepartureAirport=HKG&ArrivalAirport=LHR&Service=p",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "departure": {
+          "cityCode": "HKG",
+          "airport": {
+            "iata": "HKG"
+          }
+        },
+        "arrival": {
+          "cityCode": "LON",
+          "airport": {
+            "iata": "LHR"
+          }
+        },
+        "effectivePeriod": {
+          "local": {
+            "startDate": "1899-12-31",
+            "endDate": "2027-03-23"
+          }
+        },
+        "daysOfOperation": [
+          "tuesday"
+        ],
+        "arrivalIntervalDays": 0,
+        "elapsedTime": 1210,
+        "qsi": "18.9",
+        "frequency": 21,
+        "circuity": 101,
+        "isSelfConnection": false,
+        "connectionType": "I",
+        "leg1": {
+          "departure": {
+            "cityCode": "HKG",
+            "airport": {
+              "iata": "HKG"
+            },
+            "terminalCode": "1",
+            "localTime": "00:15:00",
+            "country": "HK"
+          },
+          "arrival": {
+            "cityCode": "BRU",
+            "airport": {
+              "iata": "BRU"
+            },
+            "localTime": "07:20:00",
+            "country": "BE"
+          },
+          "carrierCode": {
+            "iata": "CX"
+          },
+          "flightNumber": 291,
+          "effectivePeriod": {
+            "local": {
+              "startDate": "1899-12-31",
+              "endDate": "2027-03-27"
+            }
+          },
+          "daysOfOperation": [
+            "monday",
+            "tuesday",
+            "thursday",
+            "saturday"
+          ],
+          "arrivalIntervalDays": "0",
+          "distance": 9374,
+          "elapsedTime": 845,
+          "numberOfStops": 0,
+          "equipment": {
+            "aircraftType": "359",
+            "typeBody": "JW"
+          },
+          "connectionTime": 285,
+          "isLowCost": false,
+          "mctStatus": "II",
+          "isDomicileCarrier": true,
+          "isInAlliance": true,
+          "serviceType": "J",
+          "codeshare": {
+            "comments010": []
+          },
+          "intermediateAirportsIata": []
+        },
+        "leg2": {
+          "departure": {
+            "cityCode": "BRU",
+            "airport": {
+              "iata": "BRU"
+            },
+            "localTime": "12:05:00",
+            "country": "BE"
+          },
+          "arrival": {
+            "cityCode": "LON",
+            "airport": {
+              "iata": "LHR"
+            },
+            "terminalCode": "5",
+            "localTime": "12:25:00",
+            "country": "GB"
+          },
+          "carrierCode": {
+            "iata": "BA"
+          },
+          "flightNumber": 389,
+          "effectivePeriod": {
+            "local": {
+              "startDate": "1899-12-31",
+              "endDate": "2027-03-23"
+            }
+          },
+          "daysOfOperation": [
+            "tuesday"
+          ],
+          "arrivalIntervalDays": "0",
+          "distance": 327,
+          "elapsedTime": 80,
+          "numberOfStops": 0,
+          "equipment": {
+            "aircraftType": "32N",
+            "typeBody": "JN"
+          },
+          "isLowCost": false,
+          "isDomicileCarrier": false,
+          "isInAlliance": true,
+          "serviceType": "J",
+          "codeshare": {
+            "comments010": [
+              "MH9717",
+              "CX7117",
+              "AA6637",
+              "QR5970",
+              "AS5311"
+            ]
+          },
+          "intermediateAirportsIata": []
+        },
+        "connectionId": "1617520440"
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1719,
+      "totalPages": 1719,
+      "next": "https://api.oag.com/flight-connections?version=v1&limit=1&departuredate=2026-11-10&departureairport=HKG&arrivalairport=LHR&service=p&cursor=1617520440"
+    }
+  }
+}

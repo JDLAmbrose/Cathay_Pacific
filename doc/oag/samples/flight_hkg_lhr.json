@@ -1,0 +1,97 @@
+{
+  "checkedAtUtc": "2026-11-09T16:25:07.106744+00:00",
+  "product": "flights",
+  "url": "https://api.oag.com/flight-instances/?version=v2&Limit=1&DepartureDateTime=2026-11-16&CarrierCode=CX&FlightNumber=237&CodeType=IATA&Content=Status",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "carrier": {
+          "iata": "CX",
+          "icao": "CPA"
+        },
+        "serviceSuffix": "",
+        "flightNumber": 237,
+        "sequenceNumber": 1,
+        "flightType": "Scheduled",
+        "departure": {
+          "airport": {
+            "iata": "HKG",
+            "icao": "VHHH"
+          },
+          "terminal": "1",
+          "country": {
+            "code": "HK"
+          },
+          "date": {
+            "local": "2026-11-16",
+            "utc": "2026-11-15"
+          },
+          "time": {
+            "local": "00:25",
+            "utc": "16:25"
+          }
+        },
+        "arrival": {
+          "airport": {
+            "iata": "LHR",
+            "icao": "EGLL"
+          },
+          "terminal": "3",
+          "country": {
+            "code": "GB"
+          },
+          "date": {
+            "local": "2026-11-16",
+            "utc": "2026-11-16"
+          },
+          "time": {
+            "local": "07:00",
+            "utc": "07:00"
+          }
+        },
+        "elapsedTime": 875,
+        "cargoTonnage": 53.3,
+        "aircraftType": {
+          "iata": "359",
+          "icao": "A359"
+        },
+        "serviceType": {
+          "iata": "J"
+        },
+        "segmentInfo": {
+          "numberOfStops": 0,
+          "intermediateAirports": {
+            "iata": []
+          }
+        },
+        "distance": {
+          "accumulatedGreatCircleKilometers": 9630.0,
+          "accumulatedGreatCircleMiles": 5984.0,
+          "accumulatedGreatCircleNauticalMiles": 5200.0,
+          "greatCircleKilometers": 9630.0,
+          "greatCircleMiles": 5984.0,
+          "greatCircleNauticalMiles": 5200.0
+        },
+        "codeshare": {
+          "cockpitCrewEmployer": {
+            "code": "CX",
+            "name": "",
+            "number": "4"
+          },
+          "jointOperationAirlineDesignators": [],
+          "marketingFlights": []
+        },
+        "scheduleInstanceKey": "0a1c2e7e2329b9dc99a3bdad3588dc1eb82accd6b80b0ea21834e77bbf388880",
+        "statusKey": "c0d5ec9c009e53171d482ca26d74db1be4fbde85d75410a5f86d9f85391a3b51",
+        "statusDetails": []
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}

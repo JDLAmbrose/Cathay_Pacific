@@ -1,0 +1,56 @@
+{
+  "checkedAtUtc": "2026-11-09T16:20:14.679259+00:00",
+  "product": "carriers",
+  "url": "https://api.oag.com/carriers/?version=v1&Limit=1&CarrierCode=CX&CodeType=IATA",
+  "httpStatus": 200,
+  "response": {
+    "data": [
+      {
+        "code": {
+          "iata": "CX",
+          "icao": "CPA"
+        },
+        "publishingCarrier": true,
+        "duplicateCarrier": false,
+        "iataCodeRank": 1,
+        "iataCodeAssignmentCategory": {
+          "code": "I",
+          "description": "SCHEDULED PASSENGER AND CARGO CARRIERS PUBLISHING SCHEDULES IN AIRLINE GUIDES"
+        },
+        "alliances": [
+          "ONEWORLD"
+        ],
+        "name": "CATHAY PACIFIC AIRWAYS",
+        "alternativeName": {
+          "iata": {
+            "legal": "CATHAY PACIFIC AIRWAYS LTD"
+          },
+          "icao": "CATHAY PACIFIC AIRWAYS LTD."
+        },
+        "iataAccountingPrefix": "160",
+        "icaoTelephonyName": "CATHAY",
+        "domicile": {
+          "city": {
+            "name": "LANTAU"
+          },
+          "country": {
+            "name": "HONG KONG (SAR), CHINA",
+            "code": {
+              "iso": "HK",
+              "dot": "729"
+            }
+          },
+          "region": {
+            "name": "ASIA : NORTH EAST ASIA"
+          }
+        }
+      }
+    ],
+    "paging": {
+      "limit": 1,
+      "totalCount": 1,
+      "totalPages": 1,
+      "next": ""
+    }
+  }
+}

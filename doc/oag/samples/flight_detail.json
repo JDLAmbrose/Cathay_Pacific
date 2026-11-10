@@ -1,0 +1,93 @@
+{
+  "checkedAtUtc": "2026-11-10T12:19:45.842081+00:00",
+  "product": "flight-detail",
+  "url": "https://api.oag.com/flight-instances/2026-11-15/529c8567e6698ac237a99b346e675c287bc2f304f142a9dff3144a13cc5eb54f?version=v2",
+  "httpStatus": 200,
+  "response": {
+    "carrier": {
+      "iata": "CX",
+      "icao": "CPA"
+    },
+    "serviceSuffix": "",
+    "flightNumber": 331,
+    "sequenceNumber": 1,
+    "flightType": "Scheduled",
+    "departure": {
+      "airport": {
+        "iata": "PEK",
+        "icao": "ZBAA"
+      },
+      "terminal": "3",
+      "country": {
+        "code": "CN"
+      },
+      "date": {
+        "local": "2026-11-15",
+        "utc": "2026-11-15"
+      },
+      "time": {
+        "local": "16:45",
+        "utc": "08:45"
+      }
+    },
+    "arrival": {
+      "airport": {
+        "iata": "HKG",
+        "icao": "VHHH"
+      },
+      "terminal": "1",
+      "country": {
+        "code": "HK"
+      },
+      "date": {
+        "local": "2026-11-15",
+        "utc": "2026-11-15"
+      },
+      "time": {
+        "local": "20:30",
+        "utc": "12:30"
+      }
+    },
+    "elapsedTime": 225,
+    "cargoTonnage": 11.7,
+    "aircraftType": {
+      "iata": "333",
+      "icao": "A333"
+    },
+    "serviceType": {
+      "iata": "J"
+    },
+    "segmentInfo": {
+      "numberOfStops": 0,
+      "intermediateAirports": {
+        "iata": []
+      }
+    },
+    "distance": {
+      "accumulatedGreatCircleKilometers": 1992.0,
+      "accumulatedGreatCircleMiles": 1238.0,
+      "accumulatedGreatCircleNauticalMiles": 1076.0,
+      "greatCircleKilometers": 1992.0,
+      "greatCircleMiles": 1238.0,
+      "greatCircleNauticalMiles": 1076.0
+    },
+    "codeshare": {
+      "cockpitCrewEmployer": {
+        "code": "CX",
+        "name": "",
+        "number": "4"
+      },
+      "jointOperationAirlineDesignators": [],
+      "marketingFlights": [
+        {
+          "code": "CA",
+          "serviceNumber": "6501",
+          "suffix": ""
+        }
+      ]
+    },
+    "scheduleInstanceKey": "529c8567e6698ac237a99b346e675c287bc2f304f142a9dff3144a13cc5eb54f",
+    "statusKey": "cbe0f2cf4277c5b02bd5206b922c2e42040dca73e6ee5425ff3f5f96ca343919",
+    "statusDetails": []
+  }
+}
