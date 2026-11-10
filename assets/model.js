@@ -45,7 +45,7 @@ const COUNTRY_SERVICE_AREAS={
 function flightCountry(airport,explicit){const code=String(explicit?.code||explicit||AIRPORT_COUNTRIES[airport]||'').toUpperCase();return ['CN','HK','MO'].includes(code)?'CN':code;}
 function serviceRoute(){const area=(airport,explicit)=>{const country=flightCountry(airport,explicit),data=COUNTRY_SERVICE_AREAS[country];return {country,label:data?.label||null,regions:country==='CN'?['hk','gba','mainland']:['mainland'],providers:data?.providers||[]};};return {origin:area(state.flight.origin,state.flight.originCountry),destination:area(state.flight.destination,state.flight.destinationCountry)};}
 // Family hub. The demo directory maps only the two supplied sample accounts to booked travellers.
-const FAMILY_METHODS=['member','mobile','email'],FAMILY_RELATIONSHIPS=['parent','guardian','other'],FAMILY_STATUSES=['draft','pending','linked','declined'];
+const FAMILY_METHODS=['member','mobile','email'],FAMILY_RELATIONSHIPS=['parent','guardian','other'],FAMILY_STATUSES=['draft','pending','linked','declined','cancelled'];
 const FAMILY_FIELDS={member:'memberNo',mobile:'mobile',email:'email'},FAMILY_MEMBER_ID='lin',FAMILY_PARENT={name:'Mei Chen',tier:'silver',memberNo:'9876543210',mobile:'+852 0000 0001',email:'mei.chen@example.com'};
 const MEMBERSHIP_TIERS=['green','silver','gold','diamond','diamondExec'],FAMILY_MILESTONE_TARGET=3;
 function newFamilyLink(){return {method:'member',memberNo:'1234567890',mobile:'+852 0000 0000',email:'lin.chen@example.com',surname:'Chen',givenName:'Lin',relationship:'parent',status:'draft',shareProgress:false,invitedAt:null,respondedAt:null,changeRequest:null};}
@@ -70,17 +70,26 @@ function familyTravellerId(link){
 function familyMemberId(link){
  return familyTravellerId(link)||link.method+':'+familyAccountKey(link.method,familyIdentifier(link));
 }
+function familyConnectionRecords(passengerId=null){
+ const archived=state.familyInvitationArchive.filter(entry=>entry.passengerId===passengerId).map(entry=>entry.link);
+ const current=passengerId===null?state.familyLink:state.passengerLinks[passengerId];
+ return current?[...archived,current]:archived;
+}
+function parentFamilyRecords(){return [...familyConnectionRecords().reverse(),...state.familyMembers];}
 function linkedFamilyMembers(){
- if(familyDemoUnlinked(FAMILY_MEMBER_ID))return [];
- return [state.familyLink,...state.familyMembers].filter(link=>link.status==='linked');
+ return familyDemoUnlinked(FAMILY_MEMBER_ID)?[]:parentFamilyRecords().filter(link=>link.status==='linked');
 }
 function linkedFamilyMember(id){return linkedFamilyMembers().find(link=>familyMemberId(link)===id);}
-function inviteAnotherFamilyMember(){
- if(!familyLinkedRecord(state.familyLink))return false;
- state.familyMembers.push(state.familyLink);
- state.familyLink=newFamilyContact();
- persist();
- return true;
+function linkedPassengerContacts(passengerId){
+ if(familyDemoUnlinked(passengerId))return [];
+ return familyConnectionRecords(passengerId).filter(link=>link.status==='linked');
+}
+function pendingFamilyInvitations(passengerId){
+ return familyConnectionRecords(passengerId).filter(link=>link.status==='pending').reverse();
+}
+function familyInvitationId(link){return link.invitationId||'legacy:'+familyMemberId(link);}
+function pendingFamilyInvitation(passengerId,id){
+ return pendingFamilyInvitations(passengerId).find(link=>familyInvitationId(link)===id);
 }
 function familyLinkedRecord(link){return link?.status==='linked'&&!familyDemoUnlinked(FAMILY_MEMBER_ID);}
 function setFamilyProgress(id,action){
@@ -97,6 +106,7 @@ function setFamilyProgress(id,action){
 }
 function migrateFamilyState(){
  state.passengerLinks??={};
+ state.familyInvitationArchive??=[];
  if(!Array.isArray(state.familyMembers))state.familyMembers=[];
  const saved=state.familyLink,fresh=newFamilyLink();
  state.familyLink=saved&&typeof saved==='object'?{...fresh,...saved}:fresh;
@@ -109,16 +119,60 @@ function validateFamilyLink(link=state.familyLink,allContacts=false){
  if(!FAMILY_METHODS.includes(link.method))return 'e.familyMethod';
  const memberNo=String(link.memberNo??'').trim(),mobile=String(link.mobile??'').trim(),email=String(link.email??'').trim();
  if((allContacts||link.method==='member')&&!/^\d{8,12}$/.test(memberNo.replace(/[\s-]/g,'')))return 'e.familyMember';
- if((allContacts||link.method==='mobile')&&(!/^\+?[\d\s()-]+$/.test(mobile)||!/^\d{8,15}$/.test(mobile.replace(/\D/g,''))))return 'e.familyMobile';
+ if((allContacts||link.method==='mobile')&&(!/^\+[\d\s()-]+$/.test(mobile)||!/^\d{8,15}$/.test(mobile.replace(/\D/g,''))))return 'e.familyMobile';
  if((allContacts||link.method==='email')&&!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email))return 'e.familyEmail';
  if(!FAMILY_RELATIONSHIPS.includes(link.relationship))return 'e.familyRelationship';
- if(link===state.familyLink&&link.status==='draft'&&linkedFamilyMember(familyMemberId(link)))return 'e.familyDuplicate';
+ if(link===state.familyLink&&link.status==='draft')return validateFamilyInvitationDuplicate(link,null);
  return null;
 }
-// Once the parent confirms, the declared relationship is locked; later changes go to manual review.
-function sendFamilyInvite(link=state.familyLink,allContacts=false){if(link.status!=='draft')return 'e.familyLocked';const error=validateFamilyLink(link,allContacts);if(error)return error;Object.assign(link,{status:'pending',invitedAt:iso(state.clock),respondedAt:null,changeRequest:null});if(link===state.familyLink)link.owner={...FAMILY_PARENT};persist();return null;}
+function validateFamilyInvitationDuplicate(link,passengerId){
+ const records=passengerId===null?parentFamilyRecords():familyConnectionRecords(passengerId);
+ const id=familyMemberId(link);
+ const matches=records.filter(record=>familyMemberId(record)===id);
+ if(matches.some(record=>record.status==='linked'))return 'e.familyDuplicate';
+ if(matches.some(record=>record.status==='pending'))return 'e.familyInvitePending';
+ return null;
+}
+function validateFamilyInvitation(link,passengerId){
+ return validateFamilyLink(link,passengerId!==null)||validateFamilyInvitationDuplicate(link,passengerId);
+}
+function markFamilyInvitationPending(link,fromParent){
+ state.nextFamilyInvitation=(state.nextFamilyInvitation||0)+1;
+ const invitationId=globalThis.crypto?.randomUUID?.()||'invite-'+state.nextFamilyInvitation;
+ Object.assign(link,{invitationId,status:'pending',invitedAt:iso(state.clock),respondedAt:null,changeRequest:null,shareProgress:false});
+ if(fromParent)link.owner={...FAMILY_PARENT};
+}
+// Retain the original model entry point for callers submitting the active draft.
+function sendFamilyInvite(link=state.familyLink,allContacts=false){
+ if(link.status!=='draft')return 'e.familyLocked';
+ const error=validateFamilyLink(link,allContacts);
+ if(error)return error;
+ markFamilyInvitationPending(link,link===state.familyLink);
+ persist();
+ return null;
+}
+function submitFamilyInvitation(draft,passengerId){
+ const error=validateFamilyInvitation(draft,passengerId);
+ if(error)return error;
+ const fromParent=passengerId===null;
+ const current=fromParent?state.familyLink:state.passengerLinks[passengerId];
+ if(current&&current.status!=='draft')state.familyInvitationArchive.push({passengerId,link:current});
+ const link={...draft};
+ markFamilyInvitationPending(link,fromParent);
+ if(fromParent)state.familyLink=link;
+ else state.passengerLinks[passengerId]=link;
+ if(state.familyDemoUnlinked)delete state.familyDemoUnlinked[passengerId??FAMILY_MEMBER_ID];
+ persist();
+ return null;
+}
+function cancelFamilyInvitation(link){
+ if(link?.status!=='pending')return false;
+ link.status='cancelled';
+ link.respondedAt=iso(state.clock);
+ persist();
+ return true;
+}
 function respondFamilyInvite(accepted,share=true,link=state.familyLink){if(link.status!=='pending')return false;Object.assign(link,{status:accepted?'linked':'declined',shareProgress:!!(accepted&&share),respondedAt:iso(state.clock)});persist();return true;}
-function restartFamilyInvite(link=state.familyLink){if(link.status!=='declined')return false;Object.assign(link,{status:'draft',invitedAt:null,respondedAt:null,changeRequest:null});persist();return true;}
 function requestFamilyChange(link=state.familyLink){if(!['pending','linked'].includes(link.status)||link.changeRequest?.status==='pending')return false;link.changeRequest={status:'pending',submittedAt:iso(state.clock)};persist();return true;}
 function familyDemoUnlinked(travellerId){return state.familyDemoUnlinked?.[travellerId]===true;}
 function setFamilyDemoUnlinked(travellerId,active){
@@ -129,13 +183,22 @@ function setFamilyDemoUnlinked(travellerId,active){
 }
 function canAddDemoAlex(link){
  return link===state.familyLink&&familyLinkedRecord(link)&&familyTravellerId(link)===FAMILY_MEMBER_ID&&
-  !state.familyMembers.some(member=>familyTravellerId(member)==='child');
+  !parentFamilyRecords().some(member=>member.status==='linked'&&familyTravellerId(member)==='child');
 }
 function addDemoAlex(now){
  state.familyMembers.push({...alexFamilyLink(),owner:{...FAMILY_PARENT},status:'linked',shareProgress:true,invitedAt:now,respondedAt:now});
 }
+function familyDemoHasMembers(link,travellerId){
+ const records=link===state.familyLink?parentFamilyRecords():familyConnectionRecords(travellerId);
+ return records.some(member=>member.status==='linked');
+}
+function canSimulateFamilyLink(link,travellerId){
+ const hasMembers=familyDemoHasMembers(link,travellerId);
+ return (familyDemoUnlinked(travellerId)&&hasMembers)||canAddDemoAlex(link)||(link.status==='draft'&&!hasMembers);
+}
 function simulateFamilyLink(link,travellerId){
- if(link.status==='linked'&&familyDemoUnlinked(travellerId)){
+ if(!canSimulateFamilyLink(link,travellerId))return false;
+ if(familyDemoUnlinked(travellerId)&&familyDemoHasMembers(link,travellerId)){
   setFamilyDemoUnlinked(travellerId,false);
   return true;
  }
@@ -144,13 +207,7 @@ function simulateFamilyLink(link,travellerId){
   persist();
   return true;
  }
- if(link.status!=='draft')return false;
  const fromParent=link===state.familyLink,now=iso(state.clock);
- if(fromParent&&state.familyMembers.length){
-  if(!familyDemoUnlinked(travellerId))return false;
-  setFamilyDemoUnlinked(travellerId,false);
-  return true;
- }
  const sample=fromParent?newFamilyLink():{
   method:'email',memberNo:FAMILY_PARENT.memberNo,mobile:FAMILY_PARENT.mobile,email:FAMILY_PARENT.email,
   surname:'Chen',givenName:'Mei',relationship:'parent'
@@ -207,8 +264,10 @@ function migrateBookingState(){
 }
 function helperContacts(){
  if(familyDemoUnlinked(state.travellerId))return [];
- const contacts=[],link=state.passengerLinks[state.travellerId];
- if(link?.status==='linked')contacts.push({...link,id:'member',name:familyMemberName(link)});
+ const records=familyConnectionRecords(state.travellerId);
+ const contacts=records.flatMap((link,index)=>link.status==='linked'?[{
+  ...link,id:index===0?'member':'member:'+familyMemberId(link),name:familyMemberName(link)
+ }]:[]);
  // In the parent-side flow the passenger is the invitee, so the helper is the linking account owner.
  const member=linkedFamilyMembers().find(link=>familyTravellerId(link)===state.travellerId);
  if(member){

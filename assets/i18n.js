@@ -692,6 +692,16 @@ link.progress	互聯步驟	Linking steps	Étapes de liaison	Pasos de vinculació
 link.step1	填寫成員資料	Member details	Coordonnées du membre	Datos del miembro	بيانات العضو
 link.step2	確認並發送邀請	Confirm and invite	Confirmer et inviter	Confirmar e invitar	التأكيد وإرسال الدعوة
 link.step3	對方確認	Member accepts	Acceptation du membre	Aceptación del miembro	موافقة العضو
+link.addMember	添加關聯成員	Add a family member	Ajouter un membre de la famille	Añadir un familiar	إضافة فرد من العائلة
+link.inviteMember	邀請家庭成員	Invite a family member	Inviter un membre de la famille	Invitar a un familiar	دعوة فرد من العائلة
+link.reviewInvite	確認資料	Review details	Vérifier les informations	Revisar los datos	مراجعة البيانات
+link.invitationsPending	等待回覆的邀請	Invitations awaiting a response	Invitations en attente de réponse	Invitaciones pendientes de respuesta	دعوات بانتظار الرد
+link.pendingCount	{n} 個待接受	Pending: {n}	En attente : {n}	Pendientes: {n}	بانتظار القبول: {n}
+link.cancelInvite	取消邀請	Cancel invitation	Annuler l’invitation	Cancelar invitación	إلغاء الدعوة
+link.cancelInviteTitle	取消這個家庭邀請？	Cancel this family invitation?	Annuler cette invitation familiale ?	¿Cancelar esta invitación familiar?	هل تريد إلغاء هذه الدعوة العائلية؟
+link.cancelInviteBody	取消後，對方將無法再接受此邀請。	After cancellation, the recipient can no longer accept this invitation.	Après l’annulation, le destinataire ne pourra plus accepter cette invitation.	Tras cancelarla, el destinatario ya no podrá aceptar la invitación.	بعد الإلغاء، لن يتمكن المستلم من قبول هذه الدعوة.
+notice.familyInviteCancelled	已取消家庭邀請。	Family invitation cancelled.	Invitation familiale annulée.	Invitación familiar cancelada.	تم إلغاء الدعوة العائلية.
+e.familyInvitePending	此成員已有待確認的邀請。	This family member already has an invitation awaiting a response.	Ce membre a déjà reçu une invitation en attente de réponse.	Este familiar ya tiene una invitación pendiente de respuesta.	لدى فرد العائلة هذا دعوة بانتظار الرد.
 link.formTitle	要與哪位家庭成員互聯？	Who would you like to link with?	Avec quel proche souhaitez-vous vous relier ?	¿Con qué familiar quieres vincularte?	مع أيّ فرد من عائلتك تريد الربط؟
 link.formSub	請填寫對方國泰會員賬戶的資料。對方在邀請郵件中確認後，關係才會建立。	Enter details from their Cathay membership account. The link is created only after they accept the invitation email.	Saisissez les informations de son compte membre Cathay. Le lien n’est créé qu’après acceptation de l’e-mail d’invitation.	Introduce los datos de su cuenta de socio Cathay. El vínculo solo se crea cuando acepte el correo de invitación.	أدخل بيانات حساب عضوية كاثي الخاص به. لا يُنشأ الربط إلا بعد قبوله رسالة الدعوة.
 link.membersOnly	只限國泰會員	Cathay members only	Membres Cathay uniquement	Solo socios Cathay	لأعضاء كاثي فقط

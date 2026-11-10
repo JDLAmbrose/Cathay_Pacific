@@ -239,7 +239,11 @@
 .family-tabs a[aria-current=page]{background:var(--deep);color:#fff;font-weight:600}
 .family-workspace{max-width:960px;margin-inline:auto}
 .family-workspace .subhead h2:focus{outline:none}
-.family-roster{margin-bottom:24px}
+.family-roster,.family-invite-list{margin-bottom:24px}
+.family-invite-item{flex:1;min-width:0;overflow-wrap:anywhere}
+.family-invite-item .actions{margin-top:8px}
+#familyInviteForm .family-steps{margin-bottom:16px}
+#familyInviteForm .address-panel{margin-top:16px;padding:16px}
 .family-roster-empty{display:flex;align-items:flex-start;gap:14px;padding:18px;border:1px dashed var(--line);border-radius:12px;background:var(--pale)}
 .family-roster-empty p,.family-member-top p{font-size:calc(12px * var(--text-scale,1));color:var(--muted);margin-top:4px;overflow-wrap:anywhere}
 .family-member-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}

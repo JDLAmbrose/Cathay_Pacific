@@ -6,7 +6,8 @@ const FAMILY_PAGES=['family','benefits'];
 const page=document.body.dataset.page||'home';
 const helperFamilyPage=page==='family'&&new URLSearchParams(location.search).get('for')==='helper';
 const helperPassengerId=state.travellerId;
-const familyDemoTravellerId=helperFamilyPage?helperPassengerId:FAMILY_MEMBER_ID;
+const familyInvitePassengerId=helperFamilyPage?helperPassengerId:null;
+const familyDemoTravellerId=familyInvitePassengerId??FAMILY_MEMBER_ID;
 const familyPageLink=()=>helperFamilyPage?passengerFamilyLink(helperPassengerId):state.familyLink;
 // The homepage is the sole root entry; all other pages live one level below it.
 const ROOT_PREFIX=page==='home'?'':'../';
@@ -290,28 +291,32 @@ function familyInitials(fam){const surname=String(fam.surname||'').trim(),given=
 function maskEmail(value){const [user,domain]=String(value).split('@');return domain?`${user[0]||''}•••${user.length>1?user.at(-1):''}@${domain}`:String(value);}
 function familyTabsHTML(){return `<nav class="family-tabs" aria-label="${T('familyTabs.label')}">${[['benefits','benefits'],['family','link']].map(([view,key])=>`<a href="${href(view)+(helperFamilyPage&&view==='family'?'&for=helper':'')}" ${page===view?'aria-current="page"':''}>${T('familyTabs.'+key)}</a>`).join('')}</nav>`;}
 function familyHead(title,sub){return `<div class="pagehead family-head reveal"><div><div class="eyebrow page-identity">${productMark()}<span>${esc(productName())} / FAMILY</span></div><h1>${T(title)}</h1><p>${T(sub)}</p></div>${familyTabsHTML()}</div>`;}
-function familyStepsHTML(fam){const current={draft:1,pending:3,declined:3,linked:4}[fam.status]||1;return `<ol class="steps family-steps" aria-label="${T('link.progress')}">${['link.step1','link.step2','link.step3'].map((key,i)=>{const n=i+1,done=n<current,declined=fam.status==='declined'&&n===3;return `<li class="step${done?' done':''}${declined?' declined':''}" ${n===current?'aria-current="step"':''}><i>${done?'✓':declined?'!':n}</i><span>${T(key)}</span></li>`;}).join('')}</ol>`;}
+function familyStepsHTML(current){
+ return `<ol class="steps family-steps" aria-label="${T('link.progress')}">${['link.step1','link.step2'].map((key,i)=>`<li class="step${i+1<current?' done':''}" ${i+1===current?'aria-current="step"':''}><i>${i+1<current?'✓':i+1}</i><span>${T(key)}</span></li>`).join('')}</ol>`;
+}
 function familyChoiceHTML(field,value,current,ic,label){return `<label class="carriage-option family-choice"><input type="radio" name="family-${field}" value="${value}" data-family-field="${field}" ${current===value?'checked':''}><span class="carriage-top">${icon(ic)}<span class="carriage-radio" aria-hidden="true"></span></span><strong>${T(label)}</strong>${helperFamilyPage&&field==='relationship'?'':`<small>${T(label+'Hint')}</small>`}</label>`;}
 function familyIdentifierHTML(fam,method=fam.method){
  const [type,extra]=FAMILY_INPUTS[method]||FAMILY_INPUTS.member,key=FAMILY_FIELDS[method]||'memberNo';
  return `<label class="field ${helperFamilyPage?'':'full'}"><span>${T('link.input.'+method)}</span><input class="input" id="${helperFamilyPage?'familyIdentifier-'+method:'familyIdentifier'}" type="${type}" dir="ltr" data-family-field="${key}" value="${V(fam[key])}" ${extra}></label>`;
 }
 function familyPanelHead(n,id,title,sub){return `<div class="address-panel-heading"><span class="panel-number">0${n}</span><div><h3 id="${id}">${T(title)}</h3><p>${T(sub)}</p></div></div>`;}
-function familyFormHTML(fam){return `<div class="subhead"><div><h2 tabindex="-1">${T('link.formTitle')}</h2><p>${T('link.formSub')}</p></div><span class="pill">${icon('person')}${T('link.membersOnly')}</span></div>
+function familyFormHTML(fam){return `<form id="familyInviteForm" novalidate>${familyStepsHTML(1)}<p class="dialog-lead">${T('link.formSub')}</p>
  <section class="address-panel family-panel" aria-labelledby="familyNameTitle">${familyPanelHead(1,'familyNameTitle','link.nameTitle','link.nameSub')}<div class="fields">${[['surname','link.surname'],['givenName','link.givenName']].map(([key,label])=>`<label class="field"><span>${T(label)}</span><input class="input" data-family-field="${key}" value="${V(fam[key])}" maxlength="60" autocomplete="off"></label>`).join('')}</div></section>
  <fieldset class="address-panel family-panel" aria-labelledby="familyAccountTitle">${familyPanelHead(2,'familyAccountTitle','link.accountTitle',helperFamilyPage?'helper.contactAccountSub':'link.accountSub')}${helperFamilyPage?'':`<div class="carriage-grid family-choices">${[['member','card'],['mobile','phone'],['email','mail']].map(([method,ic])=>familyChoiceHTML('method',method,fam.method,ic,'link.method.'+method)).join('')}</div>`}<div class="fields">${(helperFamilyPage?FAMILY_METHODS:[fam.method]).map(method=>familyIdentifierHTML(fam,method)).join('')}</div></fieldset>
  <fieldset class="address-panel family-panel" aria-labelledby="familyRelationshipTitle">${familyPanelHead(3,'familyRelationshipTitle',helperFamilyPage?'helper.relationship':'link.relationshipTitle','link.relationshipSub')}<div class="carriage-grid family-choices">${[['parent','parent'],['guardian','shield'],['other','home']].map(([relationship,ic])=>familyChoiceHTML('relationship',relationship,fam.relationship,ic,'link.rel.'+relationship)).join('')}</div></fieldset>
  ${helperFamilyPage?'':`<div class="note">${T('link.privacyNote')}</div>`}
- ${familyFooterHTML(`<button class="btn" data-action="family-confirm">${T('link.submit')}${icon('arrow','arrow')}</button>`)}`;}
+ <p class="notice error" id="familyFormError" role="alert" tabindex="-1" hidden></p><button type="submit" hidden></button></form>`;}
 function familySummaryHTML(fam,extra=''){return `<div class="family-summary">${row('link.summary.member',esc(familyMemberName(fam)))}${row('link.summary.method',`${T('link.method.'+fam.method)} · <bdi dir="ltr">${esc(familyIdentifier(fam))}</bdi>`)}${row('link.summary.relationship',T('link.rel.'+fam.relationship))}${extra}</div>`;}
 function familyChangeHTML(fam,id=''){return fam.changeRequest?.status==='pending'?`<span class="pill gold">${icon('clock')}${T('link.changePending',{time:hk(fam.changeRequest.submittedAt)})}</span>`:`<button class="textbtn" data-action="family-change" data-id="${esc(id)}">${T('link.changeRequest')}</button>`;}
-function familyFooterHTML(primary='',backLabel=helperFamilyPage?'step.1':'common.home'){return `<div class="formfooter"><a class="btn light" href="${href(helperFamilyPage?'book':'home')}">${icon('back','arrow')}${T(backLabel)}</a>${primary}</div>`;}
-function familyPendingHTML(fam){return `<div class="subhead"><div><h2 tabindex="-1">${T('link.pendingHeading')}</h2><p>${T('link.pendingSub')}</p></div><span class="pill gold">${icon('clock')}${T('link.statusPending')}</span></div>
- <section class="family-status" role="status">${icon('mail')}<div><strong>${T('link.pendingTitle')}</strong><p>${T('link.pendingText',{time:hk(fam.invitedAt)})}</p></div></section>
- ${familySummaryHTML(fam,row('link.summary.sent',esc(hk(fam.invitedAt))+' HKT'))}
- <div class="actions family-actions"><button class="btn light" data-action="family-preview">${icon('mail')}${T('link.previewEmail')}</button>${familyChangeHTML(fam)}</div>
- <p class="prototype-note">${T('link.previewNote')}</p>
- ${familyFooterHTML(helperFamilyPage?'':link('benefits',T('link.benefitsCta'),'btn light'))}`;}
+function familyPendingHTML(invitations){
+ if(!invitations.length)return '';
+ return `<section class="card family-invite-list" aria-labelledby="familyPendingTitle"><div class="subhead"><div><h2 id="familyPendingTitle" tabindex="-1">${T('link.invitationsPending')}</h2><p>${T('link.pendingSub')}</p></div><span class="pill gold">${T('link.pendingCount',{n:fmt(invitations.length)})}</span></div>
+ ${invitations.map(fam=>{
+  const id=esc(familyInvitationId(fam));
+  return `<article class="family-status"><span class="feature-icon" aria-hidden="true">${icon('mail')}</span><div class="family-invite-item"><strong>${esc(familyMemberName(fam))} · ${T('link.statusPending')}</strong><p>${T('link.method.'+fam.method)} · <bdi dir="ltr">${esc(maskedFamilyAccount(fam))}</bdi> · ${T('link.rel.'+fam.relationship)}</p>
+   <div class="actions"><button type="button" class="textbtn" data-action="family-preview" data-id="${id}">${T('link.previewEmail')}</button><button type="button" class="textbtn" data-action="family-cancel-invite" data-id="${id}">${T('link.cancelInvite')}</button></div></div></article>`;
+ }).join('')}<p class="prototype-note">${T('link.previewNote')}</p></section>`;
+}
 function maskedFamilyAccount(fam){
  const value=familyIdentifier(fam);
  return fam.method==='email'?maskEmail(value):'•••• '+value.replace(/\D/g,'').slice(-4);
@@ -326,62 +331,83 @@ function familyMemberCard(fam,isHelper=false){
   access==='waiting'?`<small class="muted">${T('link.progressWaiting')}</small>`:
   `<button type="button" class="textbtn" data-action="${access==='requested'?'family-progress-preview':'family-progress-request'}" data-id="${esc(id)}">${T(access==='requested'?'link.progressPreview':'link.progressRequest')}${icon('arrow')}</button>`;
  return `<article class="family-member card"><header class="family-member-top"><span class="member-initials" aria-hidden="true">${esc(familyInitials(fam))}</span><div><h3>${esc(name)}</h3><p>${T('link.relationshipValue',{relationship:t('link.rel.'+fam.relationship)})} · <bdi>${esc(maskedFamilyAccount(fam))}</bdi></p></div><span class="pill">${icon('check')}${T('link.statusLinked')}</span></header>
- ${status}${isHelper?`<div class="actions member-review"><span class="pill">${T('helper.title')}</span>${helperFamilyPage?'':link('book',T('helper.select'),'textbtn')}</div>`:`<div class="actions">${proxy}${progress}</div><div class="member-review">${familyChangeHTML(fam,id)}</div>`}</article>`;
+ ${status}${isHelper?`<div class="actions member-review"><span class="pill">${T('helper.title')}</span>${helperFamilyPage?familyChangeHTML(fam,id):link('book',T('helper.select'),'textbtn')}</div>`:`<div class="actions">${proxy}${progress}</div><div class="member-review">${familyChangeHTML(fam,id)}</div>`}</article>`;
 }
-function familyRosterHTML(members,helper){
- const count=members.length+Number(!!helper);
- return `<section class="family-roster card" aria-labelledby="familyMembersTitle"><div class="subhead"><div><h2 id="familyMembersTitle">${T('link.memberLabel')}</h2></div><span class="pill">${T('link.memberCount',{n:fmt(count)})}</span></div>
- ${count?`<div class="family-member-grid">${members.map(member=>familyMemberCard(member)).join('')}${helper?familyMemberCard(helper,true):''}</div>${members.length?`<p class="prototype-note">${T('link.lockedNote')}</p>`:''}`:`<div class="family-roster-empty">${icon('parent')}<div><strong>${T('helper.noContactsTitle')}</strong><p>${T('link.membersEmpty')}</p></div></div>`}</section>`;
+function familyRosterHTML(members,helpers){
+ const count=members.length+helpers.length;
+ return `<section class="family-roster card" aria-labelledby="familyMembersTitle"><div class="subhead"><div><h2 id="familyMembersTitle" tabindex="-1">${T('link.memberLabel')}</h2></div><span class="pill">${T('link.memberCount',{n:fmt(count)})}</span></div>
+ ${count?`<div class="family-member-grid">${members.map(member=>familyMemberCard(member)).join('')}${helpers.map(member=>familyMemberCard(member,true)).join('')}</div>${members.length?`<p class="prototype-note">${T('link.lockedNote')}</p>`:''}`:`<div class="family-roster-empty">${icon('parent')}<div><strong>${T('helper.noContactsTitle')}</strong><p>${T('link.membersEmpty')}</p></div></div>`}</section>`;
 }
-function familyLinkedHTML(fam){
- if(helperFamilyPage)return `<div class="subhead"><div><h2 tabindex="-1">${T('link.linkedHeading',{name:inlineName(familyMemberName(fam))})}</h2><p>${T('helper.contactLinked')}</p></div></div>${familyFooterHTML(familyChangeHTML(fam),'link.viewPassenger')}`;
- return `<div class="subhead"><div><h2 tabindex="-1">${T('link.inviteAnother')}</h2><p>${T('link.formSub')}</p></div></div>
- <div class="actions"><button type="button" class="btn" data-action="family-add">${T('link.inviteAnother')}${icon('arrow')}</button>${familyDemoPassengerLink()}</div>
- ${familyFooterHTML(link('benefits',T('link.benefitsCta'),'btn light'))}`;
-}
-function familyDeclinedHTML(fam){return `<div class="subhead"><div><h2 tabindex="-1">${T('link.declinedHeading')}</h2><p>${T('link.declinedSub')}</p></div></div><section class="family-status declined" role="status">${icon('mail')}<div><strong>${T('link.declinedTitle')}</strong><p>${T('link.declinedText')}</p></div></section>${familySummaryHTML(fam)}${familyFooterHTML(`<button class="btn" data-action="family-restart">${T('link.restart')}${icon('arrow','arrow')}</button>`)}`;}
 function familyDemoPassengerLink(){
  return `<a class="btn light" href="${href('book')}" ${helperFamilyPage?'':'data-family-proxy'}>${T('link.viewPassenger')}${icon('arrow','arrow')}</a>`;
 }
 function familyDemoControls(fam,unlinked){
- const canLink=canAddDemoAlex(fam)||(fam.status==='draft'&&(helperFamilyPage||!state.familyMembers.length||unlinked))||(unlinked&&fam.status==='linked');
+ const canLink=canSimulateFamilyLink(fam,familyDemoTravellerId);
  return `<div class="actions family-demo-actions">
   <button type="button" class="btn slim light" data-action="family-demo-link" ${canLink?'':'disabled'}>${T('link.demoLink')}</button>
   <button type="button" class="btn slim light" data-action="family-demo-unlink" ${unlinked?'disabled':''}>${T('link.demoUnlink')}</button>
   ${unlinked?`<button type="button" class="textbtn" data-action="family-demo-exit">${T('link.demoExit')}</button>`:''}
  </div>`;
 }
-function familyDemoUnlinkedHTML(){
- return `<div class="subhead"><div><h2 tabindex="-1">${T('helper.noContactsTitle')}</h2><p>${T('link.demoUnlinkedBody')}</p></div></div>
- <div class="formfooter">${familyDemoPassengerLink()}</div>`;
-}
 function familyHTML(){
  const fam=familyPageLink(),unlinked=familyDemoUnlinked(familyDemoTravellerId);
- const view=unlinked?familyDemoUnlinkedHTML:({draft:familyFormHTML,pending:familyPendingHTML,linked:familyLinkedHTML,declined:familyDeclinedHTML}[fam.status]||familyFormHTML);
- const members=unlinked||helperFamilyPage?[]:linkedFamilyMembers();
- const passengerLink=state.passengerLinks[state.travellerId];
- const helper=helperFamilyPage?fam:familyDemoUnlinked(state.travellerId)?null:passengerLink;
- const showSteps=!unlinked&&fam.status!=='linked';
- return `${familyHead('link.title',helperFamilyPage?'helper.linkSub':'link.sub')}<div class="family-workspace reveal">${familyRosterHTML(members,!unlinked&&helper?.status==='linked'?helper:null)}<div class="card">${familyDemoControls(fam,unlinked)}${showSteps?familyStepsHTML(fam):''}${view(fam)}</div></div>`;
+ const members=helperFamilyPage?[]:linkedFamilyMembers();
+ const helpers=unlinked?[]:linkedPassengerContacts(familyInvitePassengerId??state.travellerId);
+ const invitations=unlinked?[]:pendingFamilyInvitations(familyInvitePassengerId);
+ return `${familyHead('link.title',helperFamilyPage?'helper.linkSub':'link.sub')}<div class="family-workspace reveal">${familyRosterHTML(members,helpers)}${familyPendingHTML(invitations)}<div class="card">
+ ${familyDemoControls(fam,unlinked)}
+ ${unlinked?`<p class="dialog-lead">${T('link.demoUnlinkedBody')}</p>`:''}
+ <div class="actions"><button type="button" class="btn" data-action="family-add">${icon('person')}${T('link.addMember')}</button>${helperFamilyPage||unlinked||members.length||helpers.length?familyDemoPassengerLink():''}</div></div></div>`;
 }
-function focusFamilyHeading(){document.querySelector('.family-workspace .subhead h2[tabindex]')?.focus({preventScroll:false});}
-function familyFieldFocus(error){const target={'e.familyMethod':'[data-family-field="method"]','e.familyMember':'[data-family-field="memberNo"]','e.familyMobile':'[data-family-field="mobile"]','e.familyEmail':'[data-family-field="email"]','e.familyName':`[data-family-field="${String(familyPageLink().surname||'').trim()?'givenName':'surname'}"]`,'e.familyRelationship':'[data-family-field="relationship"]'}[error],el=target&&document.querySelector(target);if(!el)return;if(el.type!=='radio')el.setAttribute('aria-invalid','true');el.focus();}
+function focusFamilyHeading(){document.getElementById('familyMembersTitle')?.focus();}
+let familyInviteDraft;
+function openFamilyInvite(){
+ const current=familyPageLink();
+ familyInviteDraft=['draft','declined','cancelled'].includes(current.status)?clone(current):newFamilyContact(helperFamilyPage?'email':'member');
+ editFamilyInvite();
+}
+function editFamilyInvite(error){
+ richModal(t('link.inviteMember'),familyFormHTML(familyInviteDraft),[{text:t('common.cancel'),action:'close-dialog',light:true},{text:t('link.reviewInvite'),action:'family-confirm'}]);
+ if(error){showFamilyInviteError(error);return;}
+ document.querySelector('#familyInviteForm [data-family-field="surname"]')?.focus();
+}
+function showFamilyInviteError(error){
+ const message=document.getElementById('familyFormError');
+ message.textContent=t(error);
+ message.hidden=false;
+ const fields={'e.familyMethod':'method','e.familyMember':'memberNo','e.familyMobile':'mobile','e.familyEmail':'email','e.familyName':String(familyInviteDraft.surname||'').trim()?'givenName':'surname','e.familyRelationship':'relationship','e.familyDuplicate':FAMILY_FIELDS[familyInviteDraft.method],'e.familyInvitePending':FAMILY_FIELDS[familyInviteDraft.method]};
+ const input=document.querySelector(`#familyInviteForm [data-family-field="${fields[error]}"]`);
+ if(input)input.setAttribute('aria-invalid','true');
+ (input||message).focus();
+}
 function setFamilyField(el){
- const fam=familyPageLink(),key=el.dataset.familyField;if(!FAMILY_EDITABLE.includes(key))return false;
- if(fam.status!=='draft'){toast('e.familyLocked');render();return false;}
- if(el.type==='radio'&&!el.checked)return false;
- fam[key]=el.value;el.removeAttribute('aria-invalid');persist();
- if(key==='method'){const field=document.getElementById('familyIdentifier')?.closest('label');if(field)field.outerHTML=familyIdentifierHTML(fam);}
- return true;
+ const key=el.dataset.familyField;
+ if(!el.closest('#familyInviteForm')||!FAMILY_EDITABLE.includes(key)||(el.type==='radio'&&!el.checked))return;
+ familyInviteDraft[key]=el.value;
+ el.removeAttribute('aria-invalid');
+ document.getElementById('familyFormError').hidden=true;
+ if(key==='method'){
+  const field=document.getElementById('familyIdentifier')?.closest('label');
+  if(field)field.outerHTML=familyIdentifierHTML(familyInviteDraft);
+ }
 }
 function familyConfirm(){
- const fam=familyPageLink();if(fam.status!=='draft'){toast('e.familyLocked');render();return;}
- const error=validateFamilyLink(fam,helperFamilyPage);if(error){toast(error);familyFieldFocus(error);return;}
- richModal(t('link.confirmTitle'),`<p class="dialog-lead">${T('link.confirmIntro')}</p>${familySummaryHTML(fam)}<div class="notice family-warning">${icon('shield')}<span>${T('link.confirmWarning')}</span></div>`,[{text:t('link.confirmSend'),action:'family-send'},{text:t('link.confirmBack'),action:'close-dialog',light:true}],'close-dialog');
+ const error=validateFamilyInvitation(familyInviteDraft,familyInvitePassengerId);
+ if(error){showFamilyInviteError(error);return;}
+ richModal(t('link.confirmTitle'),`${familyStepsHTML(2)}<p class="dialog-lead">${T('link.confirmIntro')}</p>${familySummaryHTML(familyInviteDraft)}<div class="notice family-warning">${icon('shield')}<span>${T('link.confirmWarning')}</span></div><p class="prototype-note">${T('link.previewNote')}</p>`,[{text:t('link.confirmBack'),action:'family-invite-edit',light:true},{text:t('link.confirmSend'),action:'family-send'}],'family-invite-edit');
+}
+function confirmCancelFamilyInvitation(id){
+ if(!pendingFamilyInvitation(familyInvitePassengerId,id))return;
+ modal(t('link.cancelInviteTitle'),t('link.cancelInviteBody'),[{text:t('common.back'),action:'close-dialog',light:true},{text:t('link.cancelInvite'),action:'family-cancel-confirm',id}]);
 }
 function familyEmailHTML(fam){const sender=helperFamilyPage?(PEOPLE.find(p=>p.id===helperPassengerId)||PEOPLE[0]).name:FAMILY_PARENT.name,to=fam.method==='email'?maskEmail(familyIdentifier(fam)):t('link.emailToValue');return `<article class="email-preview"><dl class="email-meta"><div><dt>${T('link.emailFrom')}</dt><dd>${T('link.emailFromValue')}</dd></div><div><dt>${T('link.emailTo')}</dt><dd><bdi>${esc(to)}</bdi></dd></div><div><dt>${T('link.emailSubjectLabel')}</dt><dd>${T('link.emailSubject',{parent:sender})}</dd></div></dl><div class="email-body">${productMark()}<p><strong>${T('link.emailGreeting',{name:familyGivenName(fam)})}</strong></p><p>${T(helperFamilyPage?'helper.linkEmailBody':'link.emailBody',{parent:sender})}</p><div class="email-details">${row('link.emailRequester',esc(sender))}${row('link.emailRelationship',T('link.rel.'+fam.relationship))}</div>${helperFamilyPage?'':`<label class="check family-share"><input type="checkbox" id="familyShare"><span><strong>${T('link.emailShare')}</strong><small>${T('link.emailShareHint')}</small></span></label>`}</div></article><p class="prototype-note">${T('link.emailDemo')}</p>`;}
-function familyPreview(){const fam=familyPageLink();if(fam.status!=='pending')return;richModal(t('link.emailTitle'),familyEmailHTML(fam),[{text:t('link.emailAccept'),action:'family-accept'},{text:t('link.emailDecline'),action:'family-decline',light:true}]);}
-function familyActionRecord(id){return id?linkedFamilyMember(id):familyPageLink();}
+function familyPreview(id){
+ const fam=pendingFamilyInvitation(familyInvitePassengerId,id);
+ if(fam)richModal(t('link.emailTitle'),familyEmailHTML(fam),[{text:t('link.emailAccept'),action:'family-accept',id},{text:t('link.emailDecline'),action:'family-decline',id,light:true}]);
+}
+function familyActionRecord(id){
+ return helperFamilyPage?linkedPassengerContacts(familyInvitePassengerId).find(link=>familyMemberId(link)===id):linkedFamilyMember(id);
+}
 function familyChangeDialog(id){
  const fam=familyActionRecord(id);if(!fam)return;
  richModal(t('link.changeTitle'),`<p class="dialog-lead">${T('link.changeBody')}</p>${familySummaryHTML(fam)}`,[{text:t('link.changeSubmit'),action:'family-change-submit',id},{text:t('common.cancel'),action:'close-dialog',light:true}],'close-dialog');
@@ -462,7 +488,7 @@ document.addEventListener('change',event=>{const el=event.target;if(el.dataset.f
  }if(el.hasAttribute('data-helper-contact')){
   selectHelper(el.value);render();document.querySelector('[data-helper-contact]')?.focus();return;
  }if(el.dataset.itemCategory){setItemCategory(el);return;}if(el.hasAttribute('data-language')){setLanguage(el.value);closeModal();render();document.getElementById('languageSelect').focus();return;}if(el.dataset.field){setField(el);if(el.tagName==='SELECT'||['checkbox','radio'].includes(el.type)||el.dataset.field.startsWith('ops.')||['clock','flight.departure','milesBalance'].includes(el.dataset.field))render();}if(el.dataset.itemField){setItemField(el);if(el.tagName==='SELECT'||el.type==='checkbox')render();}});
-document.addEventListener('submit',event=>{if(event.target.id==='chatForm'){event.preventDefault();const question=new FormData(event.target).get('question')||'';state.agent.questionDraft='';sendQuestion(question);}});
+document.addEventListener('submit',event=>{if(event.target.id==='familyInviteForm'){event.preventDefault();familyConfirm();return;}if(event.target.id==='chatForm'){event.preventDefault();const question=new FormData(event.target).get('question')||'';state.agent.questionDraft='';sendQuestion(question);}});
 document.addEventListener('click',event=>{
  const anchor=event.target.closest('a[href]');if(anchor&&!anchor.target){if(state.processing){event.preventDefault();toast('e.processing');return;}if(anchor.dataset.step&&!allowStep(Number(anchor.dataset.step))){event.preventDefault();return;}if(anchor.hasAttribute('data-family-proxy')&&!familyProxy(anchor)){event.preventDefault();return;}persist();}
  document.querySelectorAll('[data-category-picker][open]').forEach(picker=>{if(!picker.contains(event.target))picker.open=false;});
@@ -507,12 +533,30 @@ document.addEventListener('click',event=>{
   render();
   focusFamilyHeading();
   break;
+ case 'family-add':openFamilyInvite();break;
  case 'family-confirm':familyConfirm();break;
- case 'family-send':{const error=sendFamilyInvite(familyPageLink(),helperFamilyPage);closeModal();render();toast(error||'notice.familyInvite');if(!error)focusFamilyHeading();break;}
- case 'family-preview':familyPreview();break;
- case 'family-accept':{const share=document.getElementById('familyShare')?.checked!==false,done=respondFamilyInvite(true,!helperFamilyPage&&share,familyPageLink());closeModal();render();if(done){toast('notice.familyLinked');focusFamilyHeading();}break;}
- case 'family-decline':{const done=respondFamilyInvite(false,false,familyPageLink());closeModal();render();if(done){toast('notice.familyDeclined');focusFamilyHeading();}break;}
- case 'family-add':if(inviteAnotherFamilyMember()){render();document.querySelector('[data-family-field="surname"]')?.focus();}break;
+ case 'family-invite-edit':editFamilyInvite();break;
+ case 'family-send':{
+  const error=submitFamilyInvitation(familyInviteDraft,familyInvitePassengerId);
+  if(error){editFamilyInvite(error);break;}
+  closeModal();render();toast('notice.familyInvite');
+  document.getElementById('familyPendingTitle')?.focus();
+  break;
+ }
+ case 'family-preview':familyPreview(id);break;
+ case 'family-cancel-invite':confirmCancelFamilyInvitation(id);break;
+ case 'family-cancel-confirm':{
+  const link=pendingFamilyInvitation(familyInvitePassengerId,id);
+  if(cancelFamilyInvitation(link)){closeModal();render();toast('notice.familyInviteCancelled');focusFamilyHeading();}
+  break;
+ }
+ case 'family-accept':
+ case 'family-decline':{
+  const link=pendingFamilyInvitation(familyInvitePassengerId,id);
+  const accepted=b.dataset.action==='family-accept',share=!helperFamilyPage&&!!document.getElementById('familyShare')?.checked;
+  if(link&&respondFamilyInvite(accepted,share,link)){closeModal();render();toast(accepted?'notice.familyLinked':'notice.familyDeclined');focusFamilyHeading();}
+  break;
+ }
  case 'family-change':familyChangeDialog(id);break;
  case 'family-change-submit':{const fam=familyActionRecord(id),done=fam&&requestFamilyChange(fam);closeModal();render();if(done)toast('notice.familyChange');break;}
  case 'family-progress-request':if(setFamilyProgress(id,'request')){render();familyProgressDialog(id);}break;
@@ -521,7 +565,6 @@ document.addEventListener('click',event=>{
  case 'family-progress-decline':
   if(setFamilyProgress(id,b.dataset.action==='family-progress-grant'?'grant':'decline')){closeModal();render();}
   break;
- case 'family-restart':if(restartFamilyInvite(familyPageLink()))render();document.querySelector('[data-family-field="surname"]')?.focus();break;
  case 'family-occasion':familyOccasion=['enrol','holiday','graduation'].includes(b.dataset.occasion)?b.dataset.occasion:'enrol';document.querySelectorAll('[data-occasion]').forEach(button=>button.setAttribute('aria-pressed',String(button===b)));document.getElementById('occasionText').innerHTML=occasionText();break;
  case 'story-prev':updateStory(storyIndex-1);break;
  case 'story-next':updateStory(storyIndex+1);break;
