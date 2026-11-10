@@ -54,6 +54,13 @@ function app(saved){
  assert.equal(run('preparePricingBoard()'),false);
  assert.equal(run('pricingQuote().total'),180000);
  assert.equal(run('pricingQuote().plan.required'),1);
+ for(const weight of [null,7,7.01,20]){
+  run(`draft().items[0].weight=${weight}`);
+  const before=run('JSON.stringify(draft())');
+  assert.equal(run("setPricingLane('bag-1','cabin')"),false);
+  assert.equal(run('JSON.stringify(draft())'),before);
+ }
+ run('draft().items[0].weight=20');
  assert.equal(run("setPricingLane('bag-1','cargo')"),true);
  assert.equal(run('pricingQuote().total'),145000);
  assert.equal(run('pricingQuote().plan.required'),0);
@@ -78,13 +85,22 @@ function app(saved){
  run('state.processing=true');assert.equal(run("setPricingLane('bag-1','cabin')"),false);run('state.processing=false');
  run("state.orders.push({id:'paid',travellerId:'lin',status:'paid_demo'})");
  assert.equal(run("setPricingLane('bag-1','cabin')"),false);
- run("state.orders[0].status='cancelled';draft().items.forEach(i=>setPricingLane(i.id,'cabin'))");
+ run("state.orders[0].status='cancelled';draft().items.forEach(i=>{i.weight=6.9;setPricingLane(i.id,'cabin');})");
  assert.equal(run('pricingQuote().valid'),true);assert.equal(run('pricingQuote().total'),0);assert.equal(run('pricingQuote().serviceFee'),0);
  assert.match(run('bookHTML()'),/finish-declaration/);
  run('draft().countUnknown=true');assert.equal(run('pricingQuote().valid'),false);
  assert.equal(run('pricingQuote().error'),'pricing.unknownCount');
  run("draft().countUnknown=false;setPricingLane('bag-1','cargo');draft().items[0].weight=null");
  assert.equal(run('pricingQuote().error'),'e.fullSpecs');
+
+ // An old saved cabin assignment must be reviewed without changing its transport.
+ run=app();
+ run("preparePricingBoard();draft().items.find(i=>i.id==='box-2').weight=10");
+ const oldCabin=app(run('clone(state)'));
+ assert.equal(oldCabin('pricingQuote().error'),'e.cabinWeightLimit');
+ assert.equal(oldCabin("pricingLane(draft().items.find(i=>i.id==='box-2'))"),'cabin');
+ assert.equal(oldCabin("setPricingLane('box-2','flight')"),true);
+ assert.equal(oldCabin('pricingQuote().valid'),true);
 
  // Moving to a lane updates the same declaration used by quote, checkout and order snapshots.
  run=app();run("preparePricingBoard();setPricingLane('bag-1','cargo');state.agreed=true");
@@ -101,10 +117,10 @@ function app(saved){
   assert.match(run('pricingHTML()'),/data-drop-lane="cabin"/);
   assert.match(run('pricingHTML()'),/data-drop-lane="flight"/);
   assert.match(run('pricingHTML()'),/data-drop-lane="cargo"/);
-  assert.match(run('pricingSummaryHTML()'),/HKD/);
+  assert.match(run('baggageHTML()'),/class="notice"><strong>/);
   assert.doesNotMatch(run('baggageHTML()'),/carriage-options|own-bag-mode/);
   assert.doesNotMatch(run('pricingHTML()'),/pricing-move|<select/);
  }
  assert.deepEqual(run.warnings,[]);
- console.log('PASS: country-only identification, China/HK/Macao and foreign-country windows, exact order deadlines, live lane prices, shared-package charges, unknown/zero/error states, saved assignments, paid-order isolation and five-language price UI.');
+ console.log('PASS: country-only identification, China/HK/Macao and foreign-country windows, exact order deadlines, cabin weight checks, shared-package charges, unknown/zero/error states, saved assignments, paid-order isolation and five-language price UI.');
 })().catch(error=>{console.error(error);process.exitCode=1});

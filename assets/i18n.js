@@ -138,6 +138,8 @@ bag.service	需要首末程服務	Collection & delivery needed	Collecte et livra
 bag.ask	諮詢這件物品	Ask about this item	Question sur cet objet	Consultar este artículo	اسأل عن هذا الغرض
 bag.review	規則待復核 · 尚非運輸許可	Rules need review · Not transport approval	Règles à vérifier · Sans autorisation de transport	Normas por revisar · No es autorización de transporte	القواعد قيد المراجعة · ليست موافقة على النقل
 bag.note	未知重量與尺寸可留空保存，規劃會顯示補估或缺失。預約服務前須補全；隨身物品不計入托運需求。	Leave unknown weights or sizes blank. Planning shows estimates or gaps. Complete them before booking; cabin items do not count as checked demand.	Laissez les valeurs inconnues vides. La planification affiche estimations ou manques. Complétez-les avant réservation ; la cabine est exclue du calcul soute.	Deja en blanco los valores desconocidos. La planificación muestra estimaciones o datos pendientes. Complétalos antes de reservar; la cabina no cuenta como bodega.	اترك الوزن أو الأبعاد المجهولة فارغة، وستظهر كتقديرات أو بيانات ناقصة. أكملها قبل الحجز؛ أمتعة المقصورة لا تدخل في الطلب على الأمتعة المسجلة.
+bag.accuracyNoticeTitle	請如實申報行李資料	Declare your luggage accurately	Déclarez vos bagages avec exactitude	Declara tu equipaje con precisión	صرّح عن أمتعتك بدقة
+bag.accuracyNotice	預報結果會直接影響最終價格。如資料誤報或錯報，第三方取件服務商上門核對時會收取額外費用。	Your declaration directly affects the final price. If the details are inaccurate, the collection partner will charge an additional fee when checking your luggage at pickup.	Votre déclaration influe directement sur le prix final. Si les renseignements sont inexacts, le prestataire facturera des frais supplémentaires lors du contrôle à l’enlèvement.	Tu declaración afecta directamente al precio final. Si los datos son incorrectos, el proveedor de recogida cobrará un suplemento al verificar el equipaje.	يؤثر تصريح الأمتعة مباشرة في السعر النهائي. إذا كانت البيانات غير صحيحة، يفرض شريك الاستلام رسومًا إضافية عند التحقق من الأمتعة وقت الاستلام.
 bag.saveContinue	保存並繼續	Save & continue	Enregistrer et continuer	Guardar y continuar	حفظ ومتابعة
 sample.suitcaseA	行李箱 A	Suitcase A	Valise A	Maleta A	حقيبة A
 sample.suitcaseB	行李箱 B	Suitcase B	Valise B	Maleta B	حقيبة B
@@ -640,29 +642,23 @@ pricing.instructions	拖動行李卡片，在三個泳道間分配；手機可�
 pricing.lane.cabin	隨身攜帶	Cabin luggage	En cabine	En cabina	أمتعة المقصورة
 pricing.lane.flight	Plume Light 隨本次航班	Plume Light · This flight	Plume Light · Ce vol	Plume Light · Este vuelo	Plume Light · مع هذه الرحلة
 pricing.lane.cargo	Plume Light 由 Cargo 調度	Plume Light · Cargo	Plume Light · Fret	Plume Light · Carga	Plume Light · شحن جوي
-pricing.lane.cabinText	自行隨身攜帶，不使用取送服務。	Carry it in the cabin, without collection or delivery.	Gardez-le en cabine, sans collecte ni livraison.	Llévalo en cabina, sin recogida ni entrega.	احملها في المقصورة دون خدمة استلام أو تسليم.
+pricing.lane.cabinText	每件須低於 7 kg，由你隨身攜帶。	Each bag must weigh less than 7 kg to go in the cabin.	Chaque bagage cabine doit peser moins de 7 kg.	Cada bulto de cabina debe pesar menos de 7 kg.	يجب أن يقل وزن كل حقيبة مقصورة عن 7 كغ.
 pricing.lane.flightText	時效高：較晚取件、較早收件。	Faster: later pickup, earlier delivery.	Plus rapide : collecte tardive, livraison avancée.	Más rápido: recogida más tarde, entrega antes.	أسرع: استلام متأخر وتسليم أبكر.
 pricing.lane.cargoText	提早整理，可提早送走。	Pack early and send bags ahead.	Préparez tôt et expédiez en avance.	Prepara antes y envía con antelación.	جهّز مبكراً وأرسل الحقائب مسبقاً.
 pricing.dropHere	將行李拖到這裡	Drop a bag here	Déposez un bagage ici	Suelta un bulto aquí	أفلت حقيبة هنا
 pricing.dragBag	拖動 {name}	Drag {name}	Déplacer {name}	Arrastrar {name}	اسحب {name}
 pricing.moveTo	移至	Move to	Déplacer vers	Mover a	نقل إلى
 pricing.moveBag	調整 {name} 的攜帶方式	Change the travel option for {name}	Changer le transport de {name}	Cambiar el transporte de {name}	غيّر طريقة نقل {name}
-pricing.noServiceFee	取送費	Collection & delivery	Collecte et livraison	Recogida y entrega	الاستلام والتسليم
-pricing.transportOnly	運輸費，不含共用取送套餐	Transport only; shared package separate	Transport seul ; forfait partagé séparé	Solo transporte; paquete compartido aparte	النقل فقط، والباقة المشتركة منفصلة
-pricing.estimate	即時費用預覽	LIVE PRICE ESTIMATE	ESTIMATION EN DIRECT	ESTIMACIÓN EN DIRECTO	تقدير مباشر للسعر
-pricing.total	預計總價	Estimated total	Total estimé	Total estimado	الإجمالي التقديري
-pricing.totalNote	隨行李安排自動更新 · 演示價格	Updates with your choices · Demo pricing	Actualisé selon vos choix · Tarifs simulés	Se actualiza con tus elecciones · Precios de ejemplo	يتحدث حسب اختياراتك · أسعار تجريبية
 pricing.bagCount	已分配行李	Bags assigned	Bagages répartis	Bultos asignados	الحقائب الموزّعة
-pricing.collectionFee	取送及處理套餐	Collection, delivery & handling	Collecte, livraison et gestion	Recogida, entrega y gestión	الاستلام والتسليم والمناولة
-pricing.sharedPackage	取送套餐每單計一次，泳道底部只列各自運輸費。	The shared package is charged once per order. Lane subtotals show transport only.	Le forfait partagé est facturé une fois par commande. Les sous-totaux indiquent le transport seul.	El paquete compartido se cobra una vez por pedido. Los subtotales muestran solo el transporte.	تُحسب الباقة المشتركة مرة واحدة لكل طلب. تعرض المجاميع الفرعية رسوم النقل فقط.
-pricing.allCabin	全部隨身攜帶，無需預訂取送服務。	All bags are in the cabin. No collection or delivery booking is needed.	Tous les bagages sont en cabine. Aucune réservation de collecte ou livraison nécessaire.	Todos los bultos van en cabina. No hace falta reservar recogida ni entrega.	جميع الحقائب في المقصورة. لا حاجة لحجز الاستلام أو التسليم.
 pricing.rulesNote	隨身及運輸限制仍須按物品與承運規則確認；分配方式不代表已獲承運批准。	Cabin and transport rules still depend on the items and carrier. Assigning a lane is not carriage approval.	Les règles dépendent des objets et du transporteur. Une colonne ne vaut pas autorisation de transport.	Las normas dependen del artículo y el transportista. Asignar una columna no autoriza su transporte.	تظل القواعد مرتبطة بالأغراض والناقل. اختيار المسار لا يعني الموافقة على النقل.
-pricing.moved	已將 {name} 移至「{lane}」。目前預計總價：{price}。	Moved {name} to {lane}. Estimated total: {price}.	{name} déplacé vers {lane}. Total estimé : {price}.	{name} movido a {lane}. Total estimado: {price}.	نُقلت {name} إلى {lane}. الإجمالي التقديري: {price}.
+pricing.moved	已將 {name} 移至「{lane}」。	Moved {name} to {lane}.	{name} déplacé vers {lane}.	{name} movido a {lane}.	نُقلت {name} إلى {lane}.
+pricing.cabinBlocked	無法移至隨身攜帶	Cannot move to cabin luggage	Impossible de déplacer le bagage en cabine	No se puede mover a equipaje de cabina	لا يمكن نقل الحقيبة إلى أمتعة المقصورة
+e.cabinWeightMissing	請先在行李預報填寫有效重量，再安排隨身攜帶。	Enter a valid weight in Luggage before assigning this bag to the cabin.	Indiquez un poids valide dans Bagages avant d’affecter ce bagage à la cabine.	Introduce un peso válido en Equipaje antes de asignar el bulto a la cabina.	أدخل وزنًا صالحًا في قسم الأمتعة قبل تخصيص الحقيبة للمقصورة.
+e.cabinWeightLimit	只有重量低於 7 kg 的行李才可隨身攜帶。請調整行李安排，或返回行李預報核對重量。	Only bags weighing less than 7 kg can be carried in the cabin. Change the bag’s assignment or check its weight in Luggage.	Seuls les bagages de moins de 7 kg peuvent aller en cabine. Changez leur affectation ou vérifiez leur poids dans Bagages.	Solo los bultos de menos de 7 kg pueden ir en cabina. Cambia su asignación o comprueba el peso en Equipaje.	يُسمح في المقصورة فقط بالحقائب التي يقل وزنها عن 7 كغ. غيّر طريقة نقل الحقيبة أو تحقّق من وزنها في قسم الأمتعة.
 pricing.unknownCount	請先返回行李預報，確認行李件數後再計算價格。	Confirm the bag count in Luggage before calculating a price.	Confirmez le nombre de bagages avant de calculer le prix.	Confirma el número de bultos antes de calcular el precio.	أكّد عدد الحقائب أولاً قبل حساب السعر.
 pricing.finishWithoutService	保存預報並返回首頁	Save declaration and return home	Enregistrer et revenir à l’accueil	Guardar y volver al inicio	احفظ الإقرار وعُد للرئيسية
 `);
 addCopy(String.raw`
-pricing.breakdown	費用明細	Price breakdown	Détail des frais	Desglose de precio	تفاصيل السعر
 pricing.keyboardHint	用方向鍵選擇泳道，按 Enter 放下，按 Esc 取消。	Use arrow keys to choose a lane, Enter to drop, or Escape to cancel.	Choisissez une colonne avec les flèches, Entrée pour déposer, Échap pour annuler.	Elige una columna con las flechas, Enter para soltar o Escape para cancelar.	اختر المسار بالأسهم، واضغط Enter للإفلات أو Escape للإلغاء.
 `);
 addCopy(String.raw`
