@@ -455,3 +455,70 @@ function recordHandover(kind){const o=activeOrder();if(!o){toast('e.orderFirst')
 function completeService(){const o=activeOrder();if(!o)return;if(o.status==='completed'){toast('notice.duplicate');return;}if(eventCounts(o).handover<o.itemIds.length){toast('e.localFirst');return;}o.status='completed';if(o.payment==='cash'&&!o.earned){state.milesBalance+=o.quote.earn;o.earned=true;}persist();render();toast('notice.complete');}
 function cancelOrder(id,confirmed=false){const o=state.orders.find(o=>o.id===id);if(!o||o.refunded)return;if(!confirmed){modal(t('dialog.cancelTitle'),t('dialog.cancelBody',{id}),[{text:t('dialog.cancelConfirm'),action:'confirm-cancel',id},{text:t('common.cancel'),action:'close-dialog',light:true}]);return;}if(o.earned&&state.milesBalance<o.quote.earn){toast('e.reverse');return;}if(o.payment==='miles')state.milesBalance+=o.quote.miles;if(o.earned){state.milesBalance-=o.quote.earn;o.earned=false;}o.refunded=true;o.status='cancelled';o.cancelledAt=iso(state.clock);persist();closeModal();render();toast('notice.cancelled');}
 function resetDemo(scenario){if(state.processing){toast('e.processing');return;}const oldLarge=state.large;state=initial();migrateBookingState();state.large=oldLarge;let target='home',step=1;if(scenario==='family'){state.travellerId='child';state.profile='child';state.contact='@sample.parent';target='book';}if(scenario==='late'){state.clock='2026-11-14T09:30:01+08:00';target='book';step=2;}if(scenario==='unknown'){state.drafts.lin.items[0].weight=null;state.drafts.lin.items[0].l=null;saveDeclaration(true);target='ops';}persist();go(target,step);}
+
+// GLM UI state is transient: a refresh must never restore a stuck request.
+const agentRuntime={pending:false,status:'unknown',error:null,controller:null,requestId:0};
+function liveAgent(){return state.agent.mode!=='local'&&!(typeof location!=='undefined'&&location.protocol==='file:');}
+function agentQuote(q){
+ const result={valid:!!q?.valid};
+ if(!q?.valid){result.error=t(q?.error||'e.fullSpecs');return result;}
+ for(const key of ['transport','miles','earn','count','weight','cargoUnits','chargeableWeight'])if(q[key]!=null)result[key]=q[key];
+ for(const key of ['serviceFee','extraFee','cargoFee','total'])if(q[key]!=null)result[key]=q[key]/100;
+ if(q.plan){result.allowance=q.plan.allowance;result.extraPieces=q.plan.required;result.unconfirmedExtraPieces=q.plan.missing;}
+ return result;
+}
+function agentContext(){
+ const order=activeOrder(),d=draft();
+ // Explicit projection: do not send full state, contacts, identity, proof files or addresses.
+ return {
+  trip:{flight:Object.fromEntries(['flightNo','origin','destination','departure','terminal'].map(k=>[k,state.flight[k]])),enquiryDestination:state.agent.route||'',demoClock:state.clock,region:state.region,
+   order:order?{status:order.status,transport:order.transport,flight:Object.fromEntries(['flightNo','origin','destination','departure','terminal'].map(k=>[k,order.flight?.[k]])),quote:agentQuote(order.quote),bagCount:order.itemIds.length,events:eventCounts(order)}:null},
+  baggage:{selectedItemId:state.agent.itemId||'',ruleQuality:state.agent.quality,allowance:ticketAllowance(),countUnknown:d.countUnknown,zero:d.zero,
+   items:d.items.slice(0,50).map(i=>({id:i.id,name:displayValue(i.name).slice(0,300),categories:itemCategories(i),weight:i.weight==null||i.weight===''?null:Number(i.weight),l:i.l==null||i.l===''?null:Number(i.l),w:i.w==null||i.w===''?null:Number(i.w),h:i.h==null||i.h===''?null:Number(i.h),mode:i.mode,carriage:carriageFor(i),service:!!i.service}))},
+  pricing:{current:agentQuote(pricingQuote()),allFlight:agentQuote(quoteService('flight')),allCargo:agentQuote(quoteService('cargo')),deadline:checkApplicationDeadline(),milesBalance:state.milesBalance}
+ };
+}
+async function loadAgentStatus(){
+ if(!liveAgent()||agentRuntime.status!=='unknown'||typeof fetch!=='function')return;
+ agentRuntime.status='checking';
+ try{const response=await fetch('/api/assistant/status',{signal:AbortSignal.timeout(5000)});if(!response.ok)throw Error();const data=await response.json();agentRuntime.status=data.configured?'ready':'unconfigured';}
+ catch(_){agentRuntime.status='unavailable';}
+ if(document.getElementById('chatMessages'))render();
+}
+function clearAgentConversation(renderAfter=true){
+ agentRuntime.requestId++;agentRuntime.controller?.abort();agentRuntime.controller=null;agentRuntime.pending=false;agentRuntime.error=null;
+ Object.assign(state.agent,{messages:[],answer:null,pending:null,questionDraft:'',stale:false});persist();if(renderAfter)render();
+}
+function agentErrorKey(code){
+ return ({not_configured:'agent.notConfigured',invalid_configuration:'agent.notConfigured',provider_auth:'agent.authError',provider_subscription_expired:'agent.expired',provider_quota:'agent.quota',provider_rate_limit:'agent.rateLimit',rate_limit:'agent.rateLimit',busy:'agent.rateLimit',provider_timeout:'agent.timeout',incomplete_response:'agent.incomplete',context_changed:'agent.contextChanged',cancelled:'agent.cancelled'})[code]||'agent.connectionError';
+}
+async function sendQuestion(question,retry=false){
+ const text=String(question).trim();if(!text||agentRuntime.pending)return;
+ if(!liveAgent()){sendLocalQuestion(text);return;}
+ if(text.length>2000)return;
+ const a=state.agent,context=agentContext(),snapshot=JSON.stringify(context),requestId=++agentRuntime.requestId;
+ a.questionDraft='';a.answer=null;a.pending=null;a.stale=false;
+ if(!retry||a.messages.at(-1)?.role!=='user'||a.messages.at(-1)?.text!==text)a.messages.push({role:'user',text});
+ a.messages=a.messages.slice(-24);
+ const messages=a.messages.filter(m=>m.text&&!m.key&&!m.failed).slice(-16).map(m=>({role:m.role,content:m.text}));
+ // Keep complete recent turns within the server history budget.
+ while(messages.length>1&&messages.reduce((n,m)=>n+m.content.length,0)>40000)messages.shift();
+ agentRuntime.pending=true;agentRuntime.error=null;const controller=new AbortController();agentRuntime.controller=controller;
+ const timeout=setTimeout(()=>controller.abort('timeout'),90000);persist();render();
+ try{
+  const response=await fetch('/api/assistant/chat',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({messages,context,language}),signal:controller.signal});
+  let data;try{data=await response.json();}catch(_){throw Error('provider_unavailable');}
+  if(!response.ok)throw Error(data.error||'provider_unavailable');
+  if(typeof data.reply!=='string'||!data.reply.trim())throw Error('invalid_response');
+  if(requestId!==agentRuntime.requestId||state.agent!==a)return;
+  if(JSON.stringify(agentContext())!==snapshot)throw Error('context_changed');
+  a.messages.push({role:'assistant',text:data.reply,mode:'live',tools:Array.isArray(data.tools)?data.tools.filter(k=>['get_trip_context','get_baggage_context','get_price_context','get_service_guide'].includes(k)):[]});
+  a.messages=a.messages.slice(-24);agentRuntime.status='ready';
+ }catch(error){
+  if(requestId===agentRuntime.requestId&&state.agent===a)agentRuntime.error=agentErrorKey(controller.signal.aborted?(controller.signal.reason==='timeout'?'provider_timeout':'cancelled'):error.message);
+ }finally{
+  clearTimeout(timeout);
+  if(requestId===agentRuntime.requestId){agentRuntime.pending=false;agentRuntime.controller=null;persist();render();document.getElementById('chatQuestion')?.focus();}
+ }
+}
+function retryAgentQuestion(){const last=[...state.agent.messages].reverse().find(m=>m.role==='user');if(last)sendQuestion(last.text,true);}
