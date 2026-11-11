@@ -10,3 +10,4 @@ node_modules/
 
 # Hold-pressure kanban (Vite)
 kanban-app/node_modules/
+dist/

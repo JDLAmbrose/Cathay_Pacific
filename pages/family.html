@@ -6,26 +6,11 @@
   <meta name="theme-color" content="#02544f">
   <meta name="description" content="Plume Light — a lighter Cathay journey. Luggage planning, collection and delivery, and travel assistance. Hackathon prototype.">
   <title>Plume Light · 家庭互聯</title>
-  <link rel="icon" type="image/svg+xml" href="../assets/plume_light_icon.svg">
-  <link rel="stylesheet" href="../assets/styles.css?v=20261110-helper">
-  <script defer src="../assets/i18n.js?v=20261110-helper"></script>
-  <script defer src="../assets/model.js?v=20261110-helper"></script>
-  <script defer src="../assets/app.js?v=20261110-helper"></script>
+  <link rel="icon" type="image/svg+xml" href="/assets/plume_light_icon.svg">
+  <script type="module" src="/src/main.tsx"></script>
 </head>
-<body data-page="family">
-  <div id="siteHeader"></div>
-  <div class="shell">
-    <section class="flight-banner" id="tripbar" hidden aria-label="CX257"></section>
-    <main id="main" tabindex="-1"></main>
-    <div id="controls"></div>
-    <footer class="site-footer" id="siteFooter"></footer>
-  </div>
-  <div class="toast" id="toast" role="status" aria-live="polite"></div>
-  <dialog id="dialog" aria-labelledby="dialogTitle">
-    <h2 id="dialogTitle"></h2>
-    <div id="dialogBody" class="body"></div>
-    <div id="dialogActions" class="actions"></div>
-  </dialog>
+<body>
+  <div id="root"></div>
   <noscript>This interactive prototype requires JavaScript.</noscript>
 </body>
 </html>
