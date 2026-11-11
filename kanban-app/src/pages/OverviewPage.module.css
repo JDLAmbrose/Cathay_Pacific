@@ -1,0 +1,23 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.live :global(section) {
+  transition: transform 0.35s ease, box-shadow 0.35s ease;
+}
+
+.main {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  align-items: start;
+}
+
+@media (min-width: 1680px) {
+  .main {
+    grid-template-columns: minmax(0, 1.85fr) minmax(340px, 0.8fr);
+    gap: 28px;
+  }
+}

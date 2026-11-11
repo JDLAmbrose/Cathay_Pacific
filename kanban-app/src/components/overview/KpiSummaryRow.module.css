@@ -1,0 +1,25 @@
+.hero {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.8fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.unit { font-size: 14px; font-weight: 600; }
+.bad { color: var(--bad); }
+.warn { color: #a07000; }
+.ok { color: var(--ok); }
+
+@media (max-width: 960px) {
+  .hero { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 720px) {
+  .row { grid-template-columns: 1fr; }
+}

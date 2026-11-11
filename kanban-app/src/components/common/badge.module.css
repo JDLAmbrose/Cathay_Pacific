@@ -1,0 +1,14 @@
+.badge {
+  display: inline-block;
+  padding: 1px 9px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #fff;
+  white-space: nowrap;
+}
+
+.bad { background: var(--bad); }
+.warn { background: var(--warn); }
+.ok { background: var(--ok); }
+.off { background: var(--off); }

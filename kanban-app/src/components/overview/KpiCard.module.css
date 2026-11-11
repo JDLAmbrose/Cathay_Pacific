@@ -1,0 +1,25 @@
+.card {
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 20px 22px;
+  height: 100%;
+}
+
+.title {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.value {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.15;
+  margin-top: 10px;
+}
+
+.sub {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 8px;
+}
