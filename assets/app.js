@@ -10,7 +10,7 @@ const familyInvitePassengerId=helperFamilyPage?helperPassengerId:null;
 const familyDemoTravellerId=familyInvitePassengerId??FAMILY_MEMBER_ID;
 const familyPageLink=()=>helperFamilyPage?passengerFamilyLink(helperPassengerId):state.familyLink;
 // The homepage is the sole root entry; all other pages live one level below it.
-const ROOT_PREFIX=page==='home'?'':'../';
+const ROOT_PREFIX=document.body.dataset.root??(page==='home'?'':'../');
 state.view=BOOK_PAGES.includes(page)?'book':page;state.step=BOOK_PAGES.includes(page)?BOOK_PAGES.indexOf(page)+1:state.step;
 const T=(key,args)=>esc(t(key,args)),V=value=>esc(displayValue(value));
 const paths={arrow:'M4 10h12m-5-5 5 5-5 5',back:'M16 10H4m5-5-5 5 5 5',globe:'M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM2 10h16M10 2c-4 4-4 12 0 16 4-4 4-12 0-16Z',bag:'M6 5V3h8v2M4 5h12v13H4ZM7 8v7m3-7v7m3-7v7M6 18v1m8-1v1',spark:'m10 2 2.5 5.5L18 10l-5.5 2.5L10 18l-2.5-5.5L2 10l5.5-2.5ZM17 2v3m-1.5-1.5h3',home:'m2 9 8-7 8 7M4 8v10h12V8M8 18v-6h4v6',miles:'m10 2 8 8-8 8-8-8Z M10 6l4 4-4 4-4-4Z',check:'m4 10 4 4 8-8',plane:'M10 1 8 8 2 11v2l6-1v5l-2 1v1l4-1 4 1v-1l-2-1v-5l6 1v-2l-6-3-2-7Z',clock:'M18 10a8 8 0 1 1-16 0 8 8 0 0 1 16 0ZM10 5v5l3 2',chevron:'m7 5 5 5-5 5'};
@@ -22,7 +22,7 @@ function icon(name,cls=''){return `<svg class="icon ${cls}" viewBox="0 0 20 20" 
 function productName(){return 'Plume Light';}
 function productLogo(reversed=false){return `<img class="brand-logo${reversed?' brand-logo-reversed':''}" src="${ROOT_PREFIX}assets/plume_light_logo_horizontal${reversed?'_reversed':''}.svg" alt="Plume Light" width="${reversed?'840':'770'}" height="${reversed?'269':'200'}" decoding="async">`;}
 function productMark(cls=''){return `<img class="product-mark ${cls}" src="${ROOT_PREFIX}assets/plume_light_icon.svg" alt="" aria-hidden="true" width="208" height="200" decoding="async">`;}
-const UI_REVISION='20261110-helper';
+const UI_REVISION='20261111-html';
 function href(view,step){return ROOT_PREFIX+(PAGE_FILES[view==='book'?BOOK_PAGES[(step||1)-1]:view]||PAGE_FILES.home)+'?v='+UI_REVISION;}
 function link(view,label,cls='btn',step){return `<a class="${cls}" href="${href(view,step)}">${label}${icon('arrow','arrow')}</a>`;}
 function go(view,step){if(state.processing){toast('e.processing');return;}state.view=view;if(step)state.step=step;persist();location.assign(href(view,step));}
@@ -33,18 +33,53 @@ function head(title,sub,badge){return `<div class="pagehead reveal"><div><div cl
 function renderHeader(){
  document.documentElement.lang=language;document.documentElement.dir=language==='ar'?'rtl':'ltr';document.body.classList.toggle('large',state.large);
  document.title=`${productName()} · ${t(BOOK_PAGES.includes(page)?'step.'+state.step:FAMILY_PAGES.includes(page)?'familyTabs.'+(page==='family'?'link':'benefits'):'nav.'+(page==='home'?'home':page))}`;
- document.getElementById('siteHeader').innerHTML=`<a class="skip" href="#main">${T('skip')}</a><div class="topline"><span>${T('brand.line')}</span><span>${esc(productName())}</span></div><header class="site-header"><div class="nav"><a class="brand${language==='zh-Hant'?' brand-with-tagline':''}" href="${href('home')}">${productLogo()}${language==='zh-Hant'?'<span class="brand-tagline">泰易送，翼隨行</span>':''}</a><nav class="main-nav" aria-label="${T('nav.main')}">${[['home','home'],['book','book'],['agent','agent'],['journey','journey'],['benefits','family'],['ops','ops']].map(([view,key])=>`<a class="tab" href="${href(view)}" ${(key==='family'?FAMILY_PAGES.includes(state.view):state.view===view)?'aria-current="page"':''}>${T('nav.'+key)}</a>`).join('')}</nav><div class="header-tools"><label class="language-control">${icon('globe')}<span class="sr-only">${T('nav.language')}</span><select id="languageSelect" aria-label="${T('nav.language')}" data-language>${LOCALES.map((l,i)=>option(l,LOCALE_NAMES[i],language)).join('')}</select></label><button class="fontbtn" data-action="font" aria-label="${T('nav.font')}" aria-pressed="${state.large}">Aa</button></div></div></header>`;
+ document.getElementById('siteHeader').innerHTML=`<a class="skip" href="#main">${T('skip')}</a><div class="topline"><span>${T('brand.line')}</span><span>${esc(productName())}</span></div><header class="site-header"><div class="nav"><a class="brand${language==='zh-Hant'?' brand-with-tagline':''}" href="${href('home')}">${productLogo()}${language==='zh-Hant'?'<span class="brand-tagline">泰易送，翼隨行</span>':''}</a><nav class="main-nav" aria-label="${T('nav.main')}">${[['home','home'],['book','book'],['agent','agent'],['journey','journey'],['family','family'],['ops','ops']].map(([view,key])=>`<a class="tab" href="${href(view)}" ${(key==='family'?FAMILY_PAGES.includes(state.view):state.view===view)?'aria-current="page"':''}>${T('nav.'+key)}</a>`).join('')}</nav><div class="header-tools"><div class="header-language" dir="ltr"><img class="cathay-logo" src="${ROOT_PREFIX}assets/cathay_logo.png" width="1552" height="1891" alt="Cathay Pacific"><label class="language-control">${icon('globe')}<span class="sr-only">${T('nav.language')}</span><select id="languageSelect" ${language==='ar'?'dir="rtl"':''} aria-label="${T('nav.language')}" data-language>${LOCALES.map((l,i)=>option(l,LOCALE_NAMES[i],language)).join('')}</select></label></div><button class="fontbtn" data-action="font" aria-label="${T('nav.font')}" aria-pressed="${state.large}">Aa</button></div></div></header>`;
  const departure=new Date(state.flight.departure),arrival=new Date(departure.getTime()+14.5*3600000),date=(d,tz)=>new Intl.DateTimeFormat(language==='zh-Hant'?'zh-HK':language,{timeZone:tz,year:'numeric',month:'short',day:'numeric',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).format(d);
- const progress=page==='journey'?0:50;
+ const progress=0;
  document.getElementById('tripbar').innerHTML=`<div class="flight-main"><div class="flight-end"><div class="flight-location">${T('banner.hk')}<span class="flight-number"> · CX257</span></div><div class="flight-date">${esc(date(departure,'Asia/Hong_Kong'))}</div><div class="flight-date-label">${T('banner.departure')}</div></div><div class="flight-center"><div class="flight-person"><strong>${esc(person().name)}</strong><span class="separator">·</span>${T('banner.cabin')}<span class="separator">·</span>${T(state.travellerId==='child'?'banner.child':'banner.adult')}</div><div class="flight-track" style="--flight-progress:${progress}%"><span class="flight-plane">${icon('plane')}</span></div><div class="flight-progress">${T('banner.progress')} <b>${progress}%</b> · ${T('banner.ontime')}</div></div><div class="flight-end"><div class="flight-location">${T('banner.london')}</div><div class="flight-date">${esc(date(arrival,'Europe/London'))}</div><div class="flight-date-label">${T('banner.arrival')}</div></div></div>`;
  document.getElementById('siteFooter').innerHTML=`<a class="footer-brand" href="${href('home')}" aria-label="${esc(productName())}">${productLogo()}</a><div class="footer-copy"><p>${T('footer.line')}</p><p>${T('footer.demo')} · CX257 · PRD 1.3</p></div>${page==='home'||BOOK_PAGES.includes(page)||FAMILY_PAGES.includes(page)?`<div class="privacy-statement"><strong>${T('privacy.title')}</strong><p>${T('privacy.text')}</p></div>`:''}`;
 }
 function homeHTML(){
  const order=activeOrder(),flight=order?.flight||state.flight;
- return `<section class="hero reveal" data-booking-state="${order?'booked':'unbooked'}"><div class="herocopy"><div class="hero-brand">${productLogo(true)}</div><div class="eyebrow">${T(order?'home.bookedKicker':'home.kicker')}</div><h1>${T(order?'home.bookedTitle1':'home.title1')}<em>${T(order?'home.bookedTitle2':'home.title2')}</em></h1><p>${T(order?'home.bookedDescription':'home.description')}</p><div class="actions">${order?link('journey',T('home.overview'),'btn gold'):link('book',T('home.start'),'btn gold')}${link('agent',T('home.ask'),'btn ghost')}</div><div class="audience">${T('home.audience')}</div></div><div class="heroart"><div class="orbital" aria-hidden="true"></div><div class="ticket"><div class="ticket-top"><span>CATHAY PACIFIC</span><span class="pill">${esc(flight.flightNo)}</span></div><div class="airports"><div><b>${esc(flight.origin)}</b><small>${T('banner.hk')}</small></div>${icon('plane')}<div><b>${esc(flight.destination)}</b><small>${T('banner.london')}</small></div></div><div class="ticket-line">${order?`<small>${T('home.destination')}</small><strong>${V(order.destination)}</strong>`:`<small>${T('home.ticket')}</small><strong>${T('home.beforeBooking')}</strong>`}</div><div class="barcode" aria-hidden="true"></div></div>${order?`<div class="luggage-tag">${productMark()}<b>${esc(String(order.itemIds.length).padStart(2,'0'))}</b><span>${T('home.prepared')}<br>${T('home.less')}</span></div>`:''}</div></section>${order?`<div class="welcome"><span class="welcome-icon">${icon('check')}</span><div><strong>${T('home.bookedNotice')}</strong><p>${T('home.pickupNotice',{time:order.pickup.replace('T',' ')})}</p></div>${link('journey',T('home.overview'),'btn slim light')}</div>`:''}${homeServicesHTML(order)}${storiesHTML()}`;
+ return `<section class="hero reveal" data-booking-state="${order?'booked':'unbooked'}"><div class="herocopy"><div class="hero-brand">${productLogo(true)}</div><div class="eyebrow">${T(order?'home.bookedKicker':'home.kicker')}</div><h1>${T(order?'home.bookedTitle1':'home.title1')}<em>${T(order?'home.bookedTitle2':'home.title2')}</em></h1><p>${T(order?'home.bookedDescription':'home.description')}</p><div class="actions">${order?link('journey',T('home.overview'),'btn gold'):link('book',T('home.start'),'btn gold')}${link('agent',T('home.ask'),'btn ghost')}</div><div class="audience">${T('home.audience')}</div></div><div class="heroart"><div class="orbital" aria-hidden="true"></div><div class="ticket"><div class="ticket-top"><span>CATHAY PACIFIC</span><span class="pill">${esc(flight.flightNo)}</span></div><div class="airports"><div><b>${esc(flight.origin)}</b><small>${T('banner.hk')}</small></div>${icon('plane','ticket-plane')}<div><b>${esc(flight.destination)}</b><small>${T('banner.london')}</small></div></div><div class="ticket-line">${order?`<small>${T('home.destination')}</small><strong>${V(order.destination)}</strong>`:`<small>${T('home.ticket')}</small><strong>${T('home.beforeBooking')}</strong>`}</div><div class="barcode" aria-hidden="true"></div></div>${order?`<div class="luggage-tag">${productMark()}<b>${esc(String(order.itemIds.length).padStart(2,'0'))}</b><span>${T('home.prepared')}<br>${T('home.less')}</span></div>`:`<div class="luggage-tag tag-preview" aria-hidden="true">${productMark()}<span class="tag-preview-icon">${icon('bag')}</span></div>`}</div></section>${order?`<div class="welcome"><span class="welcome-icon">${icon('check')}</span><div><strong>${T('home.bookedNotice')}</strong><p>${T('home.pickupNotice',{time:order.pickup.replace('T',' ')})}</p></div>${link('journey',T('home.overview'),'btn slim light')}</div>`:''}${homeServicesHTML(order)}${storiesHTML()}`;
 }
 function homeServicesHTML(order){
- return `<section class="home-services" aria-labelledby="familyTitle"><div class="family-care"><div class="eyebrow">${T('family.kicker')}</div><h2 id="familyTitle">${T('family.title1')}<em>${T('family.title2')}</em></h2><p class="family-intro">${T('family.intro')}</p><div class="family-options">${[['child','plane'],['senior','bag']].map(([type,ic],i)=>`<article class="family-option"><div class="family-option-top"><span class="family-symbol">${icon(ic)}</span><span class="eyebrow muted">0${i+1}</span></div><h3>${T('family.'+type+'Title')}</h3><p>${T('family.'+type+'Text')}</p></article>`).join('')}</div><div class="family-footer"><p>${icon('home')}<span>${T('family.fromHome')}</span></p>${order?link('journey',T('home.overview'),'btn light'):`<a class="btn" href="${href('book')}">${T('family.start')}${icon('arrow','arrow')}</a>`}</div></div><aside class="home-features" aria-labelledby="homeFeaturesTitle"><div class="eyebrow muted">${esc(productName())} / 01—04</div><h2 id="homeFeaturesTitle">${T('home.features')}</h2><p class="feature-intro">${T('home.featureSub')}</p><div class="feature-list">${[['report','bag','book',3],['rules','spark','agent',0],['delivery','home','book',2],['miles','miles','book',5]].map(([key,ic,view,step],i)=>`<article class="feature-compact"><span class="feature-icon">${icon(ic)}</span><div><h3><a href="${href(view,step||undefined)}">${T('feature.'+key)}${icon('arrow','arrow')}</a></h3><p>${T('feature.'+key+'Short')}</p></div></article>`).join('')}</div></aside></section>`;
+ return `<section class="home-services" aria-labelledby="familyTitle"><div class="family-care"><div class="eyebrow">${T('family.kicker')}</div><h2 id="familyTitle">${T('family.title1')}<em>${T('family.title2')}</em></h2><p class="family-intro">${T('family.intro')}</p><div class="family-options">${[['child','plane'],['senior','bag']].map(([type,ic],i)=>`<article class="family-option"><div class="family-option-top"><span class="family-symbol" data-home-icon>${icon(ic)}</span><span class="eyebrow muted">0${i+1}</span></div><h3>${T('family.'+type+'Title')}</h3><p>${T('family.'+type+'Text')}</p></article>`).join('')}</div><div class="family-footer"><p>${icon('home')}<span>${T('family.fromHome')}</span></p>${order?link('journey',T('home.overview'),'btn light'):`<a class="btn" href="${href('book')}">${T('family.start')}${icon('arrow','arrow')}</a>`}</div></div><aside class="home-features" aria-labelledby="homeFeaturesTitle"><div class="eyebrow muted">${esc(productName())} / 01—04</div><h2 id="homeFeaturesTitle">${T('home.features')}</h2><p class="feature-intro">${T('home.featureSub')}</p><div class="feature-list">${[['report','bag','book',3],['rules','spark','agent',0],['delivery','home','book',2],['miles','miles','book',5]].map(([key,ic,view,step],i)=>`<article class="feature-compact"><span class="feature-icon" data-home-icon>${icon(ic)}</span><div><h3><a href="${href(view,step||undefined)}">${T('feature.'+key)}${icon('arrow','arrow')}</a></h3><p>${T('feature.'+key+'Short')}</p></div></article>`).join('')}</div></aside></section>`;
+}
+const homeReducedMotion=page==='home'&&typeof matchMedia==='function'
+ ?matchMedia('(prefers-reduced-motion: reduce)')
+ :null;
+let homeMotionFrame=0,homeIconObserver;
+function scheduleHomeMotion(){
+ if(homeMotionFrame||homeReducedMotion?.matches)return;
+ homeMotionFrame=requestAnimationFrame(()=>{
+  homeMotionFrame=0;
+  const art=document.querySelector('.heroart');
+  if(!art||homeReducedMotion?.matches)return;
+  const {top,height}=art.getBoundingClientRect();
+  const start=window.innerHeight*.55;
+  const progress=Math.max(0,Math.min(1,(start-top)/(start+height)));
+  art.style.setProperty('--home-scroll',String(progress));
+ });
+}
+function initializeHomeMotion(){
+ if(page!=='home')return;
+ scheduleHomeMotion();
+ if(typeof IntersectionObserver!=='function')return;
+ homeIconObserver?.disconnect();
+ homeIconObserver=new IntersectionObserver((entries,observer)=>{
+  for(const entry of entries){
+   if(!entry.isIntersecting)continue;
+   entry.target.classList.add('home-icon-visible');
+   observer.unobserve(entry.target);
+  }
+ },{threshold:.3});
+ document.querySelectorAll('[data-home-icon]').forEach(icon=>homeIconObserver.observe(icon));
+}
+if(page==='home'&&typeof requestAnimationFrame==='function'){
+ window.addEventListener('scroll',scheduleHomeMotion,{passive:true});
+ window.addEventListener('resize',scheduleHomeMotion);
+ homeReducedMotion?.addEventListener('change',scheduleHomeMotion);
 }
 let storyIndex=0,storyTimer=null,storyObserver=null,storyVisible=false,storyHovered=false,storyFocused=false,storyWheelTimer=null;
 const STORY_INTERVAL_MS=8000;
@@ -112,11 +147,11 @@ function passengerHTML(){
  <section class="imported-passenger" aria-labelledby="importedPassengerTitle"><div class="imported-passenger-top"><span class="person-symbol">${icon('person')}</span><div><span class="eyebrow muted">${T('common.passenger')}</span><h3 id="importedPassengerTitle">${esc(person().name)}</h3></div><span class="pill">${esc(state.flight.flightNo)}</span></div><div class="readonly-grid">${readOnlyDetail('passenger.ticketReference',esc(state.flight.bookingId))}${readOnlyDetail('passenger.flightRoute',esc(state.flight.origin)+' → '+esc(state.flight.destination))}</div>
  <div class="included-allowance"><span class="allowance-symbol">${icon('bag')}</span><div><span>${T('passenger.includedAllowance')}</span><strong>${allowance?T('fare.allowance',{n:fmt(allowance.pieces),kg:fmt(allowance.kgPerPiece)}):T('e.allowance')}</strong><p>${T('passenger.autoAllowance')}</p></div></div></section>
  <label class="check helper-toggle"><input type="checkbox" autocomplete="off" data-helper-toggle ${state.family?'checked':''} ${request?'disabled':''}><span>${T('helper.toggle')}</span></label>
- ${request?`<div class="notice" role="status" tabindex="-1" id="helperRequestStatus"><strong>${T('helper.waiting')}</strong><p>${T('helper.requestRecorded',{email:maskEmail(request.recipient)})}</p></div>`:state.family?helperHTML():''}`;
+ ${request?`<div class="notice" role="status" tabindex="-1" id="helperRequestStatus"><strong>${T('helper.waiting')}</strong><p>${T('helper.requestRecorded',{email:request.recipient?maskEmail(request.recipient):t('link.emailToValue')})}</p></div>`:state.family?helperHTML():''}`;
 }
 function helperHTML(){
  const contacts=helperContacts(),contact=selectedHelper();
- const details=contact?`<div class="readonly-grid">${readOnlyDetail('link.method.member',esc(contact.memberNo))}${readOnlyDetail('link.method.mobile',`<bdi dir="ltr">${esc(contact.mobile)}</bdi>`)}${readOnlyDetail('helper.relationship',T('link.rel.'+contact.relationship))}</div>`:'';
+ const details=contact?`<div class="readonly-grid">${readOnlyDetail('link.method.member',esc(contact.memberNo||t('common.missing')))}${readOnlyDetail('link.method.mobile',`<bdi dir="ltr">${esc(contact.mobile||t('common.missing'))}</bdi>`)}${readOnlyDetail('helper.relationship',T('link.rel.'+contact.relationship))}</div>`:'';
  return `<section class="helper-panel" aria-labelledby="helperTitle"><div class="panel-kicker">${icon('person')}<h3 id="helperTitle">${T('helper.title')}</h3></div>
  ${contacts.length?`<div class="fields"><label class="field full"><span>${T('helper.select')}</span><select class="input" data-helper-contact>${option('',t('helper.selectPlaceholder'),contact?.id||'')}${contacts.map(entry=>option(entry.id,entry.name,contact?.id)).join('')}</select></label></div>${details}<p class="prototype-note">${T('helper.requestDemo')}</p>`:`<p class="note">${T('helper.noContactsBody')}</p><button class="btn light" data-action="helper-add-contact">${T('helper.openFamily')}${icon('arrow','arrow')}</button>`}</section>`;
 }
@@ -316,8 +351,8 @@ function inlineName(name){name=String(name??'').trim();return language==='zh-Han
 function familyGivenName(fam=familyBenefitMember()){return String(fam.givenName||'').trim()||familyMemberName(fam);}
 function familyInitials(fam){const surname=String(fam.surname||'').trim(),given=String(fam.givenName||'').trim();return /[\u3400-\u9fff\uf900-\ufaff]/.test(surname)?surname[0]:((given[0]||'')+(surname[0]||'')).toUpperCase();}
 function maskEmail(value){const [user,domain]=String(value).split('@');return domain?`${user[0]||''}•••${user.length>1?user.at(-1):''}@${domain}`:String(value);}
-function familyTabsHTML(){return `<nav class="family-tabs" aria-label="${T('familyTabs.label')}">${[['benefits','benefits'],['family','link']].map(([view,key])=>`<a href="${href(view)+(helperFamilyPage&&view==='family'?'&for=helper':'')}" ${page===view?'aria-current="page"':''}>${T('familyTabs.'+key)}</a>`).join('')}</nav>`;}
-function familyHead(title,sub){return `<div class="pagehead family-head reveal"><div><div class="eyebrow page-identity">${productMark()}<span>${esc(productName())} / FAMILY</span></div><h1>${T(title)}</h1><p>${T(sub)}</p></div>${familyTabsHTML()}</div>`;}
+function familyTabsHTML(){return `<nav class="family-tabs" aria-label="${T('familyTabs.label')}">${[['family','link'],['benefits','benefits']].map(([view,key])=>`<a href="${href(view)+(helperFamilyPage&&view==='family'?'&for=helper':'')}" ${page===view?'aria-current="page"':''}>${T('familyTabs.'+key)}</a>`).join('')}</nav>`;}
+function familyHead(title,sub){return `<div class="pagehead family-head reveal"><div><div class="eyebrow page-identity">${productMark()}<span>${esc(productName())}${page==='benefits'?' / FAMILY':''}</span></div><h1>${T(title)}</h1><p>${T(sub)}</p></div>${familyTabsHTML()}</div>`;}
 function familyStepsHTML(current){
  return `<ol class="steps family-steps" aria-label="${T('link.progress')}">${['link.step1','link.step2'].map((key,i)=>`<li class="step${i+1<current?' done':''}" ${i+1===current?'aria-current="step"':''}><i>${i+1<current?'✓':i+1}</i><span>${T(key)}</span></li>`).join('')}</ol>`;
 }
@@ -334,7 +369,15 @@ function familyFormHTML(fam){return `<form id="familyInviteForm" novalidate>${fa
  ${helperFamilyPage?'':`<div class="note">${T('link.privacyNote')}</div>`}
  <p class="notice error" id="familyFormError" role="alert" tabindex="-1" hidden></p><button type="submit" hidden></button></form>`;}
 function familySummaryHTML(fam,extra=''){return `<div class="family-summary">${row('link.summary.member',esc(familyMemberName(fam)))}${row('link.summary.method',`${T('link.method.'+fam.method)} · <bdi dir="ltr">${esc(familyIdentifier(fam))}</bdi>`)}${row('link.summary.relationship',T('link.rel.'+fam.relationship))}${extra}</div>`;}
-function familyChangeHTML(fam,id=''){return fam.changeRequest?.status==='pending'?`<span class="pill gold">${icon('clock')}${T('link.changePending',{time:hk(fam.changeRequest.submittedAt)})}</span>`:`<button class="textbtn" data-action="family-change" data-id="${esc(id)}">${T('link.changeRequest')}</button>`;}
+function familyChangeHTML(fam,id=''){
+ if(fam.changeRequest?.status!=='pending'){
+  return `<button type="button" class="textbtn" data-action="family-change" data-id="${esc(id)}">${T('link.changeRequest')}</button>`;
+ }
+ return `<div class="actions">
+  <span class="pill gold">${icon('clock')}${T('link.changePending',{time:hk(fam.changeRequest.submittedAt)})}</span>
+  <button type="button" class="textbtn" data-action="family-change-preview" data-id="${esc(id)}">${T('link.changePreview')}</button>
+ </div>`;
+}
 function familyPendingHTML(invitations){
  if(!invitations.length)return '';
  return `<section class="card family-invite-list" aria-labelledby="familyPendingTitle"><div class="subhead"><div><h2 id="familyPendingTitle" tabindex="-1">${T('link.invitationsPending')}</h2><p>${T('link.pendingSub')}</p></div><span class="pill gold">${T('link.pendingCount',{n:fmt(invitations.length)})}</span></div>
@@ -358,7 +401,7 @@ function familyMemberCard(fam,isHelper=false){
   access==='waiting'?`<small class="muted">${T('link.progressWaiting')}</small>`:
   `<button type="button" class="textbtn" data-action="${access==='requested'?'family-progress-preview':'family-progress-request'}" data-id="${esc(id)}">${T(access==='requested'?'link.progressPreview':'link.progressRequest')}${icon('arrow')}</button>`;
  return `<article class="family-member card"><header class="family-member-top"><span class="member-initials" aria-hidden="true">${esc(familyInitials(fam))}</span><div><h3>${esc(name)}</h3><p>${T('link.relationshipValue',{relationship:t('link.rel.'+fam.relationship)})} · <bdi>${esc(maskedFamilyAccount(fam))}</bdi></p></div><span class="pill">${icon('check')}${T('link.statusLinked')}</span></header>
- ${status}${isHelper?`<div class="actions member-review"><span class="pill">${T('helper.title')}</span>${helperFamilyPage?familyChangeHTML(fam,id):link('book',T('helper.select'),'textbtn')}</div>`:`<div class="actions">${proxy}${progress}</div><div class="member-review">${familyChangeHTML(fam,id)}</div>`}</article>`;
+ ${status}${isHelper?`<div class="actions member-review"><span class="pill">${T('helper.title')}</span>${helperFamilyPage?'':link('book',T('helper.select'),'textbtn')}${familyChangeHTML(fam,'helper:'+id)}</div>`:`<div class="actions">${proxy}${progress}</div><div class="member-review">${familyChangeHTML(fam,id)}</div>`}</article>`;
 }
 function familyRosterHTML(members,helpers){
  const count=members.length+helpers.length;
@@ -368,23 +411,22 @@ function familyRosterHTML(members,helpers){
 function familyDemoPassengerLink(){
  return `<a class="btn light" href="${href('book')}" ${helperFamilyPage?'':'data-family-proxy'}>${T('link.viewPassenger')}${icon('arrow','arrow')}</a>`;
 }
-function familyDemoControls(fam,unlinked){
- const canLink=canSimulateFamilyLink(fam,familyDemoTravellerId);
+function familyDemoControls(unlinked){
  return `<div class="actions family-demo-actions">
-  <button type="button" class="btn slim light" data-action="family-demo-link" ${canLink?'':'disabled'}>${T('link.demoLink')}</button>
+  <button type="button" class="btn slim light" data-action="family-demo-link">${T('link.demoLink')}</button>
   <button type="button" class="btn slim light" data-action="family-demo-unlink" ${unlinked?'disabled':''}>${T('link.demoUnlink')}</button>
   ${unlinked?`<button type="button" class="textbtn" data-action="family-demo-exit">${T('link.demoExit')}</button>`:''}
  </div>`;
 }
 function familyHTML(){
- const fam=familyPageLink(),unlinked=familyDemoUnlinked(familyDemoTravellerId);
+ const unlinked=familyDemoUnlinked(familyDemoTravellerId);
  const members=helperFamilyPage?[]:linkedFamilyMembers();
  const helpers=unlinked?[]:linkedPassengerContacts(familyInvitePassengerId??state.travellerId);
  const invitations=unlinked?[]:pendingFamilyInvitations(familyInvitePassengerId);
- return `${familyHead('link.title',helperFamilyPage?'helper.linkSub':'link.sub')}<div class="family-workspace reveal">${familyRosterHTML(members,helpers)}${familyPendingHTML(invitations)}<div class="card">
- ${familyDemoControls(fam,unlinked)}
+ return `${familyHead('link.title',helperFamilyPage?'helper.linkSub':'link.sub')}<div class="family-workspace reveal"><div class="card">
+ ${familyDemoControls(unlinked)}
  ${unlinked?`<p class="dialog-lead">${T('link.demoUnlinkedBody')}</p>`:''}
- <div class="actions"><button type="button" class="btn" data-action="family-add">${icon('person')}${T('link.addMember')}</button>${helperFamilyPage||unlinked||members.length||helpers.length?familyDemoPassengerLink():''}</div></div></div>`;
+ <div class="actions"><button type="button" class="btn" data-action="family-add">${icon('person')}${T('link.addMember')}</button>${helperFamilyPage||unlinked||members.length||helpers.length?familyDemoPassengerLink():''}</div></div>${familyRosterHTML(members,helpers)}${familyPendingHTML(invitations)}</div>`;
 }
 function focusFamilyHeading(){document.getElementById('familyMembersTitle')?.focus();}
 let familyInviteDraft;
@@ -433,11 +475,26 @@ function familyPreview(id){
  if(fam)richModal(t('link.emailTitle'),familyEmailHTML(fam),[{text:t('link.emailAccept'),action:'family-accept',id},{text:t('link.emailDecline'),action:'family-decline',id,light:true}]);
 }
 function familyActionRecord(id){
- return helperFamilyPage?linkedPassengerContacts(familyInvitePassengerId).find(link=>familyMemberId(link)===id):linkedFamilyMember(id);
+ if(id.startsWith('helper:')){
+  return linkedPassengerContacts(familyInvitePassengerId??state.travellerId)
+   .find(link=>familyMemberId(link)===id.slice('helper:'.length));
+ }
+ return linkedFamilyMember(id);
 }
-function familyChangeDialog(id){
- const fam=familyActionRecord(id);if(!fam)return;
- richModal(t('link.changeTitle'),`<p class="dialog-lead">${T('link.changeBody')}</p>${familySummaryHTML(fam)}`,[{text:t('link.changeSubmit'),action:'family-change-submit',id},{text:t('common.cancel'),action:'close-dialog',light:true}],'close-dialog');
+function familyChangeDialog(id,preview=false){
+ const member=familyActionRecord(id);
+ if(!member||(preview&&member.changeRequest?.status!=='pending'))return;
+ const buttons=preview?[
+  {text:t('link.changeApprove'),action:'family-change-approve',id},
+  {text:t('link.changeDecline'),action:'family-change-decline',id,light:true},
+  {text:t('common.close'),action:'close-dialog',light:true}
+ ]:[
+  {text:t('link.changeSubmit'),action:'family-change-submit',id},
+  {text:t('common.cancel'),action:'close-dialog',light:true}
+ ];
+ richModal(t(preview?'link.changePreview':'link.changeTitle'),
+  `<p class="dialog-lead">${T(preview?'link.changeReviewBody':'link.changeBody')}</p>${familySummaryHTML(member)}`,
+  buttons,'close-dialog');
 }
 function familyProgressDialog(id,preview=false){
  const member=linkedFamilyMember(id);
@@ -490,7 +547,7 @@ function closeModal(){document.getElementById('dialog').close();}
 function modal(title,body,buttons=[{text:t('common.close'),action:'close-dialog'}]){document.getElementById('dialogTitle').textContent=title;document.getElementById('dialogBody').classList.remove('rich');document.getElementById('dialogBody').textContent=body;document.getElementById('dialogActions').innerHTML=buttons.map(b=>`<button class="btn ${b.light?'light':''}" data-action="${esc(b.action)}" data-id="${esc(b.id||'')}">${esc(b.text)}</button>`).join('');if(!document.getElementById('dialog').open)document.getElementById('dialog').showModal();}
 // Escaped HTML body for dialogs that need structure (summaries, email preview); plain modal() stays text-only.
 function richModal(title,html,buttons,focusAction){modal(title,'',buttons);const body=document.getElementById('dialogBody');body.classList.add('rich');body.innerHTML=html;if(focusAction)document.querySelector(`#dialogActions [data-action="${focusAction}"]`)?.focus();}
-function render(){renderHeader();document.getElementById('main').innerHTML=state.view==='book'?bookHTML():({home:homeHTML,agent:agentHTML,journey:journeyHTML,ops:opsHTML,family:familyHTML,benefits:benefitsHTML}[state.view]||homeHTML)();document.getElementById('controls').innerHTML=FAMILY_PAGES.includes(page)?'':controlsHTML();if(toastKey)document.getElementById('toast').textContent=t(toastKey);updateStory(storyIndex);initializeStoryAutoplay();if(state.view==='journey')loadHandoverTracking();const log=document.getElementById('chatMessages');if(log){log.scrollTop=log.scrollHeight;loadAgentStatus();}}
+function render(){renderHeader();document.getElementById('main').innerHTML=state.view==='book'?bookHTML():({home:homeHTML,agent:agentHTML,journey:journeyHTML,ops:opsHTML,family:familyHTML,benefits:benefitsHTML}[state.view]||homeHTML)();document.getElementById('controls').innerHTML=FAMILY_PAGES.includes(page)?'':controlsHTML();if(toastKey)document.getElementById('toast').textContent=t(toastKey);updateStory(storyIndex);initializeStoryAutoplay();initializeHomeMotion();if(state.view==='journey')loadHandoverTracking();const log=document.getElementById('chatMessages');if(log){log.scrollTop=log.scrollHeight;loadAgentStatus();}}
 function renderLive(){const deadlines=document.querySelector('.application-windows');if(deadlines&&page==='info')deadlines.outerHTML=applicationWindowsHTML();}
 
 function setField(el){const key=el.dataset.field;let value=el.type==='checkbox'?el.checked:el.value;if(key==='agent.mode'){clearAgentConversation(false);state.agent.mode=value;}else if(key==='travellerId'){state.travellerId=value;state.profile=person().type;state.agent.itemId=draft().items[0]?.id||'';state.agent.pending=null;invalidateAgent();state.agreed=false;}else if(key==='transport'){state.transport=value;for(const item of checked(draft()))if(item.service)item.carriage=value;state.agreed=false;invalidateAgent();}else if(['zero','countUnknown'].includes(key)){draft()[key]=value;if(value)draft()[key==='zero'?'countUnknown':'zero']=false;state.agreed=false;invalidateAgent();}else if(key==='extraPieces'){state.extraBags??={};state.extraBags[state.travellerId]=Number(value);state.agreed=false;invalidateAgent();}else if(key.startsWith('ops.')){state.ops[key.split('.')[1]]=key==='ops.expired'?value:value===''?null:Math.max(0,Number(value));}else if(key.startsWith('agent.')){state.agent[key.split('.')[1]]=value;state.agent.pending=null;invalidateAgent();}else if(key==='clock'||key==='flight.departure'){const date=new Date(value+':00+08:00');if(!Number.isFinite(date.getTime()))return;if(key==='clock')state.clock=date.toISOString();else{state.flight.departure=date.toISOString();state.flight.legId='CX257-'+value.slice(0,10);Object.values(state.declarations).forEach(d=>d.legId=state.flight.legId);state.agreed=false;invalidateAgent();}}else if(key==='milesBalance'){if(state.processing)return;state.milesBalance=Math.max(0,Math.floor(Number(value)||0));}else{state[key]=value;if(!['agreed','payment','forceFail'].includes(key)){state.agreed=false;invalidateAgent();}}persist();renderLive();}
@@ -551,7 +608,7 @@ document.addEventListener('click',event=>{
  case 'scenario':modal(t('dialog.resetTitle'),t('dialog.resetBody'),[{text:t('common.confirm'),action:'confirm-reset',id:b.dataset.scenario},{text:t('common.cancel'),action:'close-dialog',light:true}]);break;
  case 'confirm-reset':closeModal();resetDemo(id);break;
  case 'family-demo-link':
-  if(simulateFamilyLink(familyPageLink(),familyDemoTravellerId)){render();toast('notice.familyLinked');focusFamilyHeading();}
+  if(simulateFamilyLink(familyPageLink(),familyDemoTravellerId)){render();toast('link.statusLinked');focusFamilyHeading();}
   break;
  case 'family-demo-unlink':
  case 'family-demo-exit':
@@ -586,6 +643,17 @@ document.addEventListener('click',event=>{
  }
  case 'family-change':familyChangeDialog(id);break;
  case 'family-change-submit':{const fam=familyActionRecord(id),done=fam&&requestFamilyChange(fam);closeModal();render();if(done)toast('notice.familyChange');break;}
+ case 'family-change-preview':familyChangeDialog(id,true);break;
+ case 'family-change-approve':
+ case 'family-change-decline':{
+  const approved=b.dataset.action==='family-change-approve';
+  if(reviewFamilyChange(familyActionRecord(id),approved)){
+   closeModal();render();
+   toast(approved?'notice.familyChangeApproved':'notice.familyChangeDeclined');
+   focusFamilyHeading();
+  }
+  break;
+ }
  case 'family-progress-request':if(setFamilyProgress(id,'request')){render();familyProgressDialog(id);}break;
  case 'family-progress-preview':familyProgressDialog(id,true);break;
  case 'family-progress-grant':

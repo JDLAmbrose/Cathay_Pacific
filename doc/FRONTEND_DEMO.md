@@ -15,11 +15,13 @@
 | `index.html` | 行程首頁、航班橫幅、功能入口、三組案例輪播 |
 | `pages/prepare.html` | 實際乘機人、家人在家協助填寫、聯絡資料 |
 | `pages/baggage.html` | 全部托運行李預報、服務行李選擇、尺寸與重量 |
-| `pages/rules.html` | 五步流程中的 AI 攜帶規則諮詢 |
-| `pages/delivery.html` | 收取地區、申請截止、首末程安排 |
+| `pages/information.html` | 收取地區、申請截止、首末程安排 |
+| `pages/pricing.html` | 按行李分配隨身、跟機及貨運方式 |
 | `pages/checkout.html` | 費用明細、現金或里數模擬結算 |
 | `pages/assistant.html` | 可從主導覽直接進入的 AI 出行助手 |
 | `pages/journey.html` | 訂單、退款、三類交接節點及事件演示 |
+| `pages/family.html` | 成員互聯、邀請及模擬審核，家庭專區的預設頁面 |
+| `pages/benefits.html` | 家庭權益 |
 | `pages/operations.html` | 已保存預報彙總、重量與空間規劃、演示參數 |
 | `archive/index-original.html` | 原始 UI 設計，獨立保留 |
 | `archive/index-prd-single.html` | 本次拆頁前的 PRD 1.3 單頁原型，獨立保留 |

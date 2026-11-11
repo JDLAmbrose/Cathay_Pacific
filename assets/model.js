@@ -174,6 +174,31 @@ function cancelFamilyInvitation(link){
 }
 function respondFamilyInvite(accepted,share=true,link=state.familyLink){if(link.status!=='pending')return false;Object.assign(link,{status:accepted?'linked':'declined',shareProgress:!!(accepted&&share),respondedAt:iso(state.clock)});persist();return true;}
 function requestFamilyChange(link=state.familyLink){if(!['pending','linked'].includes(link.status)||link.changeRequest?.status==='pending')return false;link.changeRequest={status:'pending',submittedAt:iso(state.clock)};persist();return true;}
+function reviewFamilyChange(link, approved) {
+  if (link?.status !== "linked" || link.changeRequest?.status !== "pending")
+    return false;
+
+  if (approved) {
+    // The legacy "member" selection refers to the first registered contact.
+    for (const [passengerId, trip] of Object.entries(state.helper)) {
+      if (trip.contactId === "member" && familyConnectionRecords(passengerId)[0] === link)
+        trip.contactId = "";
+    }
+    if (state.familyLink === link) state.familyLink = newFamilyContact();
+    for (const [passengerId, contact] of Object.entries(state.passengerLinks)) {
+      if (contact === link) delete state.passengerLinks[passengerId];
+    }
+    state.familyInvitationArchive = state.familyInvitationArchive.filter(
+      (entry) => entry.link !== link,
+    );
+    state.familyMembers = state.familyMembers.filter((member) => member !== link);
+  } else {
+    link.changeRequest = null;
+  }
+  persist();
+  return true;
+}
+
 function familyDemoUnlinked(travellerId){return state.familyDemoUnlinked?.[travellerId]===true;}
 function setFamilyDemoUnlinked(travellerId,active){
  state.familyDemoUnlinked??={};
@@ -181,44 +206,80 @@ function setFamilyDemoUnlinked(travellerId,active){
  else delete state.familyDemoUnlinked[travellerId];
  persist();
 }
-function canAddDemoAlex(link){
- return link===state.familyLink&&familyLinkedRecord(link)&&familyTravellerId(link)===FAMILY_MEMBER_ID&&
-  !parentFamilyRecords().some(member=>member.status==='linked'&&familyTravellerId(member)==='child');
+function addDemoAlex(now) {
+  const hasAlex = parentFamilyRecords().some(
+    (member) =>
+      ["linked", "pending"].includes(member.status) &&
+      familyTravellerId(member) === "child",
+  );
+  if (hasAlex) return;
+
+  state.familyMembers.push({
+    ...alexFamilyLink(),
+    owner: { ...FAMILY_PARENT },
+    status: "linked",
+    shareProgress: true,
+    invitedAt: now,
+    respondedAt: now,
+  });
 }
-function addDemoAlex(now){
- state.familyMembers.push({...alexFamilyLink(),owner:{...FAMILY_PARENT},status:'linked',shareProgress:true,invitedAt:now,respondedAt:now});
-}
-function familyDemoHasMembers(link,travellerId){
- const records=link===state.familyLink?parentFamilyRecords():familyConnectionRecords(travellerId);
- return records.some(member=>member.status==='linked');
-}
-function canSimulateFamilyLink(link,travellerId){
- const hasMembers=familyDemoHasMembers(link,travellerId);
- return (familyDemoUnlinked(travellerId)&&hasMembers)||canAddDemoAlex(link)||(link.status==='draft'&&!hasMembers);
-}
-function simulateFamilyLink(link,travellerId){
- if(!canSimulateFamilyLink(link,travellerId))return false;
- if(familyDemoUnlinked(travellerId)&&familyDemoHasMembers(link,travellerId)){
-  setFamilyDemoUnlinked(travellerId,false);
+
+function simulateFamilyLink(link, travellerId) {
+  const fromParent = link === state.familyLink;
+  const passengerId = fromParent ? null : travellerId;
+  const records = fromParent
+    ? parentFamilyRecords()
+    : familyConnectionRecords(passengerId);
+  const hasMembers = records.some((member) => member.status === "linked");
+  const now = iso(state.clock);
+  if (hasMembers) {
+    if (
+      fromParent &&
+      familyLinkedRecord(link) &&
+      familyTravellerId(link) === FAMILY_MEMBER_ID
+    ) {
+      addDemoAlex(now);
+    }
+  } else {
+    const sample = fromParent
+      ? newFamilyLink()
+      : {
+          ...newFamilyContact("email"),
+          memberNo: FAMILY_PARENT.memberNo,
+          mobile: FAMILY_PARENT.mobile,
+          email: FAMILY_PARENT.email,
+          surname: "Chen",
+          givenName: "Mei",
+        };
+    const pendingSample = records.find(
+      (record) =>
+        record.status === "pending" &&
+        familyMemberId(record) === familyMemberId(sample),
+    );
+    if (pendingSample) {
+      pendingSample.status = "linked";
+      pendingSample.respondedAt = now;
+    } else {
+      if (link.status !== "draft") {
+        state.familyInvitationArchive.push({ passengerId, link });
+      }
+      const connected = {
+        ...sample,
+        status: "linked",
+        invitedAt: now,
+        respondedAt: now,
+      };
+      if (fromParent) {
+        connected.owner = { ...FAMILY_PARENT };
+        state.familyLink = connected;
+      } else {
+        state.passengerLinks[travellerId] = connected;
+      }
+    }
+    if (fromParent) addDemoAlex(now);
+  }
+  setFamilyDemoUnlinked(travellerId, false);
   return true;
- }
- if(canAddDemoAlex(link)){
-  addDemoAlex(iso(state.clock));
-  persist();
-  return true;
- }
- const fromParent=link===state.familyLink,now=iso(state.clock);
- const sample=fromParent?newFamilyLink():{
-  method:'email',memberNo:FAMILY_PARENT.memberNo,mobile:FAMILY_PARENT.mobile,email:FAMILY_PARENT.email,
-  surname:'Chen',givenName:'Mei',relationship:'parent'
- };
- Object.assign(link,sample,{status:'linked',invitedAt:now,respondedAt:now,shareProgress:false,changeRequest:null});
- if(fromParent){
-  link.owner={...FAMILY_PARENT};
-  addDemoAlex(now);
- }
- setFamilyDemoUnlinked(travellerId,false);
- return true;
 }
 function familyBenefitMember(){
  const members=linkedFamilyMembers();
@@ -262,19 +323,61 @@ function migrateBookingState(){
  state.routeLink={origin:state.flight.origin,destination:state.flight.destination,originCountry:route.origin.country,destinationCountry:route.destination.country};
  for(const declaration of [...Object.values(state.drafts||{}),...Object.values(state.declarations||{})])for(const item of declaration.items||[])item.categories=itemCategories(item);
 }
-function helperContacts(){
- if(familyDemoUnlinked(state.travellerId))return [];
- const records=familyConnectionRecords(state.travellerId);
- const contacts=records.flatMap((link,index)=>link.status==='linked'?[{
-  ...link,id:index===0?'member':'member:'+familyMemberId(link),name:familyMemberName(link)
- }]:[]);
- // In the parent-side flow the passenger is the invitee, so the helper is the linking account owner.
- const member=linkedFamilyMembers().find(link=>familyTravellerId(link)===state.travellerId);
- if(member){
-  const owner=member.owner||FAMILY_PARENT;
-  if(!contacts.some(contact=>contact.email===owner.email))contacts.push({...owner,id:'parent',relationship:member.relationship});
- }
- return contacts;
+function helperContacts() {
+  if (familyDemoUnlinked(state.travellerId)) return [];
+  const records = familyConnectionRecords(state.travellerId);
+  const members = linkedFamilyMembers();
+  const linkedIds = new Set();
+  const contacts = records.flatMap((link, index) => {
+    if (link.status !== "linked") return [];
+    const memberId = familyMemberId(link);
+    linkedIds.add(memberId);
+    return [
+      {
+        ...link,
+        id: index === 0 ? "member" : "member:" + memberId,
+        name: familyMemberName(link),
+      },
+    ];
+  });
+
+  // The account that invited this passenger can still help them directly.
+  const passengerLink = members.find(
+    (link) => familyTravellerId(link) === state.travellerId,
+  );
+  if (passengerLink) {
+    const owner = passengerLink.owner || FAMILY_PARENT;
+    if (!contacts.some((contact) => contact.email === owner.email)) {
+      contacts.push({
+        ...owner,
+        id: "parent",
+        relationship: passengerLink.relationship,
+      });
+    }
+  }
+
+  for (const member of members) {
+    const memberId = familyMemberId(member);
+    const account = familyAccountKey("member", member.memberNo);
+    const email = familyAccountKey("email", member.email);
+    if (
+      linkedIds.has(memberId) ||
+      contacts.some(
+        (contact) =>
+          (account && familyAccountKey("member", contact.memberNo) === account) ||
+          (email && familyAccountKey("email", contact.email) === email),
+      )
+    ) {
+      continue;
+    }
+    linkedIds.add(memberId);
+    contacts.push({
+      ...member,
+      id: "roster:" + memberId,
+      name: familyMemberName(member),
+    });
+  }
+  return contacts;
 }
 function helperTrip(){
  const trip=state.helper[state.travellerId];

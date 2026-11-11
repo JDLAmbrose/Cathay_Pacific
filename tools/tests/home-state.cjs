@@ -24,7 +24,8 @@ function intro(run){return run('homeHTML()').split('<section class="home-service
 function unbooked(run){
  const html=intro(run);
  assert.match(html,/data-booking-state="unbooked"/);
- assert.doesNotMatch(html,/luggage-tag|class="welcome"|LSE Student Dormitory 6/);
+ assert.match(html,/class="luggage-tag tag-preview" aria-hidden="true"/);
+ assert.doesNotMatch(html,/class="welcome"|LSE Student Dormitory 6|<b>03<\/b>/);
 }
 (async()=>{
  let run=home();unbooked(run);
@@ -56,7 +57,7 @@ function unbooked(run){
   run(`setLanguage('${language}')`);
   const html=run('homeHTML()');
   assert.match(html,/familyTitle/);
-  assert.match(html,/data-family-prepare/);
+  assert.match(html,/<a class="btn" href="pages\/prepare\.html\?/);
   for(const key of ['home.beforeBooking','home.bookedNotice','family.intro','family.childText','family.seniorText','family.start','feature.reportShort','feature.rulesShort','feature.deliveryShort','feature.milesShort']){
    assert.notEqual(run(`t('${key}')`),key);
   }

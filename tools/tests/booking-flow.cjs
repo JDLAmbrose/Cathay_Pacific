@@ -19,14 +19,13 @@ function app(saved){
  run('render=()=>{};go=()=>{};toast=()=>{};closeModal=()=>{}');
  run.warnings=warnings;return run;
 }
-function helper(run){run("state.family=true;Object.assign(state.helper,{name:'Demo Helper',identityType:'passport',identityNumber:'DEMO-ONLY',relationship:'parent',memberNo:''})");}
 (async()=>{
  let run=app();
  assert.equal(run('BOOK_PAGES.length'),5);
- assert.equal(run("href('book',2)"),'../pages/information.html?v=20261107-aircraft');
- assert.equal(run("href('book',3)"),'../pages/baggage.html?v=20261107-aircraft');
- assert.equal(run("href('book',5)"),'../pages/checkout.html?v=20261107-aircraft');
- assert.equal(run("href('book',4)"),'../pages/pricing.html?v=20261107-aircraft');
+ assert.equal(run("href('book',2)").split('?')[0],'../pages/information.html');
+ assert.equal(run("href('book',3)").split('?')[0],'../pages/baggage.html');
+ assert.equal(run("href('book',5)").split('?')[0],'../pages/checkout.html');
+ assert.equal(run("href('book',4)").split('?')[0],'../pages/pricing.html');
  assert.doesNotMatch(run('bookHTML()'),/liveSummary|rules\.html|delivery\.html/);
  const passenger=run('passengerHTML()');
  assert.match(passenger,/Lin Chen/);assert.match(passenger,/免費托運 2 件，每件最多 23 kg/);
@@ -41,28 +40,31 @@ function helper(run){run("state.family=true;Object.assign(state.helper,{name:'De
  assert.doesNotMatch(run('informationHTML()'),/EBC UK/);
  run("state.flight.origin='ZZZ';migrateBookingState()");assert.equal(run('validateInformation()'),'e.routeProviders');
 
- run=app();assert.equal(run('validateHelper()'),null);helper(run);
- assert.equal(run('validateHelper()'),null);assert.equal(run('state.helper.memberNo'),'');
- assert.equal(run('submitHelperReview()'),null);assert.equal(run('state.helper.review.status'),'draft');
- run('state.helper.sync=true');assert.equal(run('validateHelper()'),'e.helperProof');
- run("state.helper.proof={id:'test-proof',name:'test.png',type:'image/png',size:1}");
- assert.equal(run('submitHelperReview()'),null);assert.equal(run('state.helper.review.status'),'pending');
- assert.equal(run('state.helper.sharedTrip'),null);
- assert.equal(run('reviewHelperRequest(true)'),true);assert.equal(run('state.helper.sharedTrip.demo'),true);
- run("state.helper.identityNumber='CHANGED';persist()");
- assert.equal(run('state.helper.review.status'),'draft');assert.equal(run('state.helper.sharedTrip'),null);
- run('submitHelperReview();reviewHelperRequest(false)');
- assert.equal(run('state.helper.review.status'),'rejected');assert.equal(run('state.helper.sharedTrip'),null);
- run('submitHelperReview();reviewHelperRequest(true)');
- run("state.travellerId='child';persist()");assert.equal(run('state.helper.sharedTrip'),null);
+ run=app();
+ assert.equal(run('validateHelper()'),null);
+ run('state.family=true');
+ assert.equal(run('validateHelper()'),'helper.noContactsTitle');
+ assert.equal(run('simulateFamilyLink(state.familyLink,FAMILY_MEMBER_ID)'),true);
+ assert.equal(run('validateHelper()'),'helper.select');
+ assert.match(run('helperHTML()'),/Lin Chen/);
+ assert.match(run('helperHTML()'),/Alex Chen/);
+ run("selectHelper(helperContacts().find(contact=>contact.name==='Alex Chen').id)");
+ assert.equal(run('selectedHelper().memberNo'),'1600654321');
+ assert.equal(run('sendHelperRequest()'),true);
+ assert.equal(run('sendHelperRequest()'),false);
+ assert.equal(run('pendingHelperRequest().recipient'),'alex.chen@example.com');
+ assert.equal(run('validateHelper()'),'helper.waiting');
+ assert.equal(run('startNewHelperApplication()'),true);
+ assert.equal(run('validateHelper()'),null);
 
- // Booking may finish during human review, but sharing starts only after approval.
- run=app();helper(run);run("state.helper.sync=true;state.helper.proof={id:'proof',name:'test.png',type:'image/png',size:1};submitHelperReview();state.extraBags.lin=2;state.agreed=true");
- await run('pay()');assert.equal(run('state.orders.length'),1);assert.equal(run('state.helper.sharedTrip'),null);
- run('reviewHelperRequest(true)');assert.equal(run('state.helper.sharedTrip.order.id'),run('state.orders[0].id'));
- run("recordHandover('airport')");assert.equal(run('state.helper.sharedTrip.order.events.length'),1);
- run('cancelOrder(state.orders[0].id,true)');assert.equal(run('state.helper.sharedTrip.order'),null);
- run('state.helper.sync=false;persist()');assert.equal(run('state.helper.sharedTrip'),null);
+ run("state.family=true;const demoMember=linkedFamilyMember('child')");
+ assert.equal(run('requestFamilyChange(demoMember)'),true);
+ assert.match(run("familyChangeHTML(demoMember,'child')"),/data-action="family-change-preview"/);
+ assert.equal(run('reviewFamilyChange(demoMember,false)'),true);
+ assert.match(run('helperHTML()'),/Alex Chen/);
+ assert.equal(run('requestFamilyChange(demoMember)'),true);
+ assert.equal(run('reviewFamilyChange(demoMember,true)'),true);
+ assert.doesNotMatch(run('helperHTML()'),/Alex Chen/);
 
  // Mixed bags consume the ticket allowance only when travelling on the flight.
  run=app();
@@ -81,12 +83,12 @@ function helper(run){run("state.family=true;Object.assign(state.helper,{name:'De
  assert.equal(run('state.agent.answer.advice.type'),'cabin');
 
  // Render every new panel in every supported language and catch missing copy keys.
- run=app();helper(run);run('state.helper.sync=true');
+ run=app();run('state.family=true;simulateFamilyLink(state.familyLink,FAMILY_MEMBER_ID)');
  for(const lang of ['zh-Hant','en','fr','es','ar']){
   run(`setLanguage('${lang}')`);
   for(const code of ['passengerHTML()','informationHTML()','baggageHTML()'])assert.ok(run(code).length>100);
   for(const step of [1,2,3,4,5])run(`state.step=${step};bookHTML()`);
  }
  assert.deepEqual(run.warnings,[]);
- console.log('PASS: five-step routing, read-only passenger/allowance, route-bound providers and cutoffs, optional membership, proof/review/sync lifecycle and revocation, booking during review, mixed-bag pricing, saved choices, multi-category AI advice and all five languages.');
+ console.log('PASS: five-step routing, read-only passenger/allowance, route-bound providers and cutoffs, confirmed helper selection, request lifecycle, simulated removal, mixed-bag pricing, saved choices, multi-category AI advice and all five languages.');
 })().catch(error=>{console.error(error);process.exitCode=1});
