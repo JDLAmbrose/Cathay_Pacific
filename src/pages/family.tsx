@@ -20,7 +20,6 @@ import {
   familyBenefitMember,
   familyLinked,
   familyProgressAccess,
-  familyMilestones,
   familyPromoCode,
   state,
 } from "../engine/booking";
@@ -34,6 +33,7 @@ import {
 } from "../services/navigation";
 import { href } from "../config/routes";
 import { cx, keyed, Input } from "../components/primitives";
+import { FamilyMilestonesCard } from "../components/FamilyMilestones";
 import {
   icon,
   productName,
@@ -750,88 +750,8 @@ function familyEmailHTML(fam) {
 function proposedBadge() {
   return <span className={cx("proposed-badge")}>{T("benefit.proposed")}</span>;
 }
-function monthLabel(date) {
-  return new Intl.DateTimeFormat(language === "zh-Hant" ? "zh-HK" : language, {
-    timeZone: "Asia/Hong_Kong",
-    year: "numeric",
-    month: "long",
-  }).format(new Date(date));
-}
-function milestoneMoveHTML(move, order) {
-  const flight = order?.flight || state.flight,
-    [title, sub] =
-      move.key === "current"
-        ? [
-            T("benefit.move1", {
-              date: monthLabel(flight.departure),
-              flight: flight.flightNo,
-            }),
-            order
-              ? T("benefit.move1Booked", {
-                  n: fmt(order.itemIds.length),
-                  id: order.id,
-                })
-              : T("benefit.move1Draft"),
-          ]
-        : move.key === "next"
-          ? [T("benefit.move2"), T("benefit.move2Text")]
-          : [T("benefit.move3"), T("benefit.move3Text")];
-  return (
-    <li className={cx("milestone-row")}>
-      <div>
-        <strong>{title}</strong>
-        <span>{sub}</span>
-      </div>
-      <span className={cx("status-chip " + String(move.status))}>
-        {T("benefit.status." + move.status)}
-      </span>
-    </li>
-  );
-}
 function milestoneCardHTML() {
-  const linked = familyLinked(),
-    m = familyMilestones(),
-    summary = t("benefit.milestonesTitle", {
-      n: fmt(m.completed),
-      total: fmt(m.target),
-    });
-  return (
-    <article
-      className={cx("card benefit-card milestone-card")}
-      aria-labelledby={"milestoneTitle"}
-    >
-      <div className={cx("benefit-card-top")}>
-        <span className={cx("eyebrow")}>{T("benefit.milestonesKicker")}</span>
-        {proposedBadge()}
-      </div>
-      <h2 id={"milestoneTitle"}>
-        {linked ? text(summary) : T("benefit.unlinkedTitle")}
-      </h2>
-      <div
-        className={cx("milestone-progress")}
-        role={"img"}
-        aria-label={text(summary)}
-      >
-        {keyed(
-          Array.from({ length: m.target }, (_, i) => (
-            <span className={cx(i < m.completed ? "filled" : "")} />
-          )),
-        )}
-      </div>
-      <p className={cx("benefit-text")}>{T("benefit.milestonesText")}</p>
-      {linked ? (
-        <ol className={cx("milestone-list")}>
-          {keyed(m.moves.map((move) => milestoneMoveHTML(move, m.order)))}
-        </ol>
-      ) : (
-        <div className={cx("benefit-empty")}>
-          {icon("parent")}
-          <p>{T("benefit.unlinkedText")}</p>
-          {link("family", T("benefit.linkCta"), "btn slim light")}
-        </div>
-      )}
-    </article>
-  );
+  return <FamilyMilestonesCard />;
 }
 function occasionText() {
   return T("benefit.occasionText." + familyOccasion, {
@@ -853,10 +773,6 @@ function companionCardHTML() {
       className={cx("card benefit-card companion-card")}
       aria-labelledby={"companionTitle"}
     >
-      <div className={cx("benefit-card-top")}>
-        <span className={cx("eyebrow")}>{T("benefit.companionKicker")}</span>
-        {proposedBadge()}
-      </div>
       <h2 id={"companionTitle"}>
         {linked
           ? T("benefit.companionTitle", {
@@ -1100,8 +1016,6 @@ export {
   FamilyPage,
   familyEmailHTML,
   proposedBadge,
-  monthLabel,
-  milestoneMoveHTML,
   milestoneCardHTML,
   occasionText,
   companionCardHTML,

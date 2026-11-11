@@ -288,22 +288,11 @@ dialog .body.rich{white-space:normal}
 .family-share strong{font-weight:600}
 .family-share small{display:block;margin-top:4px;color:var(--muted);font-size:calc(10px * var(--text-scale,1));line-height:1.7}
 dialog .prototype-note{margin-top:12px}
-.benefit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:start}
+.benefit-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;align-items:stretch}
 .benefit-card{display:flex;flex-direction:column;padding:30px}
-.benefit-card-top{display:flex;justify-content:space-between;align-items:center;gap:12px}
-.benefit-card-top .eyebrow{color:var(--green);letter-spacing:.14em}
-.benefit-card h2{font-size:calc(26px * var(--text-scale,1));line-height:1.4;margin-top:14px;text-wrap:balance}
+.benefit-card h2{font-size:calc(26px * var(--text-scale,1));line-height:1.4;margin-top:0;text-wrap:balance}
 .proposed-badge{display:inline-flex;align-items:center;flex:none;padding:3px 10px;border:1.5px dashed #d6b57a;border-radius:8px;background:#fdf8ee;color:#8b672d;font-size:calc(11px * var(--text-scale,1));font-weight:650;letter-spacing:.08em;white-space:nowrap}
-.milestone-progress{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:22px 0}
-.milestone-progress span{height:10px;border-radius:10px;background:#e2eae4}
-.milestone-progress span.filled{background:var(--deep)}
 .benefit-text{font-size:calc(13px * var(--text-scale,1));line-height:1.9;color:#3f5a52}
-.milestone-list{list-style:none;margin:22px 0 0;padding:0;border-top:1px solid var(--line)}
-.milestone-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:18px 0;border-bottom:1px solid var(--line)}
-.milestone-row:last-child{border-bottom:0;padding-bottom:0}
-.milestone-row>div{min-width:0}
-.milestone-row strong{display:block;font-size:calc(14px * var(--text-scale,1));font-weight:600;line-height:1.6}
-.milestone-row>div>span{display:block;margin-top:3px;font-size:calc(12px * var(--text-scale,1));color:var(--muted);overflow-wrap:anywhere}
 .status-chip{display:inline-flex;align-items:center;gap:8px;flex:none;padding:6px 13px;border:1px solid #d6e0d8;border-radius:30px;background:#f1f5f2;color:#58695f;font-size:calc(12px * var(--text-scale,1));white-space:nowrap}
 .status-chip:before{content:"";width:9px;height:9px;border:2px solid currentColor;border-radius:50%;box-sizing:border-box}
 .status-chip.counted{background:var(--pale);border-color:#c1d9c8;color:var(--green);font-weight:600}
@@ -312,7 +301,6 @@ dialog .prototype-note{margin-top:12px}
 .benefit-empty{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:22px;padding:16px 18px;border:1px dashed #c6d3bf;border-radius:12px;color:var(--green)}
 .benefit-empty p{flex:1;min-width:min(100%,220px);font-size:calc(12px * var(--text-scale,1));line-height:1.8;color:var(--muted)}
 .companion-card{background:#fbf7ee;border-color:#ebdfc6}
-.companion-card .benefit-card-top .eyebrow{color:#7d5f2c}
 .occasion-tabs{display:flex;flex-wrap:wrap;gap:10px;margin:20px 0 16px}
 .occasion-tabs button{min-height:44px;padding:9px 20px;border:1px solid #cfd8cf;border-radius:30px;background:#fff;color:var(--ink);font-size:calc(13px * var(--text-scale,1));transition:background .2s}
 .occasion-tabs button:hover{background:var(--pale)}
@@ -335,6 +323,59 @@ dialog .prototype-note{margin-top:12px}
 .companion-card>.btn{align-self:flex-start;max-width:100%}
 .companion-card>.btn .icon{width:18px;height:18px}
 .benefit-fine{margin-top:12px;font-size:calc(11px * var(--text-scale,1));color:var(--muted)}
+
+/* Gift journey: the SVG and percentage padding share the same 600-unit grid. */
+.milestone-card{position:relative;isolation:isolate;overflow:hidden;padding-bottom:28px;background:linear-gradient(145deg,#fff,#fbfdfc);border-color:#dfeae5;box-shadow:0 12px 36px #173f3909}
+.milestone-card>h2,.milestone-card>p,.milestone-card>.benefit-empty{position:relative;z-index:1}
+.milestone-card>h2{color:var(--deep);font-weight:650;letter-spacing:.015em}
+.milestone-subtitle{margin-top:10px;font-size:calc(14px * var(--text-scale,1));line-height:1.85;color:var(--ink)}
+.milestone-journey{position:relative;align-self:center;width:100%;max-width:600px;margin:14px 0 16px;flex:1;min-width:0}
+.milestone-arc{position:absolute;inset:0 0 auto;width:100%;height:auto;overflow:visible;pointer-events:none}
+.milestone-arc-track,.milestone-arc-fill{fill:none;stroke-width:11;stroke-linecap:round}
+.milestone-arc-track{stroke:#dce9db}
+.milestone-node{color:#83a17a}
+.milestone-node-disc{fill:#fbfdf8;stroke:#cfdfcc;stroke-width:2.5;filter:drop-shadow(0 3px 3px #21452e19)}
+.milestone-node-first{color:var(--cream)}
+.milestone-node-first .milestone-node-disc{fill:var(--green);stroke:#c7dec8}
+.milestone-node:last-child{color:#4a8940}
+.milestone-gift{display:block;flex:none}
+.milestone-check circle{fill:#169a4b;stroke:#fff;stroke-width:1.5}
+.milestone-check path{fill:none;stroke:#fff;stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round}
+.milestone-stages{position:relative;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px;list-style:none;padding:0;margin:0;min-height:100%;direction:ltr}
+.milestone-stage{min-width:0;padding-top:123.5%;text-align:center}
+.milestone-stage:nth-child(2){display:flex;flex-direction:column;justify-content:space-between;padding-top:42%}
+.milestone-stage-copy{min-width:0}
+html[dir=rtl] .milestone-stage-copy,html[dir=rtl] .milestone-summary>p{direction:rtl}
+.milestone-stage h3{font-size:calc(clamp(12px,1.35vw,18px) * var(--text-scale,1));font-weight:650;line-height:1.5;color:var(--deep);overflow-wrap:anywhere}
+.milestone-stage-copy>p{margin-top:4px;font-size:calc(clamp(10px,1.05vw,13px) * var(--text-scale,1));line-height:1.65;color:var(--ink);overflow-wrap:anywhere}
+.milestone-stage .status-chip{justify-content:center;max-width:100%;gap:5px;margin-top:10px;padding:5px 9px;white-space:normal;font-size:calc(clamp(10px,1vw,12px) * var(--text-scale,1));line-height:1.5;color:var(--deep);background:#f0f5ef}
+.milestone-stage .status-chip:before{width:8px;height:8px;flex:none}
+.milestone-stage .status-chip.counted{background:#e4f3e7;color:#138540;border-color:#bde3c7}
+.milestone-stage .status-chip.counted:before{display:none}
+.milestone-stage .status-chip>.icon{width:15px;height:15px;stroke-width:2.5}
+.milestone-summary{position:relative;isolation:isolate;margin-top:clamp(16px,2vw,24px);padding-bottom:4px;color:var(--deep)}
+.milestone-summary:before{content:'';position:absolute;z-index:-1;inset:-38% -85% -25%;border-radius:50%;background:radial-gradient(ellipse,#e8f0e98a,transparent 70%);pointer-events:none}
+.milestone-fraction{display:block;font-size:calc(clamp(26px,3.6vw,48px) * var(--text-scale,1));font-weight:600;line-height:1.2;letter-spacing:-.035em;white-space:nowrap}
+.milestone-fraction>span{font-weight:400}
+.milestone-summary>p{margin-top:4px;font-size:calc(clamp(11px,1.1vw,14px) * var(--text-scale,1));line-height:1.6;overflow-wrap:anywhere}
+.milestone-meter{width:160%;height:8px;margin:10px -30% 0;border-radius:20px;background:#dcebe1;overflow:hidden;direction:ltr}
+.milestone-meter>span{display:block;width:100%;height:100%;border-radius:inherit;transform:scaleX(var(--milestone-progress));transform-origin:left;background:linear-gradient(90deg,#008d77,#69cb60)}
+.milestone-reward{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:3px;margin:0 10% 6px;padding:10px 16px 12px;border:1px solid #f5e5c6;border-radius:28px;background:linear-gradient(120deg,#fdfaf4,#fbf4e8);box-shadow:0 5px 14px #785b2510;color:#8b6429;text-align:center}
+.milestone-reward>.milestone-gift{width:44px;height:auto;max-width:100%}
+.milestone-reward>strong{font-size:calc(clamp(16px,1.65vw,21px) * var(--text-scale,1));font-weight:650;line-height:1.5;overflow-wrap:anywhere}
+.milestone-reward[data-reward-state=unlocked]{background:linear-gradient(120deg,#fff8de,#f4e3b4);border-color:#d5ae64;color:#795215;box-shadow:0 6px 22px #aa792e25}
+.milestone-waves{position:absolute;z-index:0;inset:auto 0 0;width:100%;height:auto;pointer-events:none}
+@media(max-width:580px){.milestone-card{padding-bottom:24px}.milestone-subtitle{font-size:calc(12px * var(--text-scale,1))}.milestone-stages{gap:2px}.milestone-stage .status-chip{padding:4px 6px;gap:4px}.milestone-reward{margin-inline:7%;border-radius:24px;padding:8px 12px 10px}.milestone-reward>.milestone-gift{width:40px}.milestone-journey{margin-top:12px;margin-bottom:14px}}
+@media(prefers-reduced-motion:no-preference){
+  .milestone-arc-fill{stroke-dashoffset:var(--milestone-offset);transition:stroke-dashoffset 800ms ease-out}
+  .milestone-meter>span{transition:transform 800ms ease-out}
+  .milestone-card[data-entered=false] .milestone-arc-fill{stroke-dashoffset:1}
+  .milestone-card[data-entered=false] .milestone-meter>span{transform:scaleX(0)}
+  .milestone-node[data-milestone-node=counted] .milestone-node-disc,.milestone-node[data-milestone-node=counted] .milestone-check{transform-box:fill-box;transform-origin:center;animation:milestone-node-reveal 600ms ease-out both}
+  .milestone-reward[data-celebrate=true]{animation:milestone-unlock 800ms ease-out both}
+  @keyframes milestone-node-reveal{from{opacity:0;scale:.9}to{opacity:1;scale:1}}
+  @keyframes milestone-unlock{from{opacity:.6;scale:.97;box-shadow:0 0 0 #aa792e00}to{opacity:1;scale:1;box-shadow:0 6px 22px #aa792e25}}
+}
 .tier-section,.faq-section{margin-top:58px}
 .tier-section .sectiontitle,.faq-section .sectiontitle{margin-top:0}
 .tier-heading{display:flex;align-items:center;flex-wrap:wrap;gap:14px}
@@ -372,7 +413,7 @@ dialog .prototype-note{margin-top:12px}
 @media(max-width:1000px){.benefit-grid{grid-template-columns:1fr}}
 @media(max-width:800px){.promo-steps{grid-template-columns:1fr}}
 @media(max-width:700px){.carriage-grid.family-choices{grid-template-columns:1fr}}
-@media(max-width:580px){.member-initials{width:46px;height:46px}.family-summary{padding:4px 14px}.benefit-card{padding:22px 20px}.benefit-card h2{font-size:calc(22px * var(--text-scale,1))}.milestone-row{flex-direction:column;align-items:flex-start;gap:9px}.promo-box{padding:18px}.promo-box strong{font-size:calc(18px * var(--text-scale,1));letter-spacing:.08em}.occasion-tabs button{padding:8px 16px;font-size:calc(12px * var(--text-scale,1))}.tier-section,.faq-section{margin-top:42px}.tier-table{min-width:700px;font-size:calc(12px * var(--text-scale,1))}.tier-table th,.tier-table td{padding:15px 10px}.tier-table tbody th{min-width:150px;font-size:calc(12px * var(--text-scale,1))}.faq-item summary{padding:18px;font-size:calc(14px * var(--text-scale,1))}.faq-answer{padding:0 18px 18px}}
+@media(max-width:580px){.member-initials{width:46px;height:46px}.family-summary{padding:4px 14px}.benefit-card{padding:22px 20px}.benefit-card h2{font-size:calc(22px * var(--text-scale,1))}.promo-box{padding:18px}.promo-box strong{font-size:calc(18px * var(--text-scale,1));letter-spacing:.08em}.occasion-tabs button{padding:8px 16px;font-size:calc(12px * var(--text-scale,1))}.tier-section,.faq-section{margin-top:42px}.tier-table{min-width:700px;font-size:calc(12px * var(--text-scale,1))}.tier-table th,.tier-table td{padding:15px 10px}.tier-table tbody th{min-width:150px;font-size:calc(12px * var(--text-scale,1))}.faq-item summary{padding:18px;font-size:calc(14px * var(--text-scale,1))}.faq-answer{padding:0 18px 18px}}
 /* French labels are the longest: keep the site's existing two-row header until all six tabs fit with room to spare. */
 @media(min-width:1281px) and (max-width:1366px){html[lang=fr] .nav{gap:18px;flex-wrap:wrap}html[lang=fr] .main-nav{order:3;flex-basis:100%;justify-content:center;border-top:1px solid var(--line);padding-top:10px;margin:0}html[lang=fr] .header-tools{margin-inline-start:auto}}
 

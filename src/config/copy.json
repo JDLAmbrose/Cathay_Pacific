@@ -5431,6 +5431,76 @@
     "HITOS FAMILIARES",
     "محطات العائلة"
   ],
+  "benefit.milestoneHeading": [
+    "家庭搬運里程碑",
+    "Family luggage milestones",
+    "Étapes de transport des bagages en famille",
+    "Hitos de traslado de equipaje familiar",
+    "محطات نقل أمتعة العائلة"
+  ],
+  "benefit.milestoneSubtitle": [
+    "完成 {total} 次合資格行李搬運，即可解鎖家庭獎賞。",
+    "Complete {total} eligible luggage moves to unlock a family reward.",
+    "Effectuez {total} transports de bagages éligibles pour débloquer une récompense familiale.",
+    "Completa {total} traslados de equipaje elegibles para desbloquear una recompensa familiar.",
+    "أكمل {total} عمليات نقل أمتعة مؤهلة لفتح مكافأة عائلية."
+  ],
+  "benefit.moveStage": [
+    "第 {n} 次搬運",
+    "Move {n}",
+    "Transport {n}",
+    "Traslado {n}",
+    "عملية النقل {n}"
+  ],
+  "benefit.moveDate": [
+    "{date} · {flight}",
+    "{date} · {flight}",
+    "{date} · {flight}",
+    "{date} · {flight}",
+    "{date} · {flight}"
+  ],
+  "benefit.completedMoves": [
+    "合資格搬運已完成",
+    "eligible moves completed",
+    "transports éligibles effectués",
+    "traslados elegibles completados",
+    "عمليات النقل المؤهلة المكتملة"
+  ],
+  "benefit.familyReward": [
+    "家庭獎賞",
+    "Family reward",
+    "Récompense familiale",
+    "Recompensa familiar",
+    "مكافأة عائلية"
+  ],
+  "benefit.rewardLocked": [
+    "家庭獎賞尚未解鎖",
+    "Family reward locked",
+    "Récompense familiale verrouillée",
+    "Recompensa familiar bloqueada",
+    "المكافأة العائلية مقفلة"
+  ],
+  "benefit.rewardUnlocked": [
+    "家庭獎賞已解鎖",
+    "Family reward unlocked",
+    "Récompense familiale débloquée",
+    "Recompensa familiar desbloqueada",
+    "تم فتح المكافأة العائلية"
+  ],
+  "benefit.demoMilestones": [
+    "示範進度，並非實際訂單紀錄。",
+    "Demo progress, not actual order history.",
+    "Progression de démonstration, sans lien avec des commandes réelles.",
+    "Progreso de demostración, no es un historial de pedidos reales.",
+    "تقدّم توضيحي لا يمثّل سجل طلبات فعليًا."
+  ],
+  "benefit.moveFirstText": [
+    "首趟行李搬運尚未開始",
+    "Your first luggage move has not started",
+    "Le premier transport de bagages n’a pas encore commencé",
+    "El primer traslado de equipaje aún no ha empezado",
+    "لم تبدأ عملية نقل الأمتعة الأولى بعد"
+  ],
   "benefit.milestonesTitle": [
     "{total} 次合資格行李搬運中已完成 {n} 次",
     "{n} of {total} eligible luggage moves completed",
@@ -5495,11 +5565,11 @@
     "التخرج أو انتهاء عقد الإيجار"
   ],
   "benefit.status.counted": [
-    "已計算",
-    "Counted",
-    "Comptabilisé",
-    "Contabilizado",
-    "محتسب"
+    "已完成",
+    "Completed",
+    "Terminé",
+    "Completado",
+    "مكتمل"
   ],
   "benefit.status.inProgress": [
     "進行中",
