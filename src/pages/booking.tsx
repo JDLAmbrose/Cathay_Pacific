@@ -101,6 +101,9 @@ function passengerHTML() {
           </div>
         </div>
       </section>{" "}
+      <p className={cx("note")} role={"note"}>
+        {icon("parent")} {T("passenger.minorReminder")}
+      </p>
       <label className={cx("check helper-toggle")}>
         <Input
           type={"checkbox"}

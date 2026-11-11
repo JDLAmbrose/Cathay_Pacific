@@ -1,8 +1,9 @@
 import { state, storageOK, person, localHK } from "../engine/booking";
 import { t, language, LOCALES, LOCALE_NAMES } from "../services/i18n";
-import { page } from "../services/navigation";
+import { page, helperFamilyPage } from "../services/navigation";
 import { BOOK_PAGES, FAMILY_PAGES, href } from "../config/routes";
 import { asset, cssVars, cx, keyed, Input, Select } from "../components/primitives";
+import { FamilyNavigation } from "./FamilyNavigation";
 import {
   icon,
   productName,
@@ -48,23 +49,19 @@ function SiteHeader() {
                 ["journey", "journey"],
                 ["family", "family"],
                 ["ops", "ops"],
-              ].map(([view, key]) => (
-                <a
-                  className={cx("tab")}
-                  href={href(view)}
-                  aria-current={
-                    (
-                      key === "family"
-                        ? FAMILY_PAGES.some((tab) => tab === state.view)
-                        : state.view === view
-                    )
-                      ? "page"
-                      : undefined
-                  }
-                >
-                  {T("nav." + key)}
-                </a>
-              )),
+              ].map(([view, key]) =>
+                key === "family" ? (
+                  <FamilyNavigation page={page} helper={helperFamilyPage} />
+                ) : (
+                  <a
+                    className={cx("tab")}
+                    href={href(view)}
+                    aria-current={state.view === view ? "page" : undefined}
+                  >
+                    {T("nav." + key)}
+                  </a>
+                ),
+              ),
             )}
           </nav>
           <div className={cx("header-tools")}>

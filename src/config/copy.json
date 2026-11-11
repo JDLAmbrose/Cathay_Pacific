@@ -3968,6 +3968,13 @@
     "Completa el nombre, contenido, peso y medidas de cada bulto. Organiza el transporte después.",
     "أدخل اسم كل حقيبة ومحتواها ووزنها وأبعادها. رتّب النقل في الخطوة التالية."
   ],
+  "passenger.minorReminder": [
+    "溫馨提醒：未成年旅客使用本服務時，請先完成必要的家長／監護人授權。家長亦取得相應的查看行李進度授權。",
+    "Friendly reminder: Before minors use this service, please complete the necessary parent or guardian authorization. Parents also receive the corresponding authorization to view baggage progress.",
+    "Petit rappel : avant qu’un voyageur mineur utilise ce service, veuillez obtenir l’autorisation nécessaire d’un parent ou d’un représentant légal. Les parents reçoivent également l’autorisation correspondante pour suivre l’acheminement des bagages.",
+    "Recordatorio: Antes de que un viajero menor de edad utilice este servicio, completa la autorización necesaria de su padre, madre o tutor legal. Los padres también reciben la autorización correspondiente para consultar el estado del equipaje.",
+    "تذكير ودّي: قبل أن يستخدم المسافرون القاصرون هذه الخدمة، يُرجى استكمال التفويض اللازم من أحد الوالدين أو الوصي القانوني. ويحصل الوالدان أيضًا على التفويض المقابل لمتابعة حالة الأمتعة."
+  ],
   "bag.multiple": [
     "可多選",
     "Select multiple",

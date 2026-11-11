@@ -101,31 +101,9 @@ function maskEmail(value) {
     ? `${user[0] || ""}•••${user.length > 1 ? user.at(-1) : ""}@${domain}`
     : String(value);
 }
-function familyTabsHTML() {
-  return (
-    <nav className={cx("family-tabs")} aria-label={T("familyTabs.label")}>
-      {keyed(
-        [
-          ["family", "link"],
-          ["benefits", "benefits"],
-        ].map(([view, key]) => (
-          <a
-            href={
-              href(view) +
-              (helperFamilyPage && view === "family" ? "&for=helper" : "")
-            }
-            {...(page === view ? { "aria-current": "page" } : {})}
-          >
-            {T("familyTabs." + key)}
-          </a>
-        )),
-      )}
-    </nav>
-  );
-}
 function familyHead(title, sub) {
   return (
-    <div className={cx("pagehead family-head reveal")}>
+    <div className={cx("pagehead reveal")}>
       <div>
         <div className={cx("eyebrow page-identity")}>
           {productMark()}
@@ -137,7 +115,6 @@ function familyHead(title, sub) {
         <h1>{T(title)}</h1>
         <p>{T(sub)}</p>
       </div>
-      {familyTabsHTML()}
     </div>
   );
 }
@@ -1106,7 +1083,6 @@ export {
   familyGivenName,
   familyInitials,
   maskEmail,
-  familyTabsHTML,
   familyHead,
   familyStepsHTML,
   familyChoiceHTML,

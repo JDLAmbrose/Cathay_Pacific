@@ -224,11 +224,14 @@
 }
 
 /* Family hub: parent–member linking, family benefits, membership tiers and FAQ. */
-.family-head{align-items:end}
-.family-tabs{display:inline-flex;gap:4px;padding:4px;border:1px solid var(--line);border-radius:999px;background:#fff;flex:none}
-.family-tabs a{display:inline-flex;align-items:center;justify-content:center;min-height:38px;padding:8px 17px;border-radius:999px;color:var(--ink);text-decoration:none;font-size:calc(12px * var(--text-scale,1));white-space:nowrap;transition:background .2s}
-.family-tabs a:hover{background:var(--pale)}
-.family-tabs a[aria-current=page]{background:var(--deep);color:#fff;font-weight:600}
+.family-nav-trigger{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;font-family:inherit;line-height:inherit;flex:none}
+.family-nav-trigger[data-active=true],.family-nav-trigger[aria-expanded=true]{background:var(--pale);color:var(--green);font-weight:600}
+.family-nav-trigger>.icon{width:14px;height:14px;transform:rotate(90deg);transition:transform .2s}
+.family-nav-trigger[aria-expanded=true]>.icon{transform:rotate(-90deg)}
+.family-nav-menu{z-index:50;min-width:min(190px,calc(100vw - 24px));padding:6px;border:1px solid var(--line);border-radius:10px;background:white;color:var(--ink);box-shadow:0 8px 28px #1e45351a;overflow:auto}
+.family-nav-menu a{display:flex;align-items:center;min-height:44px;padding:10px 14px;border-radius:6px;color:var(--ink);font-size:calc(12px * var(--text-scale,1));line-height:1.65;text-decoration:none;overflow-wrap:anywhere}
+.family-nav-menu a:hover,.family-nav-menu a:focus-visible{background:var(--pale);color:var(--green)}
+.family-nav-menu a[aria-current=page]{background:var(--pale);color:var(--green);font-weight:600}
 .family-workspace{max-width:960px;margin-inline:auto}
 .family-workspace .subhead h2:focus{outline:none}
 .family-roster,.family-invite-list{margin-bottom:24px}
@@ -369,7 +372,7 @@ dialog .prototype-note{margin-top:12px}
 @media(max-width:1000px){.benefit-grid{grid-template-columns:1fr}}
 @media(max-width:800px){.promo-steps{grid-template-columns:1fr}}
 @media(max-width:700px){.carriage-grid.family-choices{grid-template-columns:1fr}}
-@media(max-width:580px){.family-tabs{width:100%}.family-tabs a{flex:1;padding:8px 10px}.member-initials{width:46px;height:46px}.family-summary{padding:4px 14px}.benefit-card{padding:22px 20px}.benefit-card h2{font-size:calc(22px * var(--text-scale,1))}.milestone-row{flex-direction:column;align-items:flex-start;gap:9px}.promo-box{padding:18px}.promo-box strong{font-size:calc(18px * var(--text-scale,1));letter-spacing:.08em}.occasion-tabs button{padding:8px 16px;font-size:calc(12px * var(--text-scale,1))}.tier-section,.faq-section{margin-top:42px}.tier-table{min-width:700px;font-size:calc(12px * var(--text-scale,1))}.tier-table th,.tier-table td{padding:15px 10px}.tier-table tbody th{min-width:150px;font-size:calc(12px * var(--text-scale,1))}.faq-item summary{padding:18px;font-size:calc(14px * var(--text-scale,1))}.faq-answer{padding:0 18px 18px}}
+@media(max-width:580px){.member-initials{width:46px;height:46px}.family-summary{padding:4px 14px}.benefit-card{padding:22px 20px}.benefit-card h2{font-size:calc(22px * var(--text-scale,1))}.milestone-row{flex-direction:column;align-items:flex-start;gap:9px}.promo-box{padding:18px}.promo-box strong{font-size:calc(18px * var(--text-scale,1));letter-spacing:.08em}.occasion-tabs button{padding:8px 16px;font-size:calc(12px * var(--text-scale,1))}.tier-section,.faq-section{margin-top:42px}.tier-table{min-width:700px;font-size:calc(12px * var(--text-scale,1))}.tier-table th,.tier-table td{padding:15px 10px}.tier-table tbody th{min-width:150px;font-size:calc(12px * var(--text-scale,1))}.faq-item summary{padding:18px;font-size:calc(14px * var(--text-scale,1))}.faq-answer{padding:0 18px 18px}}
 /* French labels are the longest: keep the site's existing two-row header until all six tabs fit with room to spare. */
 @media(min-width:1281px) and (max-width:1366px){html[lang=fr] .nav{gap:18px;flex-wrap:wrap}html[lang=fr] .main-nav{order:3;flex-basis:100%;justify-content:center;border-top:1px solid var(--line);padding-top:10px;margin:0}html[lang=fr] .header-tools{margin-inline-start:auto}}
 
