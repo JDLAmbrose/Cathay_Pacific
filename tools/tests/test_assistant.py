@@ -146,8 +146,7 @@ class AssistantHTTPTests(unittest.TestCase):
         self.assertNotIn(b"fake-test-key", body)
         for path in ("/.env", "/.git/config", "/tools/assistant.py", "/assets/../tools/assistant.py"):
             self.assertEqual(self.request("GET", path)[0], 404)
-        expected = 200 if (serve.DIST / "index.html").is_file() else 503
-        self.assertEqual(self.request("GET", "/pages/assistant.html")[0], expected)
+        self.assertEqual(self.request("GET", "/pages/assistant.html")[0], 200)
         self.assertEqual(self.request("GET", serve.CHAT_PATH)[0], 405)
 
     def test_http_errors_and_mocked_success(self):

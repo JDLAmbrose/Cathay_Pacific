@@ -18,7 +18,7 @@
 
 **試點聚焦留學生與家庭。** 從香港的家到倫敦的新開始，把行李準備、取送安排和交接確認串成一段完整旅程。
 
-項目使用 **React + TypeScript + Vite**，保留首頁與各功能的獨立網址。源碼需要先構建或由 Vite 啟動，不能以 `file://` 雙擊 HTML 使用。**根目錄的 `index.html` 是首頁入口。** 本說明位於根目錄 `README.md`。
+項目使用原生 HTML、CSS 和 JavaScript，採用多頁面結構，無需安裝前端依賴或執行構建。**根目錄的 `index.html` 是唯一主入口。** 本說明位於根目錄 `README.md`。
 
 > 當前為靜態交互演示，沒有接入真實訂票、付款、會員或物流服務。AI 助手可透過本地 Python 服務接入 GLM；需要有效 API key 和可用額度。頁面中的價格、里數、時間、規則和交接事件均為演示數據。
 
@@ -68,46 +68,33 @@
 
 ## 快速開始
 
-### 下載後一鍵預覽（推薦）
+### 直接打開
 
-先安裝 **Node.js 24 LTS** 與 **Python 3.9+**，下載完整倉庫並解壓後：
+1. 下載或接收完整項目文件夾，並先解壓壓縮包。
+2. 在文件夾根目錄雙擊 [index.html](index.html)。
+3. 從首頁進入行李準備、AI 出行助手、行程概覽或營運看板。
 
-- macOS：雙擊根目錄的 `start.command`。若沒有執行權限，在終端執行 `sh start.command`。
-- Windows：雙擊根目錄的 `start.bat`。
-- 任意系統：在項目根目錄執行 `npm start`。
+至少保留 `index.html`、`assets/` 和 `pages/`，不要更改它們之間的相對位置。直接打開本地文件時，各瀏覽器的存儲行為可能不同；如遇到跨頁面數據無法保留，請使用本地服務器。
 
-腳本會按 `package-lock.json` 安裝依賴（首次或鎖文件變更時需要聯網）、重新構建當前 React 源碼、啟動 Python 服務，並開啟 <http://127.0.0.1:8000/>。保留終端視窗，按 `Ctrl+C` 停止。若端口被佔用，macOS/Linux 可執行 `PLUME_PORT=8001 npm start`。無 GLM 密鑰時，在助手頁切換「離線規則演示」。
+### 使用本地服務器
 
-**請勿直接打開源碼或 `dist/index.html`。** 它們使用瀏覽器 ES modules，需要 HTTP 服務。
-
-### Docker 一條命令啟動
-
-已安裝並啟動 Docker 時，在項目根目錄執行：
-
-```sh
-docker compose up --build
-```
-
-然後開啟 <http://127.0.0.1:8080/>。容器內含 React 構建與 Python API，主機無需安裝 Node.js 或 Python。按 `Ctrl+C` 停止。
-
-### 開發伺服器
-
-在項目根目錄使用 Node.js 22.12+ 運行以下命令，再開啟 [Plume Light 本地首頁](http://localhost:5173/)。
-
-```sh
-npm ci
-npm run dev
-```
-
-另開終端啟動 Python API，供 GLM 助手與模擬查件使用。Vite 會將 `/api` 轉發至 `127.0.0.1:8000`，可用 `PLUME_API_ORIGIN` 更改後端地址。
+已安裝 Python 3 時，在項目根目錄運行：
 
 ```sh
 python3 tools/serve.py --port 8000
 ```
 
-如需 GLM，在 Python 啟動命令加上 `--api-key-file /path/to/glm-key.txt`。其他配置見 [AI Agent 接入指南](doc/AI_AGENT.md)。無後端時，可在助手頁選擇「離線規則演示」。
+然後訪問 <http://127.0.0.1:8000/>。按 `Ctrl+C` 結束服務器。
 
-請在演示過程中使用同一個瀏覽器、網址和端口。不同網址來源的瀏覽器存儲各自獨立。
+啟用 GLM 出行助手（密鑰文件不放在網站目錄）：
+
+```sh
+python3 tools/serve.py --port 8000 --api-key-file /Users/rtxon/Desktop/1.txt
+```
+
+打開 <http://127.0.0.1:8000/pages/assistant.html>。支援多輪對話、行程/行李/報價工具、重試、取消等待及離線規則演示。完整配置、API 和 Google Cloud Run 部署見 [AI Agent 接入指南](doc/AI_AGENT.md)。
+
+請在演示過程中使用同一個瀏覽器、網址和端口。`localhost`、`127.0.0.1`、不同端口及本地文件屬於不同的存儲環境，數據不會自動互通。
 
 全部服務行李完成當地物流交接後，行程頁會呼叫 `POST /api/handover/tracking`。接口接收訂單識別資料和逐件交接記錄，交接未齊時回傳 `status: "pending"`，確認齊全時回傳演示運單號、承運商及查件連結。EBC UK 的查件連結待提供。運單號由本地演示服務產生，正式單號須由承運商發出。
 
@@ -116,17 +103,16 @@ python3 tools/serve.py --port 8000
 | 頁面入口 | 當前實現 | 建議體驗 |
 | --- | --- | --- |
 | [行程首頁](index.html) | CX257 航班橫幅、服務入口、三組虛構旅客案例與輪播 | 查看 Lin 的行程，切換人物故事 |
-| [① 乘機人](pages/prepare.html) | 顯示乘機人和免費托運額，可邀請已互聯的家庭成員代填 | 勾選「由他人協助」以查看聯絡人選擇或新增聯絡人提示 |
+| [① 乘機人](pages/prepare.html) | 只讀展示機票乘機人和免費托運額；可展開代填人身份、關係、選填會員號及 App 同步授權 | 勾選他人協助，體驗關係證明上傳及待人工審核狀態 |
 | [② 信息預留](pages/information.html) | 根據機票識別國家，分開填寫取送地址與服務商，展示最遲下單時間 | 查看適用的 24／48／120 小時下單規則 |
 | [③ 行李預報](pages/baggage.html) | 逐件填寫名稱、類別、重量及尺寸 | 多選物品類別並保存 |
-| [④ 價格計算](pages/pricing.html) | 拖動行李卡片至隨身、跟機或 Cargo 泳道 | 在泳道間拖動行李，於結算頁核對費用 |
+| [④ 價格計算](pages/pricing.html) | 拖動行李卡片至隨身、跟機或 Cargo 泳道，並即時更新費用 | 在泳道間拖動行李並核對總價 |
 | [⑤ 確認結算](pages/checkout.html) | 查看費用及里數，模擬現金支付或里數兌換，保存訂單快照 | 核對免費額與加購，選擇一種模擬付款方式 |
 | [AI 出行助手](pages/assistant.html) | 獨立諮詢入口，支持物品規則及價格、截止、配送等服務問題 | 先問“最遲什麼時候申請？”再進入預訂 |
 | [行程概覽](pages/journey.html) | 查看訂單、模擬取消與退款，確認機場到達、裝機及當地物流交接 | 付款後展開交接演示，觀察逐件確認 |
-| [家庭專區](pages/benefits.html) | 家庭權益、家庭互聯成員和邀請流程 | 切換至家庭互聯，模擬已互聯或未互聯 |
 | [營運看板](pages/operations.html) | 彙總已保存預報，展示重量、空間、估算值及規劃餘量，標注僅限國泰員工 | 對比修改並保存行李前後的規劃參考 |
 
-上表鏈接用於定位項目文件；在 GitHub 中點擊會打開源碼。請按「快速開始」啟動本地開發伺服器後體驗互動。
+上表鏈接用於定位項目文件；在 GitHub 中點擊會打開源碼。體驗交互請下載項目後打開首頁，或按「快速開始」中的方式啟動本地服務器。
 
 全站支持繁體中文、英語、法語、西班牙語和阿拉伯語，提供大字模式、鍵盤操作及減少動畫偏好；阿拉伯語會切換為從右向左的佈局。
 
@@ -143,15 +129,17 @@ python3 tools/serve.py --port 8000
 
 | 選項 | 頁面表達 |
 | --- | --- |
-| 隨身攜帶 | 單件重量低於 7 kg，自行攜帶 |
+| 隨身攜帶 | 自行攜帶，不使用取送服務 |
 | 行李隨本趟航班 | 與當前 CX257 旅程同行，界面標明時效較高 |
 | 由 Cathay Cargo 調度 | 界面標明時效較低，可能更早交付行李並分開抵達，以確認安排為準 |
 
 選擇會跨頁面保存，並進入結算摘要和訂單快照；Cargo 訂單的裝機說明也會顯示 Cathay Cargo。兩種方式使用不同演示運價，共用地區申請截止邏輯；沒有接入實際貨運排期、艙位分配或到達承諾。
 
-### 家庭互聯與代填
+### 代填授權與同步演示
 
-在「家庭專區」切換至「家庭互聯」，可新增邀請、查看待接受或已互聯成員，也可切換已互聯及未互聯的演示狀態。在「乘機人」勾選由他人協助後，系統會提示新增聯絡人，或提供已互聯成員的單選列表及會員號、手機和關係。送出模擬郵件後顯示等待狀態，也可開始新申請。每次重新進入乘機人頁，協助選項會重設為未勾選。
+代填人的國泰會員號碼為選填。不啟用 App 同步時無需上傳關係證明；啟用後須提供圖片或 PDF（最多 10 MB），選擇下一步才提交審核申請。文件保存在同一瀏覽器的 IndexedDB，表單及審核狀態跨頁保存。頁尾演示控制台可模擬人工通過或拒絕；通過前不建立共享資訊，通過後自動更新行程、訂單和交接事件預覽。身份、關係、證明文件或航段變更會要求重新審核。
+
+目前沒有真正的審核後台、國泰會員驗證或 App 同步 API。服務商名單和地區對應也是原型設定，不代表真實可售服務。接入實際服務時，授權、附件存取、人工審核和同步都須由後端處理。
 
 ### 機票免費額識別與加購
 
@@ -176,20 +164,39 @@ python3 tools/serve.py --port 8000
 ## 目錄與頁面
 
 ```text
-index.html / pages/     # 保留首頁及各功能的直達網址
-src/main.tsx            # React 入口與 QueryClient
-src/App.tsx             # 共用版面和頁面切換
-src/pages/              # 首頁、預訂、助手、行程、家庭專區、營運
-src/components/         # 共用元件、CSS Modules 與互動控制
-src/engine/             # 報價、行李、家庭互聯、訂單及離線規則
-src/services/           # DataSource、API 快取、瀏覽器存儲及介面事件
-src/config/             # 頁面映射、演示資料、五語文案及全局設計變量
-src/types/              # 業務資料型別與 DataSource 介面
-assets/                 # 本地圖片及品牌素材
-tools/                  # Python 助手、模擬查件 API 和測試
+Cathay_Pacific/
+├── index.html                  # 唯一主入口
+├── pages/                      # 當前功能頁面
+│   ├── prepare.html            # 只讀乘機人、行李額及代填授權
+│   ├── information.html        # 取送資料及分開選擇服務商
+│   ├── baggage.html            # 行李預報
+│   ├── pricing.html            # 三個泳道與即時費用
+│   ├── checkout.html           # 確認與模擬結算
+│   ├── assistant.html          # 獨立 AI 出行助手入口
+│   ├── journey.html            # 訂單及交接狀態
+│   └── operations.html         # 營運看板
+├── assets/                     # 共用腳本、樣式與本地圖片
+│   ├── app.js
+│   ├── model.js
+│   ├── i18n.js
+│   ├── styles.css
+│   ├── plume-feather.png
+│   ├── cathay-brushwing.png
+│   ├── cathay-brushwing-white.png
+│   └── traveller-*.png
+├── doc/                        # 需求、分鏡、配圖說明及 README 截圖
+│   └── images/                 # 當前首頁、首末程安排與營運看板截圖
+├── archive/                    # 保留的舊版原型
+│   ├── index-original.html
+│   └── index-prd-single.html
+└── tools/                      # 本地 / Cloud Run 服務端與驗證
+    ├── serve.py                # 靜態頁面、助手及演示查件 API
+    ├── assistant.py            # GLM adapter、工具循環及上下文白名單
+    ├── test.py
+    └── tests/pricing.cjs       # 行李額度、計價與訂單回歸驗證
 ```
 
-`archive/`、`family_member_order/` 與 `video/` 保留為獨立參考素材。
+`archive/` 中的頁面用於追溯歷史設計，其功能和文案可能與當前版本不同。`tools/test.py` 是保留的簡單腳本；新增的 `tools/tests/pricing.cjs` 驗證額度、計價、訂單快照及退款邏輯。
 
 ## 推薦演示流程
 
@@ -245,7 +252,7 @@ tools/                  # Python 助手、模擬查件 API 和測試
 
 助手預設使用服務端 GLM agent，支援多輪對話及四個只讀工具，查詢目前行程、行李、確定性報價和項目服務規則。模型可以解釋方案、規劃準備清單及追問物品屬性，不能自行付款、更改訂單或確認行李交接。密鑰只在 Python 服務端讀取。
 
-可切換「離線規則演示」，沿用本地意圖識別和確定性規則樣本。兩種模式明確區分，API 失敗顯示原因並允許重試，不會把模擬答案當成 GLM 回覆。目前兩種模式均未接入實時官方規則檢索。
+可切換「離線規則演示」，沿用本地意圖識別和確定性規則樣本；直接用 `file://` 打開時亦使用離線模式。兩種模式明確區分，API 失敗顯示原因並允許重試，不會把模擬答案當成 GLM 回覆。目前兩種模式均未接入實時官方規則檢索。
 
 英國、澳洲及印度提供有限規則樣本，法國作為未覆蓋目的地示例。缺失、過期、衝突及未覆蓋結果會保留待確認提示。諮詢其他目的地不會修改當前機票；可回寫的行李建議需要用戶確認，且不能靜默更改已有服務訂單。
 
@@ -255,7 +262,12 @@ tools/                  # Python 助手、模擬查件 API 和測試
 
 ## 技術與數據存儲
 
-前端使用 React 19、TypeScript 和 Vite。頁面切換由 React state 管理，瀏覽器網址與歷史同步。TanStack Query 管理助手與查件 API，Floating UI 定位行李分類選單。演示初始資料和翻譯存於本地 JSON，`DataSource` 提供可替換的讀寫及 API 介面。
+| 文件 | 職責 |
+| --- | --- |
+| [assets/app.js](assets/app.js) | 頁面映射、共用品牌及導航、表單渲染、跳轉、案例輪播和事件處理 |
+| [assets/model.js](assets/model.js) | 狀態、校驗、預報彙總、容量預測、報價、訂單、里數及規則樣本 |
+| [assets/i18n.js](assets/i18n.js) | 五種語言文案、變量替換、語言偏好及文檔方向 |
+| [assets/styles.css](assets/styles.css) | 品牌樣式、響應式佈局、大字模式及減少動畫偏好 |
 
 數據保存在瀏覽器 `localStorage`，不會在不同瀏覽器或設備間同步：
 
@@ -264,44 +276,58 @@ tools/                  # Python 助手、模擬查件 API 和測試
 | `plume-light-multipage-v2` | 表單草稿、已保存預報、訂單、交接事件、演示設置及里數狀態 |
 | `plume-light-language` | 用戶選擇的界面語言 |
 
-頁面刷新及跨頁跳轉會保留可存儲的數據。存儲不可用時，重新整理可能丟失修改。可通過演示控制台恢復預設場景；需要完全清空時，可在瀏覽器開發者工具中刪除上述兩個存儲項後刷新。
+頁面刷新及跨頁跳轉會保留可存儲的數據。存儲不可用時，刷新或跳轉可能丟失修改。可通過演示控制台恢復預設場景；需要完全清空時，可在瀏覽器開發者工具中刪除上述兩個存儲項後刷新。
 
 語言列表為 `zh-Hant`、`en`、`fr`、`es`、`ar`；阿拉伯語使用從右向左佈局。用戶輸入的姓名、地址及問題原文不會自動翻譯。
 
 ## 開發與驗證
 
+修改時請遵守以下約定：
+
+1. 保留根目錄 `index.html`、`pages/` 和 `assets/` 的層級。頁面映射由 `PAGE_FILES` 管理，子頁面通過 `ROOT_PREFIX` 返回根目錄資源。
+2. 各頁面的腳本順序保持 `i18n.js → model.js → app.js`，並正確設置 `<body data-page="...">`。
+3. 新增界面文案時，在 `i18n.js` 同時填寫五種語言；不要把顯示標籤直接作為業務狀態鍵。
+4. 保留未知值、草稿與提交、申報與服務需求之間的區別。不要用航班起飛、付款或頁面動畫推導行李狀態。
+5. 圖片隨項目本地保存；修改路徑後同時檢查首頁、子頁面和分享版。
+
+如已安裝 Node.js，可在項目根目錄進行語法檢查；Node.js 不屬於網站運行依賴：
+
 ```sh
-npm run lint
-npm test
-npm run build
+node --check assets/i18n.js
+node --check assets/model.js
+node --check assets/app.js
+node tools/tests/pricing.cjs
+node tools/tests/pricing-board.cjs
+node tools/tests/booking-flow.cjs
+node tools/tests/home-state.cjs
+node tools/tests/assistant.cjs
 python3 -m unittest discover -s tools/tests -p 'test_*.py'
 ```
 
-新增文案時在 `src/config/copy.json` 同時填寫五種語言。演示情境資料由 `src/config/demo.json` 初始化。未知值、草稿與已提交申報、已付款訂單與行李交接狀態分開管理。
+修改後應手動檢查首頁與全部八個功能頁、返回首頁、五步預訂、代填授權、證明文件與審核狀態、現金及里數模擬支付、取消訂單、按件運輸方式保存、交接狀態、語言切換和手機佈局。語法檢查不能替代瀏覽器中的交互驗證。
 
-## 構建與部署
+## 分享與靜態部署
 
-`npm run build` 會產生 `dist/`。可用 `npm run preview` 預覽，或執行 `python3 tools/serve.py --port 8000` 同時提供前端、GLM 及模擬查件。分享或部署純靜態前端時，將 `dist/` 內所有文件交由 HTTP 靜態主機提供，並在助手頁選擇離線模式。Docker 會先構建 React，再把產物交給 Python 服務。部署配置見 [Cloud Run 部署指引](doc/AI_AGENT.md)。
+分享版至少包含以下文件，解壓後從 `index.html` 開始使用：
 
-### GitHub PR 與自動預覽
+```text
+index.html
+assets/
+pages/
+README.md                      # 建議附帶
+```
 
-從最新 `main` 建立功能分支，提交源碼與鎖文件，再推送該分支，建立 **base: `main` ← compare: 功能分支** 的 Pull Request。不要提交 `node_modules/`、`dist/` 或密鑰。
+純靜態離線分享不需要 `archive/`、`tools/`、其餘開發文檔及 `.git/`；GLM 模式需要部署 `tools/serve.py`、`tools/assistant.py` 及服務端密鑰配置。修改網站或本說明後，請重新生成分享包；舊壓縮包不會自動更新。
 
-本倉庫的 `.github/workflows/preview.yml` 在 PR 開啟及更新時執行依賴安裝、前端測試、Python 測試與兩種路徑的構建。PR 中的 Actions 完成後，可在該次執行的 **Artifacts → plume-light-preview** 下載已構建預覽包。解壓後執行 `preview.command`（macOS，或 `sh preview.command`）或 `preview.bat`（Windows），開啟 <http://127.0.0.1:8000/>；這個包只需要 Python 3.9+，無需 npm 或重新構建。
-
-倉庫管理員首次需要到 **Settings → Pages → Build and deployment → Source** 選擇 **GitHub Actions**。PR 合併至 `main` 後，工作流會自動部署 GitHub Pages；也可在 Actions 中手動執行 **Build and deploy preview**。實際網址以部署作業顯示的 URL 為準。此配置以 GitHub 專案網址 `/<倉庫名稱>/` 為基底，適用於本倉庫的 `Cathay_Pacific` 路徑；若改用自訂網域，將工作流中的 `PLUME_BASE_PATH` 改為 `/`。
-
-GitHub Pages 提供 React 前端與貨艙壓力看板，**不執行 Python API**。線上助手請使用「離線規則演示」；GLM 與模擬查件請使用本地一鍵啟動或 Docker。Pages 只有合併後的正式預覽，PR 分支的預覽以 Actions 產物為準。
-
-Vite 部署與子路徑設定依據：[Vite 官方部署指南](https://vite.dev/guide/static-deploy)。
+也可將上述目錄原樣部署到支持靜態文件的託管服務。無需構建，入口設為 `index.html`，並保留 `pages/` 和 `assets/` 的相對路徑。靜態託管只提供離線演示；GLM 助手需要 Python API 服務。本項目已提供 Dockerfile 和 [Cloud Run 部署指引](doc/AI_AGENT.md)，尚未實際部署或配置公開網址。
 
 ## 常見問題
 
 | 問題 | 處理方式 |
 | --- | --- |
-| 打開首頁後空白 | 使用 Vite 或 HTTP 靜態主機開啟網站，並啟用 JavaScript |
+| 打開首頁後空白 | 確認已解壓、JavaScript 已啟用，且 `assets/` 中三個腳本未遺漏 |
 | 子頁面或圖片無法打開 | 恢復原有目錄層級；只複製 `index.html` 無法運行完整網站 |
-| 切頁後訂單、語言或草稿消失 | 使用同一瀏覽器和同一來源 |
+| 切頁後訂單、語言或草稿消失 | 使用同一瀏覽器和同一來源；本地文件模式異常時改用本地服務器 |
 | 預約顯示超時或取件時間無效 | 檢查演示控制台中的當前時間、航班時間、地區截止及取件時段 |
 | 無法獲取報價 | 確認至少選擇一件需要服務的托運行李，並補全其重量與尺寸 |
 | 付款後行李仍未裝機 | 展開行程頁的交接事件演示，按順序模擬交接確認 |
