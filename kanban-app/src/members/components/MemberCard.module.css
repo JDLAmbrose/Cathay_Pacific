@@ -1,0 +1,30 @@
+.card {
+  background: var(--card);
+  border: 1px solid rgba(4, 63, 57, 0.06);
+  border-radius: 18px;
+  box-shadow: 0 10px 28px rgba(4, 63, 57, 0.04);
+  padding: 18px 22px 16px;
+}
+
+.card h2 {
+  margin: 0 0 14px;
+  font-size: 15px;
+  font-weight: 650;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.question { flex: 1; }
+
+.badge {
+  margin-left: auto;
+  flex: none;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  color: var(--green);
+  background: var(--pale);
+  border-radius: 999px;
+  padding: 2px 8px;
+}

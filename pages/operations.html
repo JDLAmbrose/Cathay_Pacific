@@ -1,19 +1,96 @@
 <!doctype html>
-<html lang="zh-Hant" dir="ltr">
+<html lang="zh-Hant">
 <head>
   <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#02544f">
-  <meta http-equiv="refresh" content="0; url=hold-pressure/">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#043f39">
   <title>Plume Light · 營運看板</title>
   <link rel="icon" type="image/svg+xml" href="../assets/plume_light_icon.svg">
+  <link rel="stylesheet" href="../assets/boards.css">
+  <link rel="preload" as="image" href="../assets/boards/cargo-bear.webp" type="image/webp" fetchpriority="high">
+  <link rel="preload" as="image" href="../assets/boards/member-bears.webp" type="image/webp" fetchpriority="high">
   <script>
-    location.replace("hold-pressure/");
+    (function () {
+      var en = false;
+      try { en = localStorage.getItem("plume-light-language") === "en"; } catch (error) {}
+      document.documentElement.lang = en ? "en" : "zh-Hant";
+      document.title = en ? "Plume Light · Operations" : "Plume Light · 營運看板";
+    })();
   </script>
 </head>
-<body>
-  <p style="font-family: system-ui, sans-serif; padding: 2rem;">
-    <a href="hold-pressure/">打開營運看板 / Open operations board</a>
-  </p>
+<body data-title-zh="Plume Light · 營運看板" data-title-en="Plume Light · Operations">
+  <header class="top">
+    <a class="brand" href="../index.html" aria-label="Plume Light">
+      <img src="../assets/plume_light_logo_horizontal_reversed.svg" alt="Plume Light" width="770" height="200">
+    </a>
+    <button class="navbtn" type="button" id="backBtn"><span class="zh">返回</span><span class="en">Back</span></button>
+    <a class="navbtn home" href="../index.html"><span class="zh">回到主界面</span><span class="en">Home</span></a>
+    <span class="staff"><span class="zh">僅限國泰員工</span><span class="en">Cathay staff only</span></span>
+    <span class="spacer"></span>
+    <img class="brush" src="../assets/cathay-brushwing-white.png" alt="">
+    <button class="lang" type="button" data-set-lang="zh-Hant">繁中</button>
+    <button class="lang" type="button" data-set-lang="en">EN</button>
+  </header>
+  <main class="stage">
+    <div class="lede">
+      <h1><span class="zh">營運看板</span><span class="en">Operations</span></h1>
+    </div>
+    <div class="chooser">
+      <a class="board cargo" href="hold-pressure/index.html">
+        <figure class="figure">
+          <img src="../assets/boards/cargo-bear.webp" alt="" width="840" height="840" decoding="async" fetchpriority="high">
+        </figure>
+        <div class="copy">
+          <p class="eyebrow">01</p>
+          <h2><span class="zh">貨物</span><span class="en">Cargo</span></h2>
+          <p><span class="zh">貨艙壓力、佔用，以及行李能否延後到同航段的後班。</span><span class="en">Hold pressure, occupancy, and whether bags can move to a later flight on the same sector.</span></p>
+          <div class="meta">
+            <span class="pill"><span class="zh">可進入</span><span class="en">Open</span></span>
+            <span class="cta"><span class="zh">進入貨物 →</span><span class="en">Enter Cargo →</span></span>
+          </div>
+        </div>
+      </a>
+      <a class="board member" href="hold-pressure/index.html?board=members">
+        <figure class="figure">
+          <img src="../assets/boards/member-bears.webp" alt="" width="840" height="840" decoding="async" fetchpriority="high">
+        </figure>
+        <div class="copy">
+          <p class="eyebrow">02</p>
+          <h2><span class="zh">用戶</span><span class="en">Users</span></h2>
+          <p><span class="zh">入會、付費、家庭關係與服務收入。模擬數據，可按學期書籤查看。</span><span class="en">Joining, payment, family links, and service revenue. Simulated data, read by term bookmark.</span></p>
+          <div class="meta">
+            <span class="pill"><span class="zh">可進入</span><span class="en">Open</span></span>
+            <span class="cta"><span class="zh">進入會員 →</span><span class="en">Enter Members →</span></span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </main>
+  <script src="../assets/boards-lang.js"></script>
+  <script>
+    (function () {
+      var key = "plume-boards-return";
+      var home = "../index.html";
+      function passengerUrl(value) {
+        if (!value) return null;
+        try {
+          var url = new URL(value, location.href);
+          if (url.origin !== location.origin) return null;
+          var path = url.pathname;
+          if (path.endsWith("/operations.html")) return null;
+          if (path.indexOf("/hold-pressure") !== -1) return null;
+          if (path.indexOf("/users") !== -1) return null;
+          return url.href;
+        } catch (error) {
+          return null;
+        }
+      }
+      var from = passengerUrl(document.referrer);
+      if (from) sessionStorage.setItem(key, from);
+      document.getElementById("backBtn").addEventListener("click", function () {
+        location.assign(passengerUrl(sessionStorage.getItem(key)) || home);
+      });
+    })();
+  </script>
 </body>
 </html>

@@ -1,0 +1,55 @@
+.usage small,
+.top span,
+.codes span { color: var(--muted); font-size: 12px; }
+
+.usage b {
+  display: block;
+  font-size: 32px;
+  line-height: 1;
+  letter-spacing: -0.03em;
+}
+
+.row { margin-top: 14px; }
+
+.top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 6px; font-size: 13px; }
+.top b { text-align: right; }
+
+.track {
+  height: 14px;
+  background: #e7eeea;
+  border-radius: 99px;
+  overflow: hidden;
+}
+
+.track i {
+  display: block;
+  height: 100%;
+  background: #02544f;
+  transition: width 400ms ease;
+}
+
+.official { background: #3d8f86; }
+
+.toggle {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  border-radius: 999px;
+  padding: 5px 12px;
+  font-size: 12px;
+}
+
+.codes { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; }
+
+.codes li { display: flex; justify-content: space-between; font-size: 13px; }
+
+.lock {
+  margin: 14px 0 0;
+  border: 1.5px dashed #c8b48a;
+  background: #fbf6ec;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-weight: 700;
+  color: #8a6a32;
+  font-size: 13px;
+}

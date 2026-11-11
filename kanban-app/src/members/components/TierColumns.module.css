@@ -1,0 +1,68 @@
+.tiers {
+  display: grid;
+  gap: 16px;
+  align-items: end;
+  min-height: 220px;
+}
+
+.tier {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.tier strong { margin-bottom: 6px; font-size: 18px; }
+
+.col {
+  width: 46%;
+  background: #e7eeea;
+  border-radius: 8px 8px 3px 3px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+  transition: height 400ms ease;
+}
+
+.empty {
+  background: transparent;
+  border: 1px dashed #c5d5d0;
+}
+
+.exec .empty {
+  background: transparent;
+  border-color: #e4d3a8;
+}
+
+.fill {
+  display: block;
+  width: 100%;
+  background: var(--green);
+  transition: height 400ms ease;
+}
+
+/* Card-face colours from Cathay membership cards. */
+.green .col { background: #d5e7e7; }
+.green .fill { background: linear-gradient(180deg, #367878 0%, #005d63 100%); }
+
+.silver .col { background: #e4e4e4; }
+.silver .fill { background: linear-gradient(180deg, #767676 0%, #4d4d4d 100%); }
+
+.gold .col { background: #f3ead0; }
+.gold .fill { background: linear-gradient(180deg, #8f7000 0%, #705300 100%); }
+
+.diamond .col { background: #e6e6e6; }
+.diamond .fill { background: linear-gradient(180deg, #2d2d2d 0%, #000000 100%); }
+
+.exec .col { background: #f3ead0; }
+.exec .fill { background: linear-gradient(180deg, #d3a955 0%, #d3a955 16%, #1a1a1a 16%, #1a1a1a 100%); }
+
+.tier em {
+  font-style: normal;
+  margin-top: 8px;
+  font-size: 13px;
+  font-weight: 650;
+  text-align: center;
+}
+
+.tier span { margin-top: 4px; color: var(--muted); font-size: 12px; }

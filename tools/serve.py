@@ -18,6 +18,7 @@ except ImportError:
 
 
 ROOT = Path(__file__).resolve().parent.parent
+DIST = ROOT / "dist"
 TRACKING_PATH = "/api/handover/tracking"
 CHAT_PATH = "/api/assistant/chat"
 CHAT_SLOTS = threading.BoundedSemaphore(2)
@@ -104,7 +105,9 @@ def tracking_lookup(payload):
 
 class Handler(SimpleHTTPRequestHandler):
     def __init__(self, *args, **kwargs):
-        super().__init__(*args, directory=str(ROOT), **kwargs)
+        self.frontend_built = (DIST / "index.html").is_file()
+        self.public_root = DIST if self.frontend_built else ROOT
+        super().__init__(*args, directory=str(self.public_root), **kwargs)
 
     def end_headers(self):
         self.send_header("Cache-Control", "no-store")
@@ -179,12 +182,15 @@ class Handler(SimpleHTTPRequestHandler):
             self.send_error(405, "Use POST")
             return None
         target = Path(self.translate_path(path)).resolve()
-        public = target in (ROOT, ROOT / "index.html") or any(
+        public = target in (self.public_root, self.public_root / "index.html") or any(
             target.is_file() and directory in target.parents
-            for directory in (ROOT / "assets", ROOT / "pages")
+            for directory in (self.public_root / "assets", self.public_root / "pages")
         )
         if not public:
             self.send_error(404)
+            return None
+        if not self.frontend_built:
+            self.send_error(503, "Run npm run build or use the Vite development server")
             return None
         return super().send_head()
 

@@ -11,6 +11,11 @@
   min-width: 0;
 }
 
+.memberWrap {
+  min-width: 0;
+  padding-top: 8px;
+}
+
 @media (max-width: 800px) {
   .wrap { padding: 16px 14px 28px; gap: 18px; }
 }

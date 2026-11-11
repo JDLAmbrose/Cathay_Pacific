@@ -15,3 +15,12 @@ export function siteHomeHref(): string {
   }
   return "../../index.html";
 }
+
+/** Chooser in front of the cargo board: `pages/operations.html`. */
+export function boardsHubHref(): string {
+  const configured = import.meta.env.VITE_BOARDS_HUB;
+  if (typeof configured === "string" && configured.trim()) {
+    return configured.trim();
+  }
+  return "../operations.html";
+}

@@ -1,0 +1,162 @@
+<!doctype html>
+<html lang="zh-Hant"><head><meta charset="utf-8"><title>02 航班詳情 · CX251</title>
+<link rel="stylesheet" href="wf.css">
+<style>
+.hb{position:relative;height:32px;background:#eef2f1;border-radius:4px;margin:6px 0 0}
+.hb div.s{position:absolute;top:0;height:32px;display:flex;align-items:center;justify-content:center;font-size:11.5px;color:#fff;white-space:nowrap;overflow:hidden}
+.hb .l100{position:absolute;top:-7px;bottom:-7px;width:2px;background:#d6453d}
+.hb .l90{position:absolute;top:-4px;bottom:-4px;width:0;border-left:2px dashed #d99a12}
+.rowh{display:flex;justify-content:space-between;align-items:baseline;margin-top:12px}
+.seg-tip{position:absolute;right:14px;top:48px;background:#17302e;color:#fff;font:12px/1.45 -apple-system,"PingFang TC",sans-serif;padding:7px 10px;border-radius:7px;box-shadow:0 6px 16px rgba(0,0,0,.28);z-index:20}
+.pulse{display:inline-block;width:7px;height:7px;border-radius:50%;background:#4be39a;margin-right:5px;vertical-align:middle}
+</style></head>
+<body>
+<div class="wm">線框示意 · 模擬數據（JSON → Django API）</div>
+<header class="top">
+  <b>Plume Light · 貨艙壓力看板</b><span class="badge stf">僅限國泰員工</span>
+  <span class="badge" style="color:#c8f5df;background:rgba(47,158,107,.28);border-color:#6fd6a3"><i class="pulse"></i>SYNC · JSON 模擬源</span>
+  <span class="sp"></span>
+  <span class="ctl on" style="padding:2px 9px;font-size:12px">繁中</span><span class="ctl" style="padding:2px 9px;font-size:12px;color:#17302e">EN</span>
+</header>
+<div class="wrap">
+  <div style="margin-bottom:10px;display:flex;justify-content:space-between;align-items:center">
+    <span class="note">◀ 返回總覽 · OVERVIEW › <b style="color:var(--ink)">CX251</b></span>
+    <span class="note">最後更新：2026-11-15 05:30 HKT（行李入站/商貨變更即時重算）</span>
+  </div>
+
+  <div class="card" style="display:flex;align-items:center;gap:22px;margin-bottom:12px;border-color:var(--bad);border-width:2px">
+    <div style="display:flex;align-items:center;gap:10px"><b style="font-size:26px">CX251</b><span class="lvl bad" style="font-size:14px">OVER 104%</span></div>
+    <div><div class="note">SECTOR</div><b>HKG → LHR</b></div>
+    <div><div class="note">DEP (HKT)</div><b>11-15 23:40</b></div>
+    <div><div class="note">ACFT</div><b>777-300ER</b></div>
+    <div><div class="note">SEATS / PLUME PAX</div><b>368</b> / 28</div>
+    <div><div class="note">CAP 可用上限 <span class="i"><span class="tip">777-300ER 規劃上限 27,410 kg / 213.8 m³。長航受燃油與天氣影響，當班可覆寫。</span>i</span></div><b>27,410 kg · 213.8 m³</b></div>
+    <div style="flex:1"></div>
+    <div style="text-align:right"><div class="note">COUNTDOWN</div><b style="font-size:20px">T−18:10</b></div>
+  </div>
+
+  <div class="grid" style="grid-template-columns:1fr 1fr;align-items:stretch">
+
+    <!-- 左：貨艙佔用（柱上無段內數字，懸浮顯示） -->
+    <div class="card" style="position:relative">
+      <h3>貨艙佔用 · HOLD LOAD <span class="i" id="t-hold"><span class="tip">紅線 = 100% CAP；黃虛線 = 90% CAUTION。懸停分段查看具體 kg / m³。</span>i</span></h3>
+      <div class="seg-tip"><b>Plume 計入本班</b>：1,046 kg (3.8%) · 11.4 m³<br><span style="color:#ffd479">其中建議延後 DEFER：386 kg (18件)</span></div>
+      <div class="rowh"><b>WT 重量</b><span><b style="color:var(--bad)">28,466</b> / 27,410 kg · <b style="color:var(--bad)">103.9% OVER</b></span></div>
+      <div class="hb" id="hbw"></div>
+      <div class="rowh" style="margin-top:32px"><b>VOL 體積</b><span><b>211.1</b> / 213.8 m³ · <b style="color:#a07000">98.7% CAUTION</b></span></div>
+      <div class="hb" id="hbv"></div>
+      <div style="margin-top:26px">
+        <span class="leg"><i class="seg-com"></i>商貨 Cargo</span>
+        <span class="leg"><i class="seg-pax"></i>乘客預測 Pax Est.</span>
+        <span class="leg"><i class="seg-plume"></i>Plume 計入</span>
+        <span class="leg"><i class="seg-defer"></i>建議延後 Defer</span>
+      </div>
+      <table style="margin-top:10px">
+        <tr><th></th><th class="num">CARGO</th><th class="num">PAX EST</th><th class="num">PLUME (SHARE)</th><th class="num">TOTAL / CAP</th></tr>
+        <tr><td><b>WT kg</b></td><td class="num">19,600</td><td class="num">7,820</td><td class="num"><b>1,046</b> (3.8%)</td><td class="num"><b>28,466</b> / 27,410</td></tr>
+        <tr><td><b>VOL m³</b></td><td class="num">122.5</td><td class="num">77.2</td><td class="num"><b>11.4</b> (5.3%)</td><td class="num"><b>211.1</b> / 213.8</td></tr>
+      </table>
+    </div>
+
+    <!-- 右：Plume 負載 + 結論 -->
+    <div class="card">
+      <h3>Plume Light 負載與延後評估 · PLUME LOAD &amp; DEFER</h3>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:6px">
+        <div class="kpi"><div class="t">PAX 乘客</div><div class="v" style="font-size:24px">28</div></div>
+        <div class="kpi"><div class="t">PCS 申報件</div><div class="v" style="font-size:24px">66</div></div>
+        <div class="kpi"><div class="t">ON-FLIGHT 計入</div><div class="v" style="font-size:24px">1,046<span style="font-size:12px"> kg</span></div></div>
+        <div class="kpi"><div class="t">CAP SHARE <span class="i l"><span class="tip">本班計入 Plume 重量 ÷ 可用量（1,046 ÷ 27,410）。另有 6 件 134 kg 已先行送達。</span>i</span></div><div class="v" style="font-size:24px">3.8%</div></div>
+      </div>
+
+      <div style="margin-top:20px;border-top:1px solid var(--line);padding-top:12px">
+        <div style="display:flex;align-items:center;gap:10px"><b>評估結論 · ASSESSMENT</b><span class="lvl warn">PARTIAL 部分緩解</span><span style="flex:1"></span>
+          <span class="note">窗口 2D <span class="i l"><span class="tip">同目的地、更晚起飛、2 天內且承接後 &lt;90%。</span>i</span></span></div>
+        <div style="margin-top:10px" class="note">DEFICIT 缺口 <b style="color:var(--ink)">1,056 kg</b></div>
+        <div style="display:flex;height:26px;border-radius:4px;overflow:hidden;margin-top:4px">
+          <div style="width:36.5%;background:var(--ok);color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600">DEFER 386 kg</div>
+          <div style="width:63.5%;background:repeating-linear-gradient(45deg,#d6453d 0 4px,#fff 4px 8px);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700"><span style="background:#fff;padding:0 6px">RESIDUAL 殘餘 670 kg</span></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:10px;align-items:baseline">
+          <span>LOAD <b>103.9%</b> → <b style="color:var(--bad)">102.4%</b>（仍 OVER）</span>
+          <span class="note">規劃建議 · 不直接改配載</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 下：分支圖 -->
+  <div class="card" style="margin-top:14px;padding-bottom:6px">
+    <h3>Plume 行李分流 · ROUTING &amp; DEFERRAL FLOW <span class="i" id="t-flow"><span class="tip"><b>隨本班 ON-FLIGHT</b>：計入本班。<br><b>已到達 ARRIVED</b>：已先行送達，不計入。<br><b>建議延後 DEFER</b>：未裝機 Cargo，改後班。線寬 = 重量；虛線 ✕ = 拒收。</span>i</span></h3>
+    <svg id="flow" width="1390" height="290"></svg>
+  </div>
+</div>
+
+<script>
+function hb(id,items,max){
+  const el=document.getElementById(id);let x=0,h='';
+  for(const [v,bg] of items){h+=`<div class="s" style="left:${x/max*100}%;width:${v/max*100}%;background:${bg}"></div>`;x+=v}
+  h+=`<div class="l90" style="left:${.9/max*100}%"></div><div class="l100" style="left:${1/max*100}%"></div>`;
+  h+=`<div style="position:absolute;left:${1/max*100}%;top:36px;transform:translateX(-10%);font-size:11px;color:#d6453d;font-weight:700">100% CAP</div>`;
+  h+=`<div style="position:absolute;left:${.9/max*100}%;top:36px;transform:translateX(-95%);font-size:11px;color:#a07000">90%</div>`;
+  el.innerHTML=h;
+}
+const A=27410,B=213.8,HATCH='repeating-linear-gradient(45deg,#2f6fb5 0 3px,#fff 3px 6px)';
+hb('hbw',[[19600/A,'#2c5e5a'],[7820/A,'#8fb5b1'],[660/A,'#2f6fb5'],[386/A,HATCH]],1.1);
+hb('hbv',[[122.5/B,'#2c5e5a'],[77.2/B,'#8fb5b1'],[8.0/B,'#2f6fb5'],[3.4/B,HATCH]],1.1);
+
+(function(){
+ const NS='http://www.w3.org/2000/svg',svg=document.getElementById('flow');
+ const S=(t,a,x)=>{const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);if(x!=null)e.textContent=x;return e};
+ const defs=S('defs',{});const p=S('pattern',{id:'hp',width:6,height:6,patternUnits:'userSpaceOnUse',patternTransform:'rotate(45)'});
+ p.appendChild(S('rect',{width:6,height:6,fill:'#dbe8f6'}));p.appendChild(S('rect',{width:2.6,height:6,fill:'#2f6fb5'}));defs.appendChild(p);svg.appendChild(defs);
+ const k=.11;
+ const ribbon=(x1,y1a,y1b,x2,y2a,y2b,fill,op,stroke)=>{const m=(x1+x2)/2;
+  svg.appendChild(S('path',{d:`M${x1},${y1a} C${m},${y1a} ${m},${y2a} ${x2},${y2a} L${x2},${y2b} C${m},${y2b} ${m},${y1b} ${x1},${y1b} Z`,fill,opacity:op,stroke:stroke||'none','stroke-width':1}))};
+ [['本班 Plume 申報 · DECLARED',20],['分流 · SPLIT',400],['窗口內後班 · CANDIDATE FLIGHTS (2D, HKG→LHR)',870]].forEach(([t,x])=>svg.appendChild(S('text',{x,y:14,'font-size':12,fill:'#5d6f6d','font-weight':700},t)));
+ const X1=20,W1=150,Y0=40, kg=[660,134,386], h=kg.map(v=>Math.max(v*k,14));
+ const total=h.reduce((a,b)=>a+b,0);
+ svg.appendChild(S('rect',{x:X1,y:Y0,width:W1,height:total,fill:'#2f6fb5'}));
+ svg.appendChild(S('text',{x:X1+W1/2,y:Y0+total/2-6,'text-anchor':'middle','font-size':14,fill:'#fff','font-weight':700},'CX251'));
+ svg.appendChild(S('text',{x:X1+W1/2,y:Y0+total/2+12,'text-anchor':'middle','font-size':12,fill:'#fff'},'66 pcs · 1,180 kg'));
+ const X2=400,W2=20, ys=[Y0-14,Y0+h[0]+22,Y0+h[0]+h[1]+62];
+ const names=[['隨本班 ON-FLIGHT','42 pcs · 660 kg · 計入本班','#2f6fb5'],['已到達 ARRIVED','6 pcs · 134 kg · 已先行送達','#9aa5a3'],['建議延後 DEFER','18 pcs · 386 kg · Cargo 未裝機','url(#hp)']];
+ let acc=Y0;
+ for(let i=0;i<3;i++){
+   ribbon(X1+W1,acc,acc+h[i],X2,ys[i],ys[i]+h[i],i===2?'#2f6fb5':i===1?'#9aa5a3':'#2f6fb5',i===2?.55:.4);
+   svg.appendChild(S('rect',{x:X2,y:ys[i],width:W2,height:h[i],fill:names[i][2],stroke:i===2?'#2f6fb5':'none'}));
+   svg.appendChild(S('text',{x:X2+W2+10,y:ys[i]+h[i]/2-2,'font-size':13.5,'font-weight':700,fill:'#17302e'},names[i][0]));
+   svg.appendChild(S('text',{x:X2+W2+10,y:ys[i]+h[i]/2+14,'font-size':12,fill:'#5d6f6d'},names[i][1]));
+   acc+=h[i];
+ }
+ const X3=870,RW=500,RH=44,rows=[
+  {id:'CX253',t:'11-16 09:30',st:'NO-GO',why:'OVER 102%（自身超限）',c:'#d6453d'},
+  {id:'CX255',t:'11-16 23:55',st:'NO-GO',why:'CARGO UNK（商貨未知）',c:'#d99a12'},
+  {id:'CX259',t:'11-17 09:30',st:'NO-GO',why:'CAUTION VOL 94%（已觸注意線）',c:'#d6453d'},
+  {id:'CX261',t:'11-17 23:40',st:'ACCEPT',why:'+18 pcs · 386 kg · LOAD 80% → 81%',c:'#2f9e6b',get:386},
+ ];
+ const gap=12,y3=i=>26+i*(RH+gap);
+ const srcX=X2+W2, srcY=ys[2], srcH=h[2];
+ let off=0;
+ rows.forEach((r,i)=>{
+   const cy=y3(i)+RH/2;
+   if(r.get){const th=Math.max(r.get*k,14);
+     ribbon(srcX+270,srcY+off,srcY+off+srcH,X3,cy-th/2,cy+th/2,'#2f6fb5',.55);
+     svg.appendChild(S('rect',{x:srcX,y:srcY,width:270,height:srcH,fill:'#2f6fb5',opacity:.55}));
+   }else{
+     svg.appendChild(S('path',{d:`M${srcX+270},${srcY+srcH/2} C${srcX+420},${srcY+srcH/2} ${X3-230},${cy} ${X3-26},${cy}`,fill:'none',stroke:'#9aa5a3','stroke-width':2,'stroke-dasharray':'5 4'}));
+     svg.appendChild(S('text',{x:X3-14,y:cy+6,'text-anchor':'middle','font-size':16,'font-weight':700,fill:r.c},'✕'));
+   }
+ });
+ rows.forEach((r,i)=>{
+   const y=y3(i);
+   svg.appendChild(S('rect',{x:X3,y,width:RW,height:RH,rx:8,fill:r.get?'#eef8f2':'#fff',stroke:r.get?'#2f9e6b':'#d5dedc','stroke-width':r.get?2:1}));
+   svg.appendChild(S('text',{x:X3+14,y:y+19,'font-size':14,'font-weight':700,fill:'#17302e'},r.id));
+   svg.appendChild(S('text',{x:X3+14,y:y+35,'font-size':11,fill:'#5d6f6d'},r.t));
+   svg.appendChild(S('rect',{x:X3+96,y:y+13,width:62,height:18,rx:4,fill:r.get?'#2f9e6b':'#fff',stroke:r.get?'none':r.c}));
+   svg.appendChild(S('text',{x:X3+127,y:y+26,'text-anchor':'middle','font-size':11,'font-weight':700,fill:r.get?'#fff':r.c},r.st));
+   svg.appendChild(S('text',{x:X3+170,y:y+27,'font-size':13,fill:r.get?'#17302e':'#5d6f6d','font-weight':r.get?700:400},r.why));
+ });
+ svg.appendChild(S('text',{x:srcX,y:srcY+srcH+38,'font-size':12,fill:'#d6453d','font-weight':700},'RESIDUAL 670 kg：Plume 可調量不足以消除缺口，需交由貨運調度處置'));
+})();
+</script>
+</body></html>

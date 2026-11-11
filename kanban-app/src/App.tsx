@@ -6,6 +6,7 @@ import { DEFAULT_SECTOR } from "./config/sectors";
 import { addHoursIso } from "./format/display";
 import { I18nProvider } from "./i18n/I18nProvider";
 import { useI18n } from "./i18n/useI18n";
+import { MemberBoardPage } from "./members/pages/MemberBoardPage";
 import { FlightDetailPage } from "./pages/FlightDetailPage";
 import { OverviewPage } from "./pages/OverviewPage";
 import { JsonDataSource } from "./services/dataSource";
@@ -19,8 +20,18 @@ const SEED_AS_OF = "2026-11-15T05:30:00+08:00";
 const LIVE_TICK_HOURS = 0.25;
 const LIVE_TICK_MS = 4000;
 
+type BoardId = "cargo" | "members";
+
+function readBoard(): BoardId {
+  if (typeof window === "undefined") {
+    return "cargo";
+  }
+  return new URLSearchParams(window.location.search).get("board") === "members" ? "members" : "cargo";
+}
+
 function KanbanShell() {
-  const { t } = useI18n();
+  const { t, locale } = useI18n();
+  const [board, setBoard] = useState<BoardId>(readBoard);
   const [view, setView] = useState<"overview" | "detail">("overview");
   const [selectedFlightId, setSelectedFlightId] = useState<string | null>(null);
   const [asOf, setAsOf] = useState(SEED_AS_OF);
@@ -32,14 +43,29 @@ function KanbanShell() {
   const [live, setLive] = useState(true);
 
   useEffect(() => {
-    if (!live) {
+    document.title = board === "members" ? `Plume Light · ${t("mb.title")}` : t("kb.brand.title");
+  }, [board, locale, t]);
+
+  useEffect(() => {
+    if (!live || board !== "cargo") {
       return;
     }
     const timer = window.setInterval(() => {
       setAsOf((current) => addHoursIso(current, LIVE_TICK_HOURS));
     }, LIVE_TICK_MS);
     return () => window.clearInterval(timer);
-  }, [live]);
+  }, [live, board]);
+
+  const selectBoard = (next: BoardId) => {
+    setBoard(next);
+    const url = new URL(window.location.href);
+    if (next === "members") {
+      url.searchParams.set("board", "members");
+    } else {
+      url.searchParams.delete("board");
+    }
+    window.history.replaceState({}, "", url);
+  };
   const query = useMemo(
     () => ({ asOf, windowDays, nearHours, metric, sector, events }),
     [asOf, windowDays, nearHours, metric, sector, events],
@@ -54,8 +80,12 @@ function KanbanShell() {
 
   return (
     <div className={styles.shell}>
-      <TopHeader live={live} />
-      <div className={styles.wrap}>
+      <TopHeader live={board === "cargo" && live} board={board} onBoardChange={selectBoard} />
+      <div className={board === "members" ? styles.memberWrap : styles.wrap}>
+        {board === "members" ? (
+          <MemberBoardPage />
+        ) : (
+          <>
         <ControlBar
           asOf={asOf}
           sector={sector}
@@ -103,6 +133,8 @@ function KanbanShell() {
         <p className={styles.disclaimer}>
           {t("kb.staffOnly")} · {t("kb.noAutoSale")} · {t("kb.demo.data")}
         </p>
+          </>
+        )}
       </div>
     </div>
   );

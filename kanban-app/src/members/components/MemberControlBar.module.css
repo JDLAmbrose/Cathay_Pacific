@@ -1,0 +1,86 @@
+.bar {
+  position: sticky;
+  top: 60px;
+  z-index: 20;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 18px;
+  padding: 12px 4px 14px;
+  background: var(--paper);
+}
+
+.clock strong {
+  display: block;
+  font-size: 16px;
+  letter-spacing: -0.02em;
+}
+
+.clock em {
+  font-style: normal;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.bookmarks {
+  display: flex;
+  flex: 1;
+  justify-content: space-between;
+  gap: 4px;
+  min-width: 520px;
+}
+
+.mark {
+  border: 0;
+  background: transparent;
+  padding: 4px 6px;
+  border-radius: 10px;
+  min-width: 52px;
+}
+
+.mark b {
+  display: block;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.mark small {
+  display: block;
+  margin-top: 1px;
+  font-size: 10px;
+  color: var(--muted);
+}
+
+.mark.on {
+  background: var(--green);
+  color: #fff;
+}
+
+.mark.on small { color: rgba(255, 255, 255, 0.82); }
+
+.filters,
+.detail {
+  display: flex;
+  background: #f3f6f4;
+  border-radius: 999px;
+  padding: 3px;
+}
+
+.filters button,
+.detail button {
+  border: 0;
+  background: transparent;
+  border-radius: 999px;
+  padding: 6px 12px;
+  font-size: 13px;
+}
+
+.filters .on,
+.detail .on {
+  background: #fff;
+  color: var(--green);
+  font-weight: 700;
+  box-shadow: 0 1px 2px rgba(4, 63, 57, 0.08);
+}
+
+.detail { width: 100%; }
