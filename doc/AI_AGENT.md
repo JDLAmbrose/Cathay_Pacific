@@ -1,15 +1,13 @@
 # GLM 出行助手接入指南
 
-React 前端透過同源 Python API 使用 GLM。前端以 Node.js 和 Vite 構建，Python 服務使用標準庫。Docker 使用 Python 3.12。
+此版本保留原生 HTML/JavaScript 前端，擴展現有 Python 服務為同源 API。無需 Node/npm、框架或 Python 第三方依賴。建議使用 Python 3.12+；Docker 使用 3.12。
 
 ## 本地啟動
 
 在項目根目錄運行：
 
 ```sh
-npm ci
-npm run build
-python3 tools/serve.py --port 8000 --api-key-file /path/to/glm-key.txt
+python3 tools/serve.py --port 8000 --api-key-file /Users/rtxon/Desktop/1.txt
 ```
 
 打開 <http://127.0.0.1:8000/pages/assistant.html>。文件內容應只有 API key，不能包含引號、`API_KEY=` 或其他說明。密鑰文件留在網站目錄之外；不要把它加入 Git 或鏡像。
@@ -53,7 +51,7 @@ GLM 接口採用[智譜官方 Chat Completions 協議](https://docs.bigmodel.cn/
 
 助手沒有寫入工具；不會自動改行李、提交預訂、付款或確認物流。畫面提供行李、報價和行程入口，用戶在原有流程中自行確認。
 
-目前沒有即時官方規則檢索、真實航班/物流、地圖或實際訂票 API。規範性問題會要求補充屬性並提示向官方核實。GLM 回答仍需人工判斷。離線規則演示保留原有規則卡片及建議確認流程；可在助手頁選擇離線模式使用。
+目前沒有即時官方規則檢索、真實航班/物流、地圖或實際訂票 API。規範性問題會要求補充屬性並提示向官方核實。GLM 回答仍需人工判斷。離線規則演示保留原有規則卡片及建議確認流程；只有選擇離線模式或用 `file://` 打開時使用，不冒充 GLM 回答。
 
 ## API 與錯誤
 

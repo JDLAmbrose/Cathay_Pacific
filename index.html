@@ -6,16 +6,26 @@
   <meta name="theme-color" content="#02544f">
   <meta name="description" content="Plume Light — a lighter Cathay journey. Luggage planning, collection and delivery, and travel assistance. Hackathon prototype.">
   <title>Plume Light · 行程首頁</title>
-  <link rel="icon" type="image/svg+xml" href="/assets/plume_light_icon.svg">
-  <script type="module" src="/src/main.tsx"></script>
+  <link rel="icon" type="image/svg+xml" href="assets/plume_light_icon.svg">
+  <link rel="stylesheet" href="assets/styles.css?v=20261110-helper">
+  <script defer src="assets/i18n.js?v=20261110-helper"></script>
+  <script defer src="assets/model.js?v=20261110-helper"></script>
+  <script defer src="assets/app.js?v=20261110-helper"></script>
 </head>
-<body>
-  <div id="root"></div>
-  <script>
-    if (location.protocol === "file:") {
-      document.getElementById("root").innerHTML = '<main style="max-width:640px;margin:12vh auto;padding:32px;font-family:system-ui;line-height:1.8;color:#02544f"><h1>Plume Light · 啟動預覽</h1><p>請先解壓完整項目，再雙擊 <strong>start.command</strong>（macOS）或 <strong>start.bat</strong>（Windows）。</p><p>首次使用需要安裝 Node.js 與 Python，並聯網下載依賴。也可在項目目錄執行 <code>npm start</code>。</p><p>啟動完成後，請開啟終端顯示的本地網址。</p></main>';
-    }
-  </script>
+<body data-page="home">
+  <div id="siteHeader"></div>
+  <div class="shell">
+    <section class="flight-banner" id="tripbar" aria-label="CX257"></section>
+    <main id="main" tabindex="-1"></main>
+    <div id="controls"></div>
+    <footer class="site-footer" id="siteFooter"></footer>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <dialog id="dialog" aria-labelledby="dialogTitle">
+    <h2 id="dialogTitle"></h2>
+    <div id="dialogBody" class="body"></div>
+    <div id="dialogActions" class="actions"></div>
+  </dialog>
   <noscript>This interactive prototype requires JavaScript.</noscript>
 </body>
 </html>
