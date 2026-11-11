@@ -1,35 +1,37 @@
 # Plume Light 多頁前端演示
 
-本版以 `doc/Plume_Light_PRD.md` 1.3 為基礎，使用純 HTML、CSS 與 JavaScript，無建置或第三方網路依賴。
+本版以 `doc/Plume_Light_PRD.md` 1.3 為基礎，使用 React 19、TypeScript、Vite 與本地演示資料。
 
 ## 開啟方式
 
-可直接開啟專案中的 `index.html`。若瀏覽器限制本地檔案的儲存功能，請在專案目錄執行 `python3 -m http.server 8000`，再開啟 `http://localhost:8000/`。所有演示頁面應使用同一網址來源，以共享行李與訂單狀態。
+執行 `npm ci` 及 `npm run dev`，再開啟 [本地首頁](http://localhost:5173/)。如需使用助手 API 或模擬查件，另啟動 `python3 tools/serve.py --port 8000`。所有演示頁面應使用同一網址來源，以共享草稿與訂單。
 
 ## 頁面
 
-根目錄僅保留 `index.html` 一個入口檔案。功能頁面集中在 `pages/`，舊版原型保存在 `archive/`，輔助腳本保存在 `tools/`。分享時請保留 `index.html`、`assets/` 與 `pages/` 的相對位置。
+根目錄僅保留 `index.html` 一個入口檔案。功能頁面集中在 `pages/`，舊版原型保存在 `archive/`，輔助腳本保存在 `tools/`。分享時請構建網站並提供完整的 `dist/`。
 
 | 檔案 | 用途 |
 | --- | --- |
 | `index.html` | 行程首頁、航班橫幅、功能入口、三組案例輪播 |
 | `pages/prepare.html` | 實際乘機人、家人在家協助填寫、聯絡資料 |
 | `pages/baggage.html` | 全部托運行李預報、服務行李選擇、尺寸與重量 |
-| `pages/rules.html` | 五步流程中的 AI 攜帶規則諮詢 |
-| `pages/delivery.html` | 收取地區、申請截止、首末程安排 |
+| `pages/information.html` | 收取地區、申請截止、首末程安排 |
+| `pages/pricing.html` | 隨身、隨航與貨運的拖拽分配 |
 | `pages/checkout.html` | 費用明細、現金或里數模擬結算 |
 | `pages/assistant.html` | 可從主導覽直接進入的 AI 出行助手 |
 | `pages/journey.html` | 訂單、退款、三類交接節點及事件演示 |
+| `pages/benefits.html` | 家庭權益，家庭專區的預設頁面 |
+| `pages/family.html` | 家庭互聯、邀請及成員管理 |
 | `pages/operations.html` | 已保存預報彙總、重量與空間規劃、演示參數 |
 | `archive/index-original.html` | 原始 UI 設計，獨立保留 |
 | `archive/index-prd-single.html` | 本次拆頁前的 PRD 1.3 單頁原型，獨立保留 |
 
 ## 共用程式
 
-- `assets/i18n.js`：繁體中文、英語、法語、西班牙語與阿拉伯語完整文案。`t(key, args)` 處理變數；新增文案時五欄皆須填妥。使用者自行輸入的姓名、地址或問題原文保留，不自動翻譯。固定品牌、機場代碼與 `LSE Student Dormitory 6` 保留。
-- `assets/model.js`：行李彙總、未知值處理、截止校驗、報價、里數支付、交接、退款及確定性 AI 規則樣本。
-- `assets/app.js`：共用頁首、航班橫幅、頁面渲染、表單事件及實際連結跳轉。
-- `assets/styles.css`：響應式設計、邏輯方向屬性、大字模式及減少動畫偏好。
+- `src/config/copy.json` 提供五種語言文案。使用者輸入的姓名、地址及問題原文保留。
+- `src/engine/booking.ts` 處理行李彙總、截止校驗、報價、里數支付、交接、退款及離線規則。
+- `src/pages/` 與 `src/components/` 管理介面。CSS Modules 提供響應式樣式，`src/config/tokens.css` 提供全局設計變量。
+- `src/services/` 封裝瀏覽器存儲、可替換的 DataSource 及 TanStack Query 配置。
 
 原型資料儲存鍵為 `plume-light-multipage-v2`，與前一單頁版本分開。語言儲存鍵為 `plume-light-language`，跨頁保留；阿拉伯語設定 `dir="rtl"`。未提交的表單及問題草稿可跨頁保留；營運看板只統計已保存預報。
 
@@ -69,7 +71,7 @@ AI 演示目前有 13 類問題：衣物書籍、電池、輔助設備、液體�
 
 人物照片保留 PLUME LIGHT 與案例編號，不再顯示留學生、無人陪伴兒童或殘障人士的分類徽章。人物簡介採用姓名、年齡及旅程背景；協助需求仍在故事內自然說明。第三位人物為日本研究學者佐藤陽翔 Haruto Sato，搭乘 CX580 由香港至札幌新千歲 CTS。
 
-進入案例區域後，每 8 秒自動輪播並循環回第一張。滑鼠懸停、鍵盤聚焦閱讀、頁面隱藏或案例離開可視區時暫停；不顯示播放／暫停按鈕；可使用左右箭頭、圓點、觸控螢幕或觸控板橫向手勢切換。語言切換後仍只保留一個計時器。實作間隔設定為 `STORY_INTERVAL_MS = 8000`。
+進入案例區域後，每 8 秒自動輪播並循環回第一張。滑鼠懸停、鍵盤聚焦閱讀、頁面隱藏或案例離開可視區時暫停；不顯示播放／暫停按鈕；可使用左右箭頭、圓點、觸控螢幕或觸控板橫向手勢切換。語言切換後仍只保留一個計時器。
 
 
 ### 觸控板手勢
