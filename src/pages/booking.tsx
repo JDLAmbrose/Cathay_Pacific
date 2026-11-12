@@ -24,9 +24,11 @@ import {
   pricingLane,
   pricingQuote,
   validateService,
+  familySessionPermission,
 } from "../engine/booking";
-import { t } from "../services/i18n";
+import { language, t } from "../services/i18n";
 import { BOOK_PAGES, href } from "../config/routes";
+import { cathayMembershipSignUpUrl } from "../config/urls";
 import { cssVars, cx, keyed, Input, Select } from "../components/primitives";
 import { CategoryPicker } from "../components/Popover";
 import {
@@ -101,6 +103,9 @@ function passengerHTML() {
           </div>
         </div>
       </section>{" "}
+      <p className={cx("note")} role={"note"}>
+        {icon("parent")} {T("passenger.minorReminder")}
+      </p>
       <label className={cx("check helper-toggle")}>
         <Input
           type={"checkbox"}
@@ -162,6 +167,48 @@ function helperHTML() {
         {icon("person")}
         <h3 id={"helperTitle"}>{T("helper.title")}</h3>
       </div>{" "}
+      <aside
+        className={cx("helper-guidance")}
+        aria-labelledby={"helperGuidanceTitle"}
+      >
+        <h4 id={"helperGuidanceTitle"}>
+          {icon("shield")}
+          {T("helper.guidanceTitle")}
+        </h4>
+        <p>{T("helper.membershipReminder")}</p>
+        <ol className={cx("helper-guidance-steps")}>
+          <li>
+            <h5>{T("helper.registerStep")}</h5>
+            <p>{T("helper.registerBody")}</p>
+            <a
+              className={cx("btn slim light")}
+              href={cathayMembershipSignUpUrl(language)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {T("helper.register")}
+              {icon("external")}
+            </a>
+          </li>
+          <li>
+            <h5>{T("helper.linkStep", { link: t("familyTabs.link") })}</h5>
+            <p>
+              {T("helper.linkBody", {
+                family: t("nav.family"),
+                link: t("familyTabs.link"),
+              })}
+            </p>
+            <button
+              type="button"
+              className={cx("btn slim light")}
+              data-action="helper-add-contact"
+            >
+              {T("helper.openFamily")}
+              {icon("arrow", "arrow")}
+            </button>
+          </li>
+        </ol>
+      </aside>
       {contacts.length ? (
         <>
           <div className={cx("fields")}>
@@ -181,16 +228,7 @@ function helperHTML() {
           <p className={cx("prototype-note")}>{T("helper.requestDemo")}</p>
         </>
       ) : (
-        <>
-          <p className={cx("note")}>{T("helper.noContactsBody")}</p>
-          <button
-            className={cx("btn light")}
-            data-action={"helper-add-contact"}
-          >
-            {T("helper.openFamily")}
-            {icon("arrow", "arrow")}
-          </button>
-        </>
+        <p className={cx("note")}>{T("helper.noContactsBody")}</p>
       )}
     </section>
   );
@@ -923,6 +961,11 @@ function bookingStepHTML(view, index, waiting) {
   );
 }
 function BookingPage({ gesture }: { gesture?: PricingGesture }) {
+  const allowed = familySessionPermission(state.step === 5 ? "payment" : "booking");
+  if (!allowed) return <>
+    {head("book.title", "book.sub")}
+    <div className={cx("card")}><div className={cx("notice")}>{T(state.step === 5 ? "service.paymentDenied" : "service.bookingDenied")}</div>{link("family", T("service.manage"), "btn light")}</div>
+  </>;
   const step = state.step,
     waiting = step === 1 && state.family && !!pendingHelperRequest();
   return (

@@ -6,6 +6,8 @@ import type {
   BookingState,
   Draft,
   FamilyLink,
+  FamilyConsent,
+  FamilyPermissions,
   PaymentSnapshot,
   Quote,
   View,
@@ -176,7 +178,7 @@ function serviceRoute() {
 // Family hub. The demo directory maps only the two supplied sample accounts to booked travellers.
 const FAMILY_METHODS = ["member", "mobile", "email"],
   FAMILY_RELATIONSHIPS = ["parent", "guardian", "other"],
-  FAMILY_STATUSES = ["draft", "pending", "linked", "declined", "cancelled"];
+  FAMILY_STATUSES = ["draft", "pending", "linked", "declined", "cancelled", "revoked"];
 const FAMILY_FIELDS = { member: "memberNo", mobile: "mobile", email: "email" },
   FAMILY_MEMBER_ID = "lin",
   FAMILY_PARENT = {
@@ -255,10 +257,14 @@ function familyTravellerId(link) {
 function familyMemberId(link) {
   return (
     familyTravellerId(link) ||
-    link.method + ":" + familyAccountKey(link.method, familyIdentifier(link))
+    (familyDemoMember(link) ? "member:" + familyDemoMember(link).memberNo : link.method + ":" + familyAccountKey(link.method, familyIdentifier(link)))
   );
 }
 function familyConnectionRecords(passengerId = null) {
+  if (state.familyDemo)
+    return state.familyDemo.mode === "linked" ? state.familyDemo.records.filter((link) =>
+      passengerId === null ? link.service?.initiatedBy === "family" : link.service?.initiatedBy === "student" && familyStudentId(link) === passengerId,
+    ) : [];
   const archived = state.familyInvitationArchive
     .filter((entry) => entry.passengerId === passengerId)
     .map((entry) => entry.link);
@@ -267,20 +273,20 @@ function familyConnectionRecords(passengerId = null) {
   return current ? [...archived, current] : archived;
 }
 function parentFamilyRecords() {
-  return [...familyConnectionRecords().reverse(), ...state.familyMembers];
+  return [...familyConnectionRecords().reverse(), ...(state.familyDemo ? [] : state.familyMembers)];
 }
 function linkedFamilyMembers() {
   return familyDemoUnlinked(FAMILY_MEMBER_ID)
     ? []
-    : parentFamilyRecords().filter((link) => link.status === "linked");
+    : parentFamilyRecords().filter(familyServiceEstablished);
 }
 function linkedFamilyMember(id) {
-  return linkedFamilyMembers().find((link) => familyMemberId(link) === id);
+  return linkedFamilyMembers().find((link) => familyMemberId(link) === id || familyInvitationId(link) === id);
 }
 function linkedPassengerContacts(passengerId) {
   if (familyDemoUnlinked(passengerId)) return [];
   return familyConnectionRecords(passengerId).filter(
-    (link) => link.status === "linked",
+    familyServiceEstablished,
   );
 }
 function pendingFamilyInvitations(passengerId) {
@@ -294,19 +300,112 @@ function familyInvitationId(link) {
 function pendingFamilyInvitation(passengerId, id) {
   return pendingFamilyInvitations(passengerId).find(
     (link) => familyInvitationId(link) === id,
-  );
+  ) ?? [familyServiceRecord(id)].find((link) => link?.status === "pending");
 }
 function familyLinkedRecord(link) {
-  return link?.status === "linked" && !familyDemoUnlinked(FAMILY_MEMBER_ID);
+  return familyServiceEstablished(link);
+}
+const noFamilyPermissions = (): FamilyPermissions => ({ booking: false, payment: false, progress: false });
+function familyPolicy(studentId: string) {
+  const policy = state.membership?.eligibility?.[studentId];
+  if (!policy) return { serviceConsent: "unknown", guardianStatus: "unknown", policy: "unconfigured" } as const;
+  // An overlay simulates an unavailable external result; the external snapshot is never edited.
+  return state.familyDemo?.mode === "unlinked" && policy.serviceConsent === "guardian"
+    ? { ...policy, guardianStatus: "unknown" as const }
+    : policy;
+}
+function familyStudentId(link: FamilyLink, passengerId: string | null = null) {
+  return passengerId ?? link?.service?.studentId ?? (link ? familyTravellerId(link) : null);
+}
+function familyDemoMember(link: FamilyLink) {
+  const parent = { ...newFamilyContact(), ...FAMILY_PARENT, surname: "Chen", givenName: "Mei" };
+  const key = FAMILY_FIELDS[link.method];
+  if (!key || !familyIdentifier(link)) return null;
+  return [newFamilyLink(), alexFamilyLink(), parent].find((sample) =>
+    familyAccountKey(link.method, sample[key]) === familyAccountKey(link.method, link[key]),
+  ) ?? null;
+}
+function familyServiceDraft(studentId: string, initiatedBy: "student" | "family") {
+  return { studentId, initiatedBy, permissions: noFamilyPermissions(), journey: { bookingId: state.flight.bookingId, legId: state.flight.legId } };
+}
+function familyGuardianEligible(link: FamilyLink) {
+  const policy = familyPolicy(familyStudentId(link));
+  const guardian = link.service?.initiatedBy === "student"
+    ? familyDemoMember(link)?.memberNo : (link.owner ?? FAMILY_PARENT).memberNo;
+  return policy.guardianStatus === "linked" && "guardianMemberNo" in policy &&
+    guardian === policy.guardianMemberNo;
+}
+function familyServiceEstablished(link: FamilyLink) {
+  if (link?.status !== "linked" || !link.service?.confirmedAt) return false;
+  const policy = familyPolicy(familyStudentId(link));
+  return policy.serviceConsent === "self"
+    ? link.service.confirmedBy === "student"
+    : policy.serviceConsent === "guardian" && link.service.confirmedBy === "guardian" && familyGuardianEligible(link);
+}
+function familyPermission(link: FamilyLink, permission: keyof FamilyPermissions, journey = state.flight) {
+  return familyServiceEstablished(link) && link.service.permissions[permission] === true &&
+    link.service.journey?.bookingId === journey.bookingId && link.service.journey?.legId === journey.legId;
+}
+function allFamilyRecords() {
+  if (state.familyDemo) return state.familyDemo.mode === "linked" ? state.familyDemo.records : [];
+  return [...parentFamilyRecords(), ...Object.keys(state.passengerLinks).flatMap((key) => familyConnectionRecords(key))];
+}
+function familyServiceRecord(id: string) {
+  return allFamilyRecords().find((link) => familyInvitationId(link) === id || familyMemberId(link) === id);
+}
+function familyVisibleRecords(fromStudent: boolean, studentId = state.travellerId) {
+  const records = allFamilyRecords();
+  const visible = new Map<string, FamilyLink>();
+  for (const link of records) {
+    if (!["linked", "pending", "revoked"].includes(link.status)) continue;
+    const subject = familyStudentId(link);
+    const helperNo = link.service?.initiatedBy === "student" ? familyDemoMember(link)?.memberNo : (link.owner ?? FAMILY_PARENT).memberNo;
+    if (fromStudent ? subject !== studentId : helperNo !== FAMILY_PARENT.memberNo) continue;
+    const key = subject + ":" + helperNo;
+    const previous = visible.get(key);
+    const rank = (entry: FamilyLink) => ({ linked: 3, pending: 2, revoked: 1 })[entry.status] ?? 0;
+    if (!previous || rank(link) > rank(previous)) visible.set(key, link);
+  }
+  return [...visible.values()];
+}
+function familySessionPermission(permission: keyof FamilyPermissions) {
+  if (!state.familyAccess) return true;
+  const link = familyServiceRecord(state.familyAccess.linkId);
+  return state.familyAccess.studentId === state.travellerId && familyStudentId(link) === state.travellerId && familyPermission(link, permission);
+}
+function updateFamilyPermissions(link: FamilyLink, permissions: FamilyPermissions, consent: FamilyConsent) {
+  if (!link?.service || link.status !== "linked" || !consent?.confirmed) return false;
+  const policy = familyPolicy(familyStudentId(link));
+  const role = policy.serviceConsent === "self" ? "student" : "guardian";
+  if (policy.serviceConsent === "unknown" || consent.role !== role || (role === "guardian" && !familyGuardianEligible(link))) return false;
+  Object.assign(link.service, { permissions: { ...permissions }, confirmedBy: role, confirmedAt: iso(state.clock), journey: { bookingId: state.flight.bookingId, legId: state.flight.legId } });
+  link.status = "linked";
+  link.shareProgress = permissions.progress;
+  link.progressRequested = false;
+  persist();
+  return true;
+}
+function revokeFamilyService(link: FamilyLink, consent: FamilyConsent) {
+  if (!link?.service || link.status !== "linked" || !consent?.confirmed) return false;
+  const policy = familyPolicy(familyStudentId(link));
+  if (policy.serviceConsent === "unknown" || consent.role !== (policy.serviceConsent === "self" ? "student" : "guardian") || (consent.role === "guardian" && !familyGuardianEligible(link))) return false;
+  link.status = "revoked";
+  link.service.permissions = noFamilyPermissions();
+  link.service.revokedAt = iso(state.clock);
+  link.shareProgress = false;
+  link.progressRequested = false;
+  persist();
+  return true;
 }
 function setFamilyProgress(id, action) {
-  const link = linkedFamilyMember(id);
-  if (!link || link.shareProgress) return false;
+  const link = familyServiceRecord(id);
+  if (!familyServiceEstablished(link) || familyPermission(link, "progress")) return false;
   if (action === "request") link.progressRequested = true;
   else {
     if (!link.progressRequested) return false;
+    // Grants require the explicit student/guardian consent dialog.
+    if (action === "grant") return false;
     link.progressRequested = false;
-    link.shareProgress = action === "grant";
   }
   persist();
   return true;
@@ -321,6 +420,18 @@ function migrateFamilyState() {
     saved && typeof saved === "object" ? { ...fresh, ...saved } : fresh;
   if (!FAMILY_STATUSES.includes(state.familyLink.status))
     state.familyLink = { ...fresh };
+  state.membership ??= clone(dataSource.loadDemo().membership ?? { source: "demo", eligibility: {} });
+  for (const [passengerId, records] of [
+    [null, [...familyConnectionRecords(), ...state.familyMembers]],
+    ...Object.keys(state.passengerLinks).map((id) => [id, familyConnectionRecords(id)]),
+  ] as [string | null, FamilyLink[]][]) {
+    for (const link of records) {
+      // Old links retain their history, but never inherit new service permissions.
+      link.service ??= familyServiceDraft(passengerId ?? familyTravellerId(link), passengerId ? "student" : "family");
+      link.service.permissions ??= noFamilyPermissions();
+      link.shareProgress = familyServiceEstablished(link) && link.service.permissions.progress;
+    }
+  }
 }
 function familyIdentifier(link = state.familyLink) {
   return String(link[FAMILY_FIELDS[link.method]] ?? "").trim();
@@ -365,12 +476,11 @@ function validateFamilyLink(link = state.familyLink, allContacts = false) {
   return null;
 }
 function validateFamilyInvitationDuplicate(link, passengerId) {
-  const records =
-    passengerId === null
-      ? parentFamilyRecords()
-      : familyConnectionRecords(passengerId);
-  const id = familyMemberId(link);
-  const matches = records.filter((record) => familyMemberId(record) === id);
+  const records = allFamilyRecords();
+  const studentId = passengerId ?? familyTravellerId(link);
+  const helperNo = passengerId ? familyDemoMember(link)?.memberNo : FAMILY_PARENT.memberNo;
+  const matches = records.filter((record) => familyStudentId(record) === studentId &&
+    (record.service?.initiatedBy === "student" ? familyDemoMember(record)?.memberNo : (record.owner ?? FAMILY_PARENT).memberNo) === helperNo);
   if (matches.some((record) => record.status === "linked"))
     return "e.familyDuplicate";
   if (matches.some((record) => record.status === "pending"))
@@ -378,15 +488,23 @@ function validateFamilyInvitationDuplicate(link, passengerId) {
   return null;
 }
 function validateFamilyInvitation(link, passengerId) {
+  const studentId = passengerId ?? familyTravellerId(link);
+  const policy = familyPolicy(studentId);
   return (
     validateFamilyLink(link, passengerId !== null) ||
+    (!familyDemoMember(link) ? "service.memberUnknown" : null) ||
+    (passengerId !== null && familyTravellerId(link) === passengerId ? "service.selfInvite" : null) ||
+    (passengerId === null && !studentId ? "service.studentUnknown" : null) ||
+    (policy.serviceConsent === "unknown" ? "service.eligibilityUnknown" : null) ||
+    (policy.serviceConsent === "guardian" && (policy.guardianStatus !== "linked" || !familyGuardianEligible({ ...link, service: familyServiceDraft(studentId, passengerId ? "student" : "family") })) ? "service.guardianRequired" : null) ||
+    (passengerId !== null && policy.serviceConsent === "self" && !link.service?.studentConfirmed ? "service.confirmRequired" : null) ||
     validateFamilyInvitationDuplicate(link, passengerId)
   );
 }
-function markFamilyInvitationPending(link, fromParent) {
-  state.nextFamilyInvitation = (state.nextFamilyInvitation || 0) + 1;
+function markFamilyInvitationPending(link, fromParent, passengerId: string | null = null) {
+  if (!state.familyDemo) state.nextFamilyInvitation = (state.nextFamilyInvitation || 0) + 1;
   const invitationId =
-    globalThis.crypto?.randomUUID?.() || "invite-" + state.nextFamilyInvitation;
+    globalThis.crypto?.randomUUID?.() || (state.familyDemo ? "demo-invite-" + (state.familyDemo.records.length + 1) : "invite-" + state.nextFamilyInvitation);
   Object.assign(link, {
     invitationId,
     status: "pending",
@@ -395,14 +513,23 @@ function markFamilyInvitationPending(link, fromParent) {
     changeRequest: null,
     shareProgress: false,
   });
+  const studentId = fromParent ? familyTravellerId(link) : passengerId;
+  const supplied = link.service;
+  link.service = {
+    ...familyServiceDraft(studentId, fromParent ? "family" : "student"),
+    // Only a student can preselect permissions in an outgoing invitation.
+    permissions: fromParent ? noFamilyPermissions() : { ...noFamilyPermissions(), ...supplied?.permissions },
+    studentConfirmed: !fromParent && supplied?.studentConfirmed === true,
+  };
   if (fromParent) link.owner = { ...FAMILY_PARENT };
 }
 // Retain the original model entry point for callers submitting the active draft.
-function sendFamilyInvite(link = state.familyLink, allContacts = false) {
+function sendFamilyInvite(link = state.familyLink, _allContacts = false) {
   if (link.status !== "draft") return "e.familyLocked";
-  const error = validateFamilyLink(link, allContacts);
+  const passengerId = link === state.familyLink ? null : link.service?.studentId;
+  const error = validateFamilyInvitation(link, passengerId);
   if (error) return error;
-  markFamilyInvitationPending(link, link === state.familyLink);
+  markFamilyInvitationPending(link, link === state.familyLink, passengerId);
   persist();
   return null;
 }
@@ -410,13 +537,21 @@ function submitFamilyInvitation(draft, passengerId) {
   const error = validateFamilyInvitation(draft, passengerId);
   if (error) return error;
   const fromParent = passengerId === null;
+  if (state.familyDemo) {
+    const link = clone(draft);
+    markFamilyInvitationPending(link, fromParent, passengerId);
+    state.familyDemo.mode = "linked";
+    state.familyDemo.records.push(link);
+    persist();
+    return null;
+  }
   const current = fromParent
     ? state.familyLink
     : state.passengerLinks[passengerId];
   if (current && current.status !== "draft")
     state.familyInvitationArchive.push({ passengerId, link: current });
-  const link = { ...draft };
-  markFamilyInvitationPending(link, fromParent);
+  const link = clone(draft);
+  markFamilyInvitationPending(link, fromParent, passengerId);
   if (fromParent) state.familyLink = link;
   else state.passengerLinks[passengerId] = link;
   if (state.familyDemoUnlinked)
@@ -433,13 +568,27 @@ function cancelFamilyInvitation(link) {
 }
 function respondFamilyInvite(
   accepted: boolean,
-  share = true,
+  _share = false,
   link = state.familyLink,
+  consent?: FamilyConsent,
 ) {
   if (link.status !== "pending") return false;
+  if (accepted) {
+    const policy = familyPolicy(familyStudentId(link));
+    const role = policy.serviceConsent === "self" ? "student" : "guardian";
+    if (!consent?.confirmed || policy.serviceConsent === "unknown") return false;
+    if (role === "guardian" && (!familyGuardianEligible(link) || consent.role !== "guardian")) return false;
+    if (role === "student" && (link.service.initiatedBy === "student"
+      ? !link.service.studentConfirmed || consent.role !== "family"
+      : consent.role !== "student")) return false;
+    link.service.permissions = link.service.initiatedBy === "student" && role === "student"
+      ? { ...link.service.permissions } : { ...noFamilyPermissions(), ...consent.permissions };
+    link.service.confirmedBy = role;
+    link.service.confirmedAt = iso(state.clock);
+  } else if (link.service) link.service.permissions = noFamilyPermissions();
   Object.assign(link, {
     status: accepted ? "linked" : "declined",
-    shareProgress: !!(accepted && share),
+    shareProgress: !!(accepted && link.service?.permissions.progress),
     respondedAt: iso(state.clock),
   });
   persist();
@@ -485,84 +634,48 @@ function reviewFamilyChange(link, approved: boolean) {
   return true;
 }
 function familyDemoUnlinked(travellerId) {
-  return state.familyDemoUnlinked?.[travellerId] === true;
+  return (state.familyDemo?.travellerId === travellerId && state.familyDemo.mode === "unlinked") || state.familyDemoUnlinked?.[travellerId] === true;
 }
-function setFamilyDemoUnlinked(travellerId, active) {
-  state.familyDemoUnlinked ??= {};
-  if (active) state.familyDemoUnlinked[travellerId] = true;
-  else delete state.familyDemoUnlinked[travellerId];
+function setFamilyDemoUnlinked(travellerId, active, passengerId: string | null = null) {
+  if (active) {
+    if (state.familyDemo?.travellerId !== travellerId)
+      state.familyDemo = { travellerId, passengerId, mode: "unlinked", records: [] };
+    state.familyDemo.mode = "unlinked";
+  } else if (state.familyDemo?.travellerId === travellerId) {
+    if (state.familyDemo.records.length) state.familyDemo.mode = "linked";
+    else delete state.familyDemo;
+  }
+  if (state.familyDemoUnlinked) delete state.familyDemoUnlinked[travellerId];
   persist();
 }
-function addDemoAlex(now) {
-  const hasAlex = parentFamilyRecords().some(
-    (member) =>
-      ["linked", "pending"].includes(member.status) &&
-      familyTravellerId(member) === "child",
-  );
-  if (hasAlex) return;
-  state.familyMembers.push({
-    ...alexFamilyLink(),
-    owner: { ...FAMILY_PARENT },
-    status: "linked",
-    shareProgress: true,
-    invitedAt: now,
-    respondedAt: now,
-  });
+function exitFamilyDemo() {
+  delete state.familyDemo;
+  delete state.familyDemoUnlinked;
+  persist();
 }
 function simulateFamilyLink(link, travellerId) {
-  const fromParent = link === state.familyLink;
-  const passengerId = fromParent ? null : travellerId;
-  const records = fromParent
-    ? parentFamilyRecords()
-    : familyConnectionRecords(passengerId);
-  const hasMembers = records.some((member) => member.status === "linked");
+  const fromParent = link === state.familyLink || state.familyDemo?.passengerId === null && state.familyDemo.records.includes(link);
   const now = iso(state.clock);
-  if (hasMembers) {
-    if (
-      fromParent &&
-      familyLinkedRecord(link) &&
-      familyTravellerId(link) === FAMILY_MEMBER_ID
-    )
-      addDemoAlex(now);
-  } else {
-    const sample = fromParent
-      ? newFamilyLink()
-      : {
-          ...newFamilyContact("email"),
-          memberNo: FAMILY_PARENT.memberNo,
-          mobile: FAMILY_PARENT.mobile,
-          email: FAMILY_PARENT.email,
-          surname: "Chen",
-          givenName: "Mei",
-        };
-    const pendingSample = records.find(
-      (record) =>
-        record.status === "pending" &&
-        familyMemberId(record) === familyMemberId(sample),
-    );
-    if (pendingSample) {
-      pendingSample.status = "linked";
-      pendingSample.respondedAt = now;
-    } else {
-      if (link.status !== "draft")
-        state.familyInvitationArchive.push({ passengerId, link });
-      const connected = {
-        ...sample,
-        status: "linked",
-        invitedAt: now,
-        respondedAt: now,
-      };
-      if (fromParent) {
-        connected.owner = { ...FAMILY_PARENT };
-        state.familyLink = connected;
-      } else {
-        state.passengerLinks[travellerId] = connected;
-      }
-    }
-    if (fromParent) addDemoAlex(now);
-  }
-  setFamilyDemoUnlinked(travellerId, false);
+  const sample = familyKnownContact(travellerId, !fromParent);
+  sample.invitationId = "demo:" + travellerId + (fromParent ? ":family" : ":student");
+  sample.status = "linked";
+  sample.invitedAt = sample.respondedAt = now;
+  sample.service.permissions.booking = true;
+  sample.service.studentConfirmed = true;
+  sample.service.confirmedBy = familyPolicy(travellerId).serviceConsent === "self" ? "student" : "guardian";
+  sample.service.confirmedAt = now;
+  state.familyDemo = { travellerId, passengerId: fromParent ? null : travellerId, mode: "linked", records: [sample] };
+  delete state.familyDemoUnlinked;
+  persist();
   return true;
+}
+function familyKnownContact(studentId: string, fromStudent: boolean): FamilyLink {
+  const link = fromStudent
+    ? { ...newFamilyContact("email"), ...FAMILY_PARENT, surname: "Chen", givenName: "Mei" }
+    : studentId === "child" ? alexFamilyLink() : newFamilyLink();
+  link.service = familyServiceDraft(studentId, fromStudent ? "student" : "family");
+  if (!fromStudent) link.owner = { ...FAMILY_PARENT };
+  return link;
 }
 function familyBenefitMember() {
   const members = linkedFamilyMembers();
@@ -573,11 +686,12 @@ function familyBenefitMember() {
 }
 const familyLinked = () => !!familyBenefitMember();
 function familyOrder(link = familyBenefitMember()) {
-  const id = link && familyTravellerId(link);
+  const id = link && familyStudentId(link);
   return id
     ? state.orders
         .filter(
-          (order) => order.travellerId === id && order.status !== "cancelled",
+          (order) => order.travellerId === id && order.status !== "cancelled" &&
+            order.flight.bookingId === link.service?.journey?.bookingId && order.flight.legId === link.service?.journey?.legId,
         )
         .at(-1) || null
     : null;
@@ -585,7 +699,7 @@ function familyOrder(link = familyBenefitMember()) {
 // Sharing permission is separate from the family connection and any service order.
 function familyProgressAccess(link = familyBenefitMember()) {
   if (!familyLinkedRecord(link)) return "unlinked";
-  if (!link.shareProgress)
+  if (!familyPermission(link, "progress"))
     return link.progressRequested ? "requested" : "denied";
   return familyOrder(link) ? "ready" : "waiting";
 }
@@ -607,16 +721,6 @@ function familyMilestones() {
       { key: "final", status: "notStarted" },
     ],
   };
-}
-// A move counts only after the order completes; the code is a fixed demo value, never a live offer.
-function familyPromoCode() {
-  const order = familyLinked() ? familyOrder() : null;
-  if (order?.status !== "completed") return null;
-  const link = familyBenefitMember(),
-    initials =
-      (String(link.givenName).trim()[0] || "F") +
-      (String(link.surname).trim()[0] || "M");
-  return `FAMILY-${/^[A-Za-z]{2}$/.test(initials) ? initials.toUpperCase() : "PL"}${String(order.flight?.flightNo || "").slice(-2)}-${(order.id.split("-").at(-1).replace(/\D/g, "") || "1").padStart(4, "0").slice(-4)}`;
 }
 function itemCategories(item: Bag): string[] {
   return [
@@ -697,7 +801,6 @@ function helperContacts() {
   if (familyDemoUnlinked(state.travellerId)) return [];
   const records = familyConnectionRecords(state.travellerId);
   const members = linkedFamilyMembers();
-  const linkedIds = new Set<string>();
   const contacts: {
     id: string;
     name: string;
@@ -706,9 +809,8 @@ function helperContacts() {
     mobile?: string;
     relationship?: string;
   }[] = records.flatMap((link, index) => {
-    if (link.status !== "linked") return [];
+    if (!familyPermission(link, "booking") || familyStudentId(link) !== state.travellerId) return [];
     const memberId = familyMemberId(link);
-    linkedIds.add(memberId);
     return [
       {
         ...link,
@@ -718,7 +820,7 @@ function helperContacts() {
     ];
   });
   const passengerLink = members.find(
-    (link) => familyTravellerId(link) === state.travellerId,
+    (link) => familyStudentId(link) === state.travellerId && familyPermission(link, "booking"),
   );
   if (passengerLink) {
     const owner = passengerLink.owner || FAMILY_PARENT;
@@ -728,27 +830,6 @@ function helperContacts() {
         id: "parent",
         relationship: passengerLink.relationship,
       });
-  }
-  for (const member of members) {
-    const memberId = familyMemberId(member);
-    const account = familyAccountKey("member", member.memberNo);
-    const email = familyAccountKey("email", member.email);
-    if (
-      linkedIds.has(memberId) ||
-      contacts.some(
-        (contact) =>
-          (account &&
-            familyAccountKey("member", contact.memberNo) === account) ||
-          (email && familyAccountKey("email", contact.email) === email),
-      )
-    )
-      continue;
-    linkedIds.add(memberId);
-    contacts.push({
-      ...member,
-      id: "roster:" + memberId,
-      name: familyMemberName(member),
-    });
   }
   return contacts;
 }
@@ -904,7 +985,8 @@ const draft = () => state.drafts[state.travellerId],
   person = () => PEOPLE.find((p) => p.id === state.travellerId) || PEOPLE[0],
   activeOrder = () =>
     state.orders.find(
-      (o) => o.travellerId === state.travellerId && o.status !== "cancelled",
+      (o) => o.travellerId === state.travellerId && o.status !== "cancelled" &&
+        (!state.familyAccess || o.flight.bookingId === state.flight.bookingId && o.flight.legId === state.flight.legId),
     );
 const checked = (d: Draft) =>
   d.zero || d.countUnknown ? [] : d.items.filter((i) => i.mode === "checked");
@@ -1511,6 +1593,10 @@ function applyAdvice() {
 }
 async function pay() {
   if (state.processing || activeOrder()) return;
+  if (!familySessionPermission("payment")) {
+    toast("service.paymentDenied");
+    return;
+  }
   const error = validateService(),
     q = quoteService();
   if (error || !q.valid) {
@@ -1563,6 +1649,7 @@ async function pay() {
     insufficient = snapshot.payment === "miles" && state.milesBalance < q.miles;
   if (
     state.forceFail ||
+    !familySessionPermission("payment") ||
     changed ||
     insufficient ||
     !checkApplicationDeadline().valid
@@ -2021,14 +2108,27 @@ export {
   reviewFamilyChange,
   familyDemoUnlinked,
   setFamilyDemoUnlinked,
-  addDemoAlex,
+  exitFamilyDemo,
+  noFamilyPermissions,
+  familyPolicy,
+  familyStudentId,
+  familyDemoMember,
+  familyServiceDraft,
+  familyServiceEstablished,
+  familyGuardianEligible,
+  familyPermission,
+  familyServiceRecord,
+  familyVisibleRecords,
+  familySessionPermission,
+  updateFamilyPermissions,
+  revokeFamilyService,
+  familyKnownContact,
   simulateFamilyLink,
   familyBenefitMember,
   familyLinked,
   familyOrder,
   familyProgressAccess,
   familyMilestones,
-  familyPromoCode,
   itemCategories,
   carriageFor,
   refreshTransport,

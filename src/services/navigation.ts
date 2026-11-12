@@ -1,7 +1,7 @@
 import { BOOK_PAGES, readRoute } from "../config/routes";
 import {
   FAMILY_MEMBER_ID,
-  passengerFamilyLink,
+  familyKnownContact,
   state,
 } from "../engine/booking";
 import type { Page, Route } from "../types/domain";
@@ -12,14 +12,14 @@ export let helperPassengerId = "lin";
 export let familyInvitePassengerId: string | null = null;
 export let familyDemoTravellerId = FAMILY_MEMBER_ID;
 export const familyPageLink = () =>
-  helperFamilyPage ? passengerFamilyLink(helperPassengerId) : state.familyLink;
+  helperFamilyPage ? state.passengerLinks[helperPassengerId] ?? familyKnownContact(helperPassengerId, true) : state.familyLink;
 
 export function applyRoute(route: Route) {
   page = route.page;
   helperFamilyPage = route.helper;
   helperPassengerId = state.travellerId;
   familyInvitePassengerId = route.helper ? helperPassengerId : null;
-  familyDemoTravellerId = familyInvitePassengerId ?? FAMILY_MEMBER_ID;
+  familyDemoTravellerId = state.travellerId;
   const step = BOOK_PAGES.indexOf(page) + 1;
   state.view = step ? "book" : page;
   if (step) state.step = step;

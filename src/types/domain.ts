@@ -119,6 +119,32 @@ export type HandoverEvent = {
   direction?: string;
 };
 
+export type FamilyPermissions = { booking: boolean; payment: boolean; progress: boolean };
+export type FamilyConsent = {
+  role: "student" | "guardian" | "family";
+  confirmed: boolean;
+  permissions?: FamilyPermissions;
+};
+export type FamilyService = {
+  studentId: string;
+  initiatedBy: "student" | "family";
+  permissions: FamilyPermissions;
+  journey: { bookingId: string; legId: string };
+  studentConfirmed?: boolean;
+  confirmedBy?: "student" | "guardian";
+  confirmedAt?: string;
+  revokedAt?: string;
+};
+// A read-only mock of external membership results, without duplicating member identities.
+export type MembershipSnapshot = {
+  source: "demo";
+  eligibility: Record<string, {
+    serviceConsent: "self" | "guardian" | "unknown";
+    guardianStatus: "linked" | "unknown" | "notApplicable";
+    guardianMemberNo?: string;
+    policy: string;
+  }>;
+};
 export type FamilyLink = {
   method: string;
   memberNo: string;
@@ -129,6 +155,7 @@ export type FamilyLink = {
   relationship: string;
   status: string;
   shareProgress: boolean;
+  service?: FamilyService;
   invitationId?: string;
   invitedAt: string | null;
   respondedAt: string | null;
@@ -243,6 +270,14 @@ export type BookingState = {
   helper: Record<string, HelperTrip>;
   passengerLinks: Record<string, FamilyLink>;
   familyLink: FamilyLink;
+  membership?: MembershipSnapshot;
+  familyDemo?: {
+    passengerId: string | null;
+    travellerId: string;
+    mode: "linked" | "unlinked";
+    records: FamilyLink[];
+  };
+  familyAccess?: { linkId: string; studentId: string };
   familyMembers?: FamilyLink[];
   familyInvitationArchive?: { passengerId: string | null; link: FamilyLink }[];
   nextFamilyInvitation?: number;

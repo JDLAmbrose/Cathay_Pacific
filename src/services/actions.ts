@@ -2,7 +2,6 @@ import type { ChangeEvent, FormEvent, MouseEvent } from "react";
 import type { BookingState } from "../types/domain";
 import { BOOK_PAGES, isAppPath, readRoute } from "../config/routes";
 import {
-  FAMILY_MEMBER_ID,
   agentRuntime,
   answerRouteScope,
   baggagePlan,
@@ -15,11 +14,8 @@ import {
   hk,
   initial,
   invalidateAgent,
-  linkedFamilyMember,
-  familyTravellerId,
   familyProgressAccess,
   familyMemberName,
-  familyIdentifier,
   migrateBookingState,
   pay,
   pendingFamilyInvitation,
@@ -49,6 +45,13 @@ import {
   state,
   submitFamilyInvitation,
   ticketAllowance,
+  familyPermission,
+  familyServiceRecord,
+  familyStudentId,
+  familyInvitationId,
+  familyKnownContact,
+  exitFamilyDemo,
+  familySessionPermission,
   validateHelper,
   validateInformation,
   validateService,
@@ -75,6 +78,11 @@ import {
   focusFamilyHeading,
   openFamilyInvite,
   setFamilyField,
+  setFamilyDraftPermission,
+  activateFamilyService,
+  readFamilyConsent,
+  familyPermissionsDialog,
+  saveFamilyPermissions,
 } from "./familyActions";
 
 const FAMILY_BOOKING_FIELDS: (keyof BookingState)[] = [
@@ -93,16 +101,17 @@ const FAMILY_BOOKING_FIELDS: (keyof BookingState)[] = [
 ];
 function familyProxy(anchor: HTMLAnchorElement) {
   const id = anchor.dataset.familyProxy,
-    member = id && linkedFamilyMember(id),
-    traveller = id ? member && familyTravellerId(member) : FAMILY_MEMBER_ID;
+    member = id && familyServiceRecord(id),
+    traveller = member && familyStudentId(member);
   if (!traveller || !state.drafts[traveller]) return false;
   if (
     id &&
     (anchor.hasAttribute("data-family-progress")
       ? familyProgressAccess(member) !== "ready"
-      : !ticketAllowance(traveller))
+      : !familyPermission(member, anchor.hasAttribute("data-family-payment") ? "payment" : "booking") || !ticketAllowance(traveller))
   )
     return false;
+  state.familyAccess = { linkId: familyInvitationId(member), studentId: traveller };
   if (state.travellerId === traveller) return true;
   state.familyBookingProfiles ??= {};
   state.familyBookingProfiles[state.travellerId] = Object.fromEntries(
@@ -117,9 +126,9 @@ function familyProxy(anchor: HTMLAnchorElement) {
       ),
   );
   if (!state.familyBookingProfiles[traveller] && member) {
-    state.recipient = familyMemberName(member);
-    state.recipientPhone =
-      member.method === "mobile" ? familyIdentifier(member) : "";
+    const student = familyKnownContact(traveller, false);
+    state.recipient = familyMemberName(student);
+    state.recipientPhone = student.mobile;
   }
   state.travellerId = traveller;
   state.profile = person().type;
@@ -217,6 +226,9 @@ function setItemField(el: HTMLInputElement) {
   persist();
 }
 function allowStep(next: number) {
+  if (!familySessionPermission(next === 5 ? "payment" : "booking")) {
+    toast(next === 5 ? "service.paymentDenied" : "service.bookingDenied"); return false;
+  }
   if (state.processing) {
     toast("e.processing");
     return false;
@@ -287,6 +299,14 @@ export function onClick(event: MouseEvent) {
         return;
       if (anchor.hasAttribute("data-family-proxy") && !familyProxy(anchor))
         return;
+      if (anchor.hasAttribute("data-family-self")) delete state.familyAccess;
+      if (anchor.hasAttribute("data-family-direction")) {
+        closeModal();
+        const route = readRoute(url);
+        go(route.page, undefined, route.helper);
+        openFamilyInvite();
+        return;
+      }
       const route = readRoute(url);
       go(route.page, undefined, route.helper);
       return;
@@ -457,16 +477,25 @@ export function onClick(event: MouseEvent) {
       break;
     case "family-demo-unlink":
     case "family-demo-exit":
-      setFamilyDemoUnlinked(
-        familyDemoTravellerId,
-        b.dataset.action === "family-demo-unlink",
-      );
+      if (b.dataset.action === "family-demo-exit") exitFamilyDemo();
+      else setFamilyDemoUnlinked(familyDemoTravellerId, true, familyInvitePassengerId);
       toast("");
       render();
       focusFamilyHeading();
       break;
     case "family-add":
-      openFamilyInvite();
+      openFamilyInvite(b.dataset.studentId || state.travellerId);
+      break;
+    case "family-activate":
+      activateFamilyService();
+      break;
+    case "family-permissions":
+    case "family-revoke":
+      familyPermissionsDialog(id, b.dataset.action === "family-revoke");
+      break;
+    case "family-permissions-save":
+    case "family-revoke-confirm":
+      saveFamilyPermissions(id, b.dataset.action === "family-revoke-confirm");
       break;
     case "family-confirm":
       familyConfirm();
@@ -510,16 +539,13 @@ export function onClick(event: MouseEvent) {
     case "family-accept":
     case "family-decline": {
       const link = pendingFamilyInvitation(familyInvitePassengerId, id);
-      const accepted = b.dataset.action === "family-accept",
-        share =
-          !helperFamilyPage &&
-          !!document.querySelector<HTMLInputElement>("#familyShare")?.checked;
-      if (link && respondFamilyInvite(accepted, share, link)) {
+      const accepted = b.dataset.action === "family-accept";
+      if (link && respondFamilyInvite(accepted, false, link, readFamilyConsent(link, true))) {
         closeModal();
         render();
         toast(accepted ? "notice.familyLinked" : "notice.familyDeclined");
         focusFamilyHeading();
-      }
+      } else if (accepted) toast("service.confirmRequired");
       break;
     }
     case "family-change":
@@ -561,11 +587,13 @@ export function onClick(event: MouseEvent) {
       familyProgressDialog(id, true);
       break;
     case "family-progress-grant":
+      familyPermissionsDialog(id);
+      break;
     case "family-progress-decline":
       if (
         setFamilyProgress(
           id,
-          b.dataset.action === "family-progress-grant" ? "grant" : "decline",
+          "decline",
         )
       ) {
         closeModal();
@@ -583,6 +611,10 @@ export function onChange(event: ChangeEvent<HTMLElement>) {
   const el = event.target;
   if (!(el instanceof HTMLInputElement || el instanceof HTMLSelectElement))
     return;
+  if (el.hasAttribute("data-family-student")) { openFamilyInvite(el.value); return; }
+  if (el instanceof HTMLInputElement && (el.dataset.familyPermission || el.hasAttribute("data-family-confirm"))) {
+    setFamilyDraftPermission(el); return;
+  }
   if (el.dataset.familyField && el instanceof HTMLInputElement) {
     setFamilyField(el);
     return;

@@ -1,7 +1,8 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it, vi } from "vitest";
-import { FlightBanner } from "../components/layout";
+import { FlightBanner, SiteHeader } from "../components/layout";
+import { cx } from "../components/primitives";
 import { BOOK_PAGES, href, readRoute } from "../config/routes";
 import {
   activeOrder,
@@ -10,7 +11,7 @@ import {
   restoreBooking,
   state,
 } from "../engine/booking";
-import { LOCALES, setLanguage } from "../services/i18n";
+import { LOCALES, setLanguage, t } from "../services/i18n";
 import { applyRoute } from "../services/navigation";
 import { queryClient } from "../services/query";
 import { AssistantPage } from "./assistant";
@@ -78,6 +79,42 @@ it("keeps all three pricing lanes while omitting fee summaries", () => {
   expect(html).not.toContain("費用明細");
   expect(html).not.toContain("預計總價");
   expect(html).not.toContain("運輸費，不含共用取送套餐");
+});
+
+it("moves family navigation to the header and removes the page switcher in all languages", () => {
+  for (const locale of LOCALES) {
+    setLanguage(locale);
+    for (const [page, Component] of [
+      ["family", FamilyPage],
+      ["benefits", BenefitsPage],
+    ] as const) {
+      applyRoute(readRoute(new URL(href(page), "https://preview.example")));
+      const header = renderToStaticMarkup(<SiteHeader />);
+      expect(header).toContain('aria-haspopup="menu"');
+      expect(header).toContain('aria-expanded="false"');
+      expect(header).toContain('data-active="true"');
+      expect(header).toContain(t("nav.family"));
+      for (const key of ["familyTabs.link", "familyTabs.benefits"])
+        expect(t(key)).not.toBe(key);
+      const content = renderToStaticMarkup(<Component />);
+      expect(content).not.toContain(`aria-label="${t("familyTabs.label")}"`);
+      expect(content).not.toContain(cx("family-tabs"));
+    }
+    applyRoute({ page: "home", helper: false });
+    expect(renderToStaticMarkup(<SiteHeader />)).toContain('data-active="false"');
+  }
+});
+
+it("preserves family and baggage data across direct family routes and helper entry", () => {
+  const familyLink = state.familyLink;
+  const drafts = state.drafts;
+  for (const url of [href("family"), href("benefits"), href("family", 1, true)]) {
+    const route = readRoute(new URL(url, "https://preview.example"));
+    applyRoute(route);
+    expect(state.view).toBe(route.page);
+    expect(state.familyLink).toBe(familyLink);
+    expect(state.drafts).toBe(drafts);
+  }
 });
 
 it("shows zero flight progress and gates delivery destination on payment", async () => {
