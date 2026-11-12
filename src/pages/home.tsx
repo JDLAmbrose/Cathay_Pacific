@@ -174,22 +174,17 @@ function homeServicesHTML(order) {
         <div className={cx("feature-list")}>
           {keyed(
             [
-              ["report", "bag", "book", 3],
-              ["rules", "spark", "agent", 0],
-              ["delivery", "home", "book", 2],
-              ["miles", "miles", "book", 5],
-            ].map(([key, ic, view, step]) => (
+              ["report", "bag"],
+              ["rules", "spark"],
+              ["delivery", "home"],
+              ["miles", "miles"],
+            ].map(([key, ic]) => (
               <article className={cx("feature-compact")}>
                 <span className={cx("feature-icon")} data-home-icon={""}>
                   {icon(ic)}
                 </span>
                 <div>
-                  <h3>
-                    <a href={href(String(view), step || undefined)}>
-                      {T("feature." + key)}
-                      {icon("arrow", "arrow")}
-                    </a>
-                  </h3>
+                  <h3>{T("feature." + key)}</h3>
                   <p>{T("feature." + key + "Short")}</p>
                 </div>
               </article>
