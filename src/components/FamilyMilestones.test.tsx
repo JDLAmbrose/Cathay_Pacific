@@ -1,16 +1,11 @@
 import { renderToStaticMarkup } from "react-dom/server";
 import { afterEach, beforeEach, expect, it } from "vitest";
 import {
-  familyPromoCode,
   initial,
   restoreBooking,
-  simulateFamilyLink,
-  state,
 } from "../engine/booking";
-import { BenefitsPage, setFamilyOccasion } from "../pages/family";
 import {
   calculateFamilyMilestones,
-  getFamilyMilestones,
   resolveFamilyMilestones,
   type FamilyMilestoneRecord,
 } from "../services/familyMilestones";
@@ -27,7 +22,6 @@ beforeEach(() => {
 
 afterEach(() => {
   setLanguage("zh-Hant");
-  setFamilyOccasion("enrol");
 });
 
 const escaped = (value: string) => renderToStaticMarkup(<>{value}</>);
@@ -66,8 +60,9 @@ function actualOrder(status = "completed"): Order {
   };
 }
 
-it.each([0, 1, 2, 3])("renders %i/3 consistently across the arc, badges, progress and reward", (completed) => {
-  const records: FamilyMilestoneRecord[] = Array.from({ length: 3 }, (_, index) => ({
+it.each([0, 1, 2, 3, 5])("renders %i completed moves with consistent, capped progress and next-reward copy", (completed) => {
+  const count = Math.min(3, completed);
+  const records: FamilyMilestoneRecord[] = Array.from({ length: Math.max(3, completed) }, (_, index) => ({
     id: `sample-${index}`,
     eligible: true,
     status: index < completed ? "completed" : "notStarted",
@@ -75,17 +70,22 @@ it.each([0, 1, 2, 3])("renders %i/3 consistently across the arc, badges, progres
   const milestones = calculateFamilyMilestones(records, { source: "demo", linked: true });
   const html = renderToStaticMarkup(<FamilyMilestonesCard milestones={milestones} />);
   const arc = html.match(/<path\b[^>]*data-milestone-arc="true"[^>]*>/)?.[0];
-  expect(arc).toContain(`stroke-dashoffset="${1 - completed / 3}"`);
-  expect(html.match(/data-milestone-node="counted"/g) ?? []).toHaveLength(completed);
-  expect(html.match(/data-milestone-check="true"/g) ?? []).toHaveLength(completed);
+  expect(arc).toContain(`stroke-dashoffset="${1 - count / 3}"`);
+  expect(html.match(/data-milestone-node="counted"/g) ?? []).toHaveLength(count);
+  expect(html.match(/data-milestone-check="true"/g) ?? []).toHaveLength(count);
   const progress = html.match(/<div\b[^>]*role="progressbar"[^>]*>/)?.[0];
-  expect(progress).toContain(`aria-valuenow="${completed}"`);
+  expect(progress).toContain(`aria-valuenow="${count}"`);
   expect(progress).toContain('aria-valuemax="3"');
-  const state = completed === 3 ? "unlocked" : "locked";
+  expect(html.match(/role="progressbar"/g)).toHaveLength(1);
+  expect(html).not.toContain("milestone-meter");
+  const state = count === 3 ? "unlocked" : "locked";
   const reward = html.match(new RegExp(`<div\\b[^>]*data-reward-state="${state}"[^>]*>([\\s\\S]*?)</div>`));
   expect(reward).not.toBeNull();
-  expect(reward![0]).toContain(escaped(t(completed === 3 ? "benefit.rewardUnlocked" : "benefit.rewardLocked")));
-  expect(reward![1].replace(/<[^>]*>/g, "").trim()).toBe(escaped(t("benefit.familyReward")));
+  expect(reward![1]).toContain(`<strong>${escaped(t(`benefit.nextMilestone.${count}.title`))}</strong>`);
+  expect(reward![1]).toContain(`<p>${escaped(t(`benefit.nextMilestone.${count}.description`))}</p>`);
+  expect(reward![1].match(/<p>/g)).toHaveLength(1);
+  expect(reward![1]).not.toContain("<button");
+  expect(html).toContain(escaped(t("benefit.rewardConcept")));
 });
 
 it("renders all supported languages without unresolved labels or placeholders", () => {
@@ -95,9 +95,12 @@ it("renders all supported languages without unresolved labels or placeholders", 
     for (const key of [
       "benefit.milestoneHeading",
       "benefit.completedMoves",
-      "benefit.familyReward",
+      "benefit.milestoneSubtitle",
+      "benefit.rewardConcept",
       "benefit.status.counted",
-      "benefit.status.notStarted",
+      "benefit.milestonePending",
+      "benefit.nextMilestone.1.title",
+      "benefit.nextMilestone.1.description",
     ]) {
       expect(html).toContain(escaped(t(key)));
       expect(html).not.toContain(key);
@@ -111,7 +114,7 @@ it("renders all supported languages without unresolved labels or placeholders", 
   }
 });
 
-it("displays the order snapshot itinerary instead of the current trip or sample flight", () => {
+it("uses order history for progress without displaying flight, month or scenario descriptions", () => {
   const order = actualOrder();
   const milestones = resolveFamilyMilestones({
     linked: true,
@@ -120,37 +123,25 @@ it("displays the order snapshot itinerary instead of the current trip or sample 
     isDemo: true,
   });
   const html = renderToStaticMarkup(<FamilyMilestonesCard milestones={milestones} />);
-  expect(html).toContain("CX999");
-  expect(html).toContain("August 2025");
+  expect(html).toContain('aria-valuenow="1"');
+  expect(html).not.toContain("CX999");
+  expect(html).not.toContain("August 2025");
   expect(html).not.toContain("CX257");
   expect(html).not.toContain(escaped(t("benefit.demoMilestones")));
+  for (const key of ["benefit.moveFirstText", "benefit.move2Text", "benefit.move3Text"])
+    expect(html).not.toContain(escaped(t(key)));
+  const stages = html.match(/<ol\b[^>]*>[\s\S]*?<\/ol>/)![0];
+  expect(stages.match(/<h3>/g)).toHaveLength(3);
+  const nodeCopy = stages.match(/<div class="[^"]*milestone-stage-copy[^"]*">[\s\S]*?<\/div>/g)!;
+  expect(nodeCopy).toHaveLength(3);
+  for (const copy of nodeCopy) expect(copy).not.toContain("<p>");
 });
 
-it("keeps companion occasions and actual order qualification independent of sample milestones", () => {
-  expect(getFamilyMilestones()).toMatchObject({ completed: 1, source: "demo" });
-  expect(familyPromoCode()).toBeNull();
-  const companion = () => renderToStaticMarkup(<BenefitsPage />)
-    .match(/<article\b[^>]*aria-labelledby="companionTitle"[\s\S]*?<\/article>/)![0];
-  for (const occasion of ["enrol", "holiday", "graduation"]) {
-    setFamilyOccasion(occasion);
-    const html = companion();
-    expect(html).toContain(escaped(t("benefit.occasionText." + occasion, {
-      name: t("benefit.familyFallback"),
-    })));
-    expect(html).toContain(`data-occasion="${occasion}" aria-pressed="true"`);
-    expect(html).toContain(escaped(t("benefit.promoNeedsLink")));
-    expect(html).toContain("FAMILY-••••-••••");
-    expect(html).not.toContain(escaped(t("benefit.companionKicker")));
-    expect(html).not.toContain(`>${escaped(t("benefit.proposed"))}</span>`);
-  }
-  simulateFamilyLink(state.familyLink, "lin");
-  const order = actualOrder("paid");
-  state.orders.push(order);
-  expect(familyPromoCode()).toBeNull();
-  expect(companion()).toContain(escaped(t("benefit.promoNotIssued")));
-  order.status = "completed";
-  const code = familyPromoCode();
-  expect(code).not.toBeNull();
-  expect(companion()).toContain(code!);
-  expect(companion()).toContain(escaped(t("benefit.promoIssued")));
+it("keeps a paid, unfinished first order at zero with the first-milestone hint", () => {
+  const milestones = resolveFamilyMilestones({ linked: true, travellerId: "lin", orders: [actualOrder("paid_demo")], isDemo: true });
+  const html = renderToStaticMarkup(<FamilyMilestonesCard milestones={milestones} />);
+  expect(html).toContain('aria-valuenow="0"');
+  expect(html).not.toContain('data-milestone-check="true"');
+  expect(html).toContain(escaped(t("benefit.nextMilestone.0.description")));
+  expect(html).not.toContain(escaped(t("benefit.status.inProgress")));
 });

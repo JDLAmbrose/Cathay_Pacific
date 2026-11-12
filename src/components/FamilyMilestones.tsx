@@ -3,10 +3,9 @@ import { fmt } from "../engine/booking";
 import { href } from "../config/routes";
 import {
   getFamilyMilestones,
-  type FamilyMilestoneMove,
   type FamilyMilestones,
 } from "../services/familyMilestones";
-import { language, t } from "../services/i18n";
+import { t } from "../services/i18n";
 import { cssVars, cx } from "./primitives";
 import { icon } from "./shared";
 
@@ -25,41 +24,23 @@ function GiftIcon({ stitched = false }: { stitched?: boolean }) {
   );
 }
 
-function moveDescription(move: FamilyMilestoneMove, index: number) {
-  const date = move.date && new Date(move.date);
-  const month = date && !Number.isNaN(date.getTime())
-    ? new Intl.DateTimeFormat(language === "zh-Hant" ? "zh-HK" : language, {
-        timeZone: "Asia/Hong_Kong",
-        year: "numeric",
-        month: "long",
-      }).format(date)
-    : "";
-  if (month && move.flightNo)
-    return t("benefit.moveDate", { date: month, flight: move.flightNo });
-  if (month || move.flightNo) return month || move.flightNo;
-  return t(index === 0 ? "benefit.moveFirstText" : `benefit.move${index + 1}Text`);
-}
-
 function MilestoneSummary({ milestones }: { milestones: FamilyMilestones }) {
   return (
-    <div className={cx("milestone-summary")}>
+    <div
+      className={cx("milestone-summary")}
+      role="progressbar"
+      aria-label={t("benefit.completedMoves")}
+      aria-valuemin={0}
+      aria-valuemax={milestones.target}
+      aria-valuenow={milestones.completed}
+      aria-valuetext={t("benefit.milestonesTitle", {
+        n: fmt(milestones.completed), total: fmt(milestones.target),
+      })}
+    >
       <strong className={cx("milestone-fraction")} dir="ltr">
-        {fmt(milestones.completed)}<span>{" / "}</span>{fmt(milestones.target)}
+        {fmt(milestones.completed)}<span>{" / "}{fmt(milestones.target)}</span>
       </strong>
       <p>{t("benefit.completedMoves")}</p>
-      <div
-        className={cx("milestone-meter")}
-        role="progressbar"
-        aria-label={t("benefit.completedMoves")}
-        aria-valuemin={0}
-        aria-valuemax={milestones.target}
-        aria-valuenow={milestones.completed}
-        aria-valuetext={t("benefit.milestonesTitle", {
-          n: fmt(milestones.completed), total: fmt(milestones.target),
-        })}
-      >
-        <span />
-      </div>
     </div>
   );
 }
@@ -90,77 +71,82 @@ export function FamilyMilestonesCard({
     previouslyUnlocked.current = milestones.unlocked;
   }, [milestones.unlocked]);
   const positions = [[100, 205], [300, 42], [500, 205]];
+  const rewardKey = `benefit.nextMilestone.${milestones.completed}`;
   return (
     <article
       className={cx("card benefit-card milestone-card")}
       aria-labelledby={`${id}-title`}
       data-entered={entered}
       style={cssVars({
-        "--milestone-progress": milestones.progress,
         "--milestone-offset": 1 - milestones.progress,
       })}
     >
-      <h2 id={`${id}-title`}>{t("benefit.milestoneHeading")}</h2>
+      <header className={cx("milestone-heading")}>
+        <h2 id={`${id}-title`}>{t("benefit.milestoneHeading")}</h2>
+        <span className={cx("milestone-demo")} title={t("benefit.rewardConceptHint")}>
+          {t("benefit.rewardConcept")}
+        </span>
+      </header>
       <p className={cx("milestone-subtitle")}>
-        {t("benefit.milestoneSubtitle", { total: fmt(milestones.target) })}
+        {t("benefit.milestoneSubtitle")}
       </p>
       <div className={cx("milestone-journey")}>
-        <svg className={cx("milestone-arc")} viewBox="0 0 600 250" aria-hidden="true">
-          <defs>
-            <linearGradient id={`${id}-arc`} x1="0" y1="1" x2="1" y2="0">
-              <stop offset="0%" stopColor="#02544f" />
-              <stop offset="55%" stopColor="#00a37c" />
-              <stop offset="100%" stopColor="#69c979" />
-            </linearGradient>
-          </defs>
-          <path className={cx("milestone-arc-track")} d="M100 205A200 163 0 0 1 500 205" />
-          <path
-            className={cx("milestone-arc-fill")}
-            d="M100 205A200 163 0 0 1 500 205"
-            pathLength={1}
-            stroke={`url(#${id}-arc)`}
-            strokeDasharray={1}
-            strokeDashoffset={1 - milestones.progress}
-            data-milestone-arc
-          />
-          {milestones.moves.map((move, index) => {
-            const [x, y] = positions[index];
-            return (
-              <g
-                key={move.id}
-                transform={`translate(${x} ${y})`}
-                data-milestone-node={move.status}
-                className={cx("milestone-node" + (index === 0 ? " milestone-node-first" : ""))}
-              >
-                <circle className={cx("milestone-node-disc")} r="32" />
-                <g transform="translate(-22 -22) scale(.6875)">
-                  <GiftIcon stitched={index < 2} />
-                </g>
-                {move.status === "counted" && (
-                  <g className={cx("milestone-check")} transform="translate(25 25)" data-milestone-check>
-                    <circle r="14" />
-                    <path d="m-7 0 5 5 10-11" />
+        <div className={cx("milestone-orbit")}>
+          <svg className={cx("milestone-arc")} viewBox="0 0 600 250" aria-hidden="true">
+            <defs>
+              <linearGradient id={`${id}-arc`} x1="0" y1="1" x2="1" y2="0">
+                <stop offset="0%" stopColor="#02544f" />
+                <stop offset="55%" stopColor="#00a37c" />
+                <stop offset="100%" stopColor="#69c979" />
+              </linearGradient>
+            </defs>
+            <path className={cx("milestone-arc-track")} d="M100 205A200 163 0 0 1 500 205" />
+            <path
+              className={cx("milestone-arc-fill")}
+              d="M100 205A200 163 0 0 1 500 205"
+              pathLength={1}
+              stroke={`url(#${id}-arc)`}
+              strokeDasharray={1}
+              strokeDashoffset={1 - milestones.progress}
+              data-milestone-arc
+            />
+            {milestones.moves.map((move, index) => {
+              const [x, y] = positions[index];
+              return (
+                <g
+                  key={move.id}
+                  transform={`translate(${x} ${y})`}
+                  data-milestone-node={move.status}
+                  className={cx("milestone-node")}
+                >
+                  <circle className={cx("milestone-node-disc")} r="32" />
+                  <g transform="translate(-22 -22) scale(.6875)">
+                    <GiftIcon stitched={move.status !== "counted"} />
                   </g>
-                )}
-              </g>
-            );
-          })}
-        </svg>
-        <ol className={cx("milestone-stages")}>
-          {milestones.moves.map((move, index) => (
-            <li key={move.id} className={cx("milestone-stage")}>
-              <div className={cx("milestone-stage-copy")}>
-                <h3>{t("benefit.moveStage", { n: fmt(index + 1) })}</h3>
-                <p>{moveDescription(move, index)}</p>
-                <span className={cx("status-chip " + move.status)}>
-                  {move.status === "counted" && icon("check")}
-                  {t("benefit.status." + move.status)}
-                </span>
-              </div>
-              {index === 1 && <MilestoneSummary milestones={milestones} />}
-            </li>
-          ))}
-        </ol>
+                  {move.status === "counted" && (
+                    <g className={cx("milestone-check")} transform="translate(25 25)" data-milestone-check>
+                      <circle r="14" />
+                      <path d="m-7 0 5 5 10-11" />
+                    </g>
+                  )}
+                </g>
+              );
+            })}
+          </svg>
+          <ol className={cx("milestone-stages")}>
+            {milestones.moves.map((move, index) => (
+              <li key={move.id} className={cx("milestone-stage")}>
+                <div className={cx("milestone-stage-copy")}>
+                  <h3>{t("benefit.moveStage", { n: fmt(index + 1) })}</h3>
+                  <span className={cx("status-chip " + (move.status === "counted" ? "counted" : "notStarted"))}>
+                    {t(move.status === "counted" ? "benefit.status.counted" : "benefit.milestonePending")}
+                  </span>
+                </div>
+                {index === 1 && <MilestoneSummary milestones={milestones} />}
+              </li>
+            ))}
+          </ol>
+        </div>
       </div>
       {milestones.source === "unlinked" && (
         <div className={cx("benefit-empty")}>
@@ -175,10 +161,15 @@ export function FamilyMilestonesCard({
         className={cx("milestone-reward")}
         data-reward-state={milestones.unlocked ? "unlocked" : "locked"}
         data-celebrate={celebrate}
-        aria-label={t(milestones.unlocked ? "benefit.rewardUnlocked" : "benefit.rewardLocked")}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
       >
-        <GiftIcon />
-        <strong>{t("benefit.familyReward")}</strong>
+        <div className={cx("milestone-reward-copy")}>
+          <strong>{t(rewardKey + ".title")}</strong>
+          <p>{t(rewardKey + ".description")}</p>
+        </div>
+        {icon("bag", "milestone-reward-luggage")}
       </div>
       <svg className={cx("milestone-waves")} viewBox="0 0 600 95" preserveAspectRatio="none" aria-hidden="true">
         <path d="M0 12C145 99 210 97 360 62S530 43 600 13V95H0Z" fill="#d7ebe5" opacity=".48" />

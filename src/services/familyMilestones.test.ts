@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { FAMILY_MILESTONES_DEMO } from "../config/familyMilestones.demo";
-import { initial, restoreBooking, state } from "../engine/booking";
+import { initial, restoreBooking, simulateFamilyLink, state } from "../engine/booking";
 import type { Order } from "../types/domain";
 import {
   calculateFamilyMilestones,
@@ -81,6 +81,24 @@ describe("family milestone progress", () => {
     expect(calculateFamilyMilestones(records, { source: "orders", linked: false }))
       .toMatchObject({ completed: 0, progress: 0, unlocked: false });
   });
+
+  it.each([false, true])("a cancelled or ineligible duplicate overrides stale completed data, reverse=%s", (reverse) => {
+    for (const cancelled of [
+      { id: "same-order", status: "cancelled" as const, eligible: true },
+      { id: "same-order", status: "completed" as const, eligible: false },
+    ]) {
+      const records: FamilyMilestoneRecord[] = [
+        { id: "same-order", status: "completed", eligible: true },
+        cancelled,
+        { id: "other-order", status: "completed", eligible: true },
+      ];
+      const before = JSON.stringify(records);
+      const result = calculateFamilyMilestones(reverse ? records.toReversed() : records, { source: "orders", linked: true });
+      expect(result.completed).toBe(1);
+      expect(result.moves[0].id).toBe("other-order");
+      expect(JSON.stringify(records)).toBe(before);
+    }
+  });
 });
 
 describe("isolated demo and order data", () => {
@@ -135,5 +153,41 @@ describe("isolated demo and order data", () => {
       linked: true, travellerId: "lin", orders: [order("completed", "other", "child")],
       isDemo: false,
     })).toMatchObject({ source: "orders", completed: 0, unlocked: false });
+  });
+
+  it.each(["unpaid", "payment_pending", "paid_demo", "in_transit", "delivering", "cancelled"])(
+    "%s orders never count as completed or fall back to the one-move sample", (status) => {
+      expect(resolveFamilyMilestones({ linked: true, travellerId: "lin", orders: [order(status)], isDemo: true }))
+        .toMatchObject({ source: "orders", completed: 0, progress: 0, unlocked: false });
+    },
+  );
+
+  it("excludes refunded or empty service orders and deduplicates completed orders", () => {
+    const original = order("completed", "same-order");
+    const orders = [
+      original, structuredClone(original),
+      { ...order("completed", "refunded"), refunded: true },
+      { ...order("completed", "no-service"), itemIds: [] },
+      order("completed", "unrelated-family", "child"),
+    ];
+    const before = JSON.stringify(orders);
+    expect(resolveFamilyMilestones({ linked: true, travellerId: "lin", orders, isDemo: true }).completed).toBe(1);
+    const refunded = { ...original, refunded: true };
+    for (const copies of [[original, refunded], [refunded, original]])
+      expect(resolveFamilyMilestones({ linked: true, travellerId: "lin", orders: copies, isDemo: true }).completed).toBe(0);
+    expect(JSON.stringify(orders)).toBe(before);
+  });
+
+  it("reads only the confirmed family member's orders once, even with repeated member links", () => {
+    simulateFamilyLink(state.familyLink, "lin");
+    state.familyDemo.records.push(structuredClone(state.familyDemo.records[0]));
+    state.orders.push(order("completed"), order("completed", "unrelated", "child"));
+    const before = JSON.stringify(state);
+    expect(getFamilyMilestones()).toMatchObject({ source: "orders", completed: 1 });
+    expect(JSON.stringify(state)).toBe(before);
+    for (const status of ["pending", "revoked"]) {
+      for (const member of state.familyDemo.records) member.status = status;
+      expect(getFamilyMilestones()).toMatchObject({ source: "unlinked", completed: 0 });
+    }
   });
 });

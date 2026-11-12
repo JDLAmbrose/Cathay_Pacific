@@ -5,9 +5,13 @@ import type { FamilyMilestoneRecord } from "../services/familyMilestones";
 // 0/3, 1/3, 2/3 and 3/3. Live/non-demo bookings never use this fallback.
 export const FAMILY_MILESTONES_DEMO: {
   enabled: boolean;
+  family: { studentId: string; linked: boolean; relationship: string };
   records: FamilyMilestoneRecord[];
 } = {
   enabled: true,
+  // The existing 1/3 presentation sample represents this linked Demo family.
+  // It never creates or confirms a relationship in saved membership data.
+  family: { studentId: "lin", linked: true, relationship: "parent" },
   records: [
     {
       id: "sample-family-move-1",
@@ -20,3 +24,9 @@ export const FAMILY_MILESTONES_DEMO: {
     { id: "sample-family-move-3", status: "notStarted", eligible: true },
   ],
 };
+
+// Issuance is independent of eligibility. No code is generated on completion.
+// An explicitly supplied sample here is still invalid for real flight bookings.
+export const FAMILY_VISIT_PROMO_DEMO: {
+  issued: { studentId: string; code: string } | null;
+} = { issued: { studentId: "lin", code: "PLUMEFAM2026" } };

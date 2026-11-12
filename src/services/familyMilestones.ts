@@ -1,10 +1,13 @@
 import demo from "../config/demo.json";
-import { FAMILY_MILESTONES_DEMO } from "../config/familyMilestones.demo";
+import { FAMILY_MILESTONES_DEMO, FAMILY_VISIT_PROMO_DEMO } from "../config/familyMilestones.demo";
 import {
   FAMILY_MEMBER_ID,
   FAMILY_MILESTONE_TARGET,
-  familyBenefitMember,
-  familyTravellerId,
+  familyStudentId,
+  familyDemoUnlinked,
+  parentFamilyRecords,
+  familyVisibleRecords,
+  familyServiceEstablished,
   state,
 } from "../engine/booking";
 import type { Order } from "../types/domain";
@@ -44,7 +47,18 @@ export function calculateFamilyMilestones(
   { source, linked }: { source: FamilyMilestoneSource; linked: boolean },
 ): FamilyMilestones {
   const target = FAMILY_MILESTONE_TARGET;
-  const unique = [...new Map(records.map((record) => [record.id, record])).values()];
+  const byId = new Map<string, FamilyMilestoneRecord>();
+  for (const record of records) {
+    if (!record.id.trim()) continue;
+    const previous = byId.get(record.id);
+    // A cancelled/refunded copy takes precedence over stale completed copies.
+    // Multiple family links or repeated snapshots never create extra moves.
+    if (!previous || (previous.eligible && previous.status !== "cancelled" &&
+        (!record.eligible || record.status === "cancelled" || record.status === "completed"))) {
+      byId.set(record.id, record);
+    }
+  }
+  const unique = [...byId.values()];
   const eligible = linked
     ? unique.filter((record) => record.eligible && record.status !== "cancelled")
     : [];
@@ -104,14 +118,14 @@ export function resolveFamilyMilestones({
   if (!linked) {
     return calculateFamilyMilestones([], { source: "unlinked", linked: false });
   }
-  // Existing Orders are door-to-door service orders. As in the booking engine,
-  // a completed order qualifies; no new membership or transport rules are added.
+  // Only completed door-to-door service orders qualify. Refunds disqualify a
+  // stale completed snapshot even if its status has not yet been reconciled.
   const records: FamilyMilestoneRecord[] = memberOrders.map((order) => ({
     id: order.id,
     status: order.status === "completed"
       ? "completed"
       : order.status === "cancelled" ? "cancelled" : "inProgress",
-    eligible: order.status !== "cancelled",
+    eligible: order.status !== "cancelled" && !order.refunded && order.itemIds.length > 0,
     date: order.flight?.departure,
     flightNo: order.flight?.flightNo,
     order,
@@ -121,12 +135,55 @@ export function resolveFamilyMilestones({
 
 // Future API integration belongs here (or feed normalized API records into
 // calculateFamilyMilestones). UI consumes only the returned view model.
+function milestoneFamilyMember() {
+  // Both invitation directions refer to the same confirmed service relation.
+  // Only relationships belonging to the current family viewer are considered.
+  const members = familyVisibleRecords(false).filter(familyServiceEstablished);
+  return members.find((link) => familyStudentId(link) === FAMILY_MEMBER_ID) ?? members[0] ?? null;
+}
+
 export function getFamilyMilestones(): FamilyMilestones {
-  const member = familyBenefitMember();
+  const member = milestoneFamilyMember();
+  const studentId = member ? familyStudentId(member) : FAMILY_MEMBER_ID;
+  const sample = FAMILY_MILESTONES_DEMO.family;
+  const hasSavedRelationship = parentFamilyRecords().some((link) => link.status !== "draft") ||
+    Object.values(state.passengerLinks).some((link) => link.status !== "draft");
+  // Both cards may use the existing linked Demo family, but it cannot override
+  // an explicit invitation, revoked/unlinked state, or another student's data.
+  const demoEnabled = FAMILY_MILESTONES_DEMO.enabled && sample.linked && sample.studentId === studentId &&
+    !familyDemoUnlinked(studentId) && (!hasSavedRelationship || !!member);
   return resolveFamilyMilestones({
     linked: !!member,
-    travellerId: member ? familyTravellerId(member) : FAMILY_MEMBER_ID,
+    travellerId: studentId,
     orders: state.orders,
     isDemo: state.flight.bookingId === demo.flight.bookingId,
+    demoEnabled,
   });
+}
+
+export type FamilyVisitOffer = {
+  eligible: boolean;
+  code: string | null;
+  source: FamilyMilestoneSource;
+};
+
+export function getFamilyVisitOffer(): FamilyVisitOffer {
+  // Use exactly the same completed, non-refunded, deduplicated order result as
+  // the left card; a newer unfinished order must not hide a completed move.
+  const milestones = getFamilyMilestones();
+  const member = milestoneFamilyMember();
+  const studentId = member ? familyStudentId(member) : FAMILY_MEMBER_ID;
+  const sample = FAMILY_MILESTONES_DEMO.family;
+  const demoFamily = milestones.source === "demo";
+  const relationship = member?.relationship ?? (demoFamily ? sample.relationship : null);
+  const eligible = !!(member || demoFamily) && milestones.completed > 0 &&
+    ["parent", "guardian"].includes(relationship);
+  const issued = FAMILY_VISIT_PROMO_DEMO.issued;
+  return {
+    eligible,
+    source: milestones.source,
+    // A configured Demo code is visible only for its eligible family. A move,
+    // a page render or an occasion switch can never create an issued code.
+    code: eligible && issued?.studentId === studentId ? issued.code.trim() || null : null,
+  };
 }

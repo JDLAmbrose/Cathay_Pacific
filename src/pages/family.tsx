@@ -16,7 +16,6 @@ import {
   familyBenefitMember,
   familyLinked,
   familyProgressAccess,
-  familyPromoCode,
   state,
   familyKnownContact,
   familyPolicy,
@@ -26,6 +25,7 @@ import {
   familyVisibleRecords,
 } from "../engine/booking";
 import { t, language } from "../services/i18n";
+import { getFamilyVisitOffer } from "../services/familyMilestones";
 import {
   page,
   helperFamilyPage,
@@ -703,16 +703,13 @@ function occasionText() {
 }
 function companionCardHTML() {
   const linked = familyLinked(),
-    code = familyPromoCode(),
-    promoKey = !linked
-      ? "benefit.promoNeedsLink"
-      : code
-        ? "benefit.promoIssued"
-        : "benefit.promoNotIssued";
+    { eligible, code, source } = getFamilyVisitOffer();
   return (
     <article
       className={cx("card benefit-card companion-card")}
       aria-labelledby={"companionTitle"}
+      data-visit-eligible={eligible}
+      data-visit-source={source}
     >
       <h2 id={"companionTitle"}>
         {linked
@@ -746,33 +743,32 @@ function companionCardHTML() {
       >
         {occasionText()}
       </p>
-      <div className={cx("promo-box" + String(code ? " issued" : ""))}>
+      <div
+        className={cx("visit-qualification" + (eligible ? " qualified" : ""))}
+        role="status"
+        aria-live="polite"
+        aria-atomic="true"
+      >
+        {eligible && <span className={cx("visit-check")} aria-hidden="true">{icon("check")}</span>}
+        <div>
+          <h3>{T(eligible ? "benefit.visitUnlocked" : "benefit.visitLocked")}</h3>
+          {eligible && <p>{T("benefit.visitCompleted")}</p>}
+        </div>
+      </div>
+      <div
+        className={cx("promo-box")}
+        data-promo-issued={!!code}
+        aria-label={t(code ? "benefit.promoIssued" : "benefit.promoLabel")}
+      >
         <div>
           <span className={cx("eyebrow")}>{T("benefit.promoLabel")}</span>
-          <strong dir={"ltr"}>{code ? text(code) : "FAMILY-••••-••••"}</strong>
+          <strong dir={"ltr"}>{code ? text(code) : T("benefit.promoUnavailable")}</strong>
         </div>
-        <span className={cx("promo-state")}>{T(promoKey)}</span>
+        <span className={cx("promo-state")} title={t("benefit.promoDemoNote")}>
+          {T("benefit.promoDemoLabel")}
+        </span>
       </div>
-      {code ? (
-        <p className={cx("promo-note")}>{T("benefit.promoDemoNote")}</p>
-      ) : (
-        ""
-      )}
-      <ol className={cx("promo-steps")}>
-        {keyed(
-          [1, 2, 3].map((n) => (
-            <li>
-              <span>{n}</span>
-              <p>{T("benefit.promoStep" + n)}</p>
-            </li>
-          )),
-        )}
-      </ol>
-      <p className={cx("eligibility")}>
-        <strong>{T("benefit.eligibilityLabel")}</strong>
-        {language === "zh-Hant" ? "" : " "}
-        {T("benefit.eligibility")}
-      </p>
+      <p className={cx("promo-note")}>{T(code ? "benefit.promoUsage" : "benefit.promoDemoNote")}</p>
       <a
         className={cx("btn")}
         href={"https://www.cathaypacific.com/"}
@@ -783,7 +779,6 @@ function companionCardHTML() {
         {icon("external")}
         <span className={cx("sr-only")}>{T("benefit.newWindow")}</span>
       </a>
-      <p className={cx("benefit-fine")}>{T("benefit.bookNote")}</p>
     </article>
   );
 }

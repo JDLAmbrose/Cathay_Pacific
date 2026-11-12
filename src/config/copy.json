@@ -5488,11 +5488,11 @@
     "محطات نقل أمتعة العائلة"
   ],
   "benefit.milestoneSubtitle": [
-    "完成 {total} 次合資格行李搬運，即可解鎖家庭獎賞。",
-    "Complete {total} eligible luggage moves to unlock a family reward.",
-    "Effectuez {total} transports de bagages éligibles pour débloquer une récompense familiale.",
-    "Completa {total} traslados de equipaje elegibles para desbloquear una recompensa familiar.",
-    "أكمل {total} عمليات نقل أمتعة مؤهلة لفتح مكافأة عائلية."
+    "每一次搬運，都是家庭旅程的新里程碑。",
+    "Every move marks a new milestone in your family’s journey.",
+    "Chaque transport marque une nouvelle étape du voyage familial.",
+    "Cada traslado marca un nuevo hito en el viaje familiar.",
+    "كل عملية نقل محطة جديدة في رحلة العائلة."
   ],
   "benefit.moveStage": [
     "第 {n} 次搬運",
@@ -5509,11 +5509,88 @@
     "{date} · {flight}"
   ],
   "benefit.completedMoves": [
-    "合資格搬運已完成",
-    "eligible moves completed",
-    "transports éligibles effectués",
-    "traslados elegibles completados",
-    "عمليات النقل المؤهلة المكتملة"
+    "次搬運已完成",
+    "moves completed",
+    "transports effectués",
+    "traslados completados",
+    "عمليات نقل مكتملة"
+  ],
+  "benefit.milestonePending": [
+    "待完成",
+    "To complete",
+    "À terminer",
+    "Pendiente",
+    "بانتظار الإكمال"
+  ],
+  "benefit.rewardConcept": [
+    "Demo · 擬議獎賞",
+    "Demo · Proposed rewards",
+    "Démo · Récompenses proposées",
+    "Demo · Recompensas propuestas",
+    "عرض تجريبي · مكافآت مقترحة"
+  ],
+  "benefit.rewardConceptHint": [
+    "Hackathon Demo 擬議概念，未獲國泰正式批准，不可實際兌換。",
+    "Proposed Hackathon Demo concepts; not approved by Cathay or available for redemption.",
+    "Concepts proposés pour la démo du hackathon, non approuvés par Cathay et non échangeables.",
+    "Conceptos propuestos para la demo del hackathon, sin aprobación de Cathay ni posibilidad de canje.",
+    "أفكار مقترحة لعرض الهاكاثون، غير معتمدة من كاثي وغير قابلة للاستبدال."
+  ],
+  "benefit.nextMilestone.0.title": [
+    "第一個里程碑",
+    "Your first milestone",
+    "Votre première étape",
+    "Tu primer hito",
+    "محطتك الأولى"
+  ],
+  "benefit.nextMilestone.0.description": [
+    "完成首次搬運，開啟家庭獎賞旅程",
+    "Complete your first move to begin your family rewards journey",
+    "Effectuez votre premier transport pour commencer le parcours des récompenses familiales",
+    "Completa tu primer traslado para iniciar el viaje de recompensas familiares",
+    "أكمل أول عملية نقل لبدء رحلة المكافآت العائلية"
+  ],
+  "benefit.nextMilestone.1.title": [
+    "下一站：第 2 次搬運",
+    "Next stop: move 2",
+    "Prochaine étape : transport 2",
+    "Próxima parada: traslado 2",
+    "المحطة التالية: عملية النقل الثانية"
+  ],
+  "benefit.nextMilestone.1.description": [
+    "再完成 1 次，解鎖家庭回訪獎勵",
+    "One more move to unlock a family visit reward",
+    "Encore un transport pour débloquer une récompense de visite familiale",
+    "Un traslado más para desbloquear una recompensa de visita familiar",
+    "عملية نقل أخرى لفتح مكافأة زيارة عائلية"
+  ],
+  "benefit.nextMilestone.2.title": [
+    "下一站：第 3 次搬運",
+    "Next stop: move 3",
+    "Prochaine étape : transport 3",
+    "Próxima parada: traslado 3",
+    "المحطة التالية: عملية النقل الثالثة"
+  ],
+  "benefit.nextMilestone.2.description": [
+    "再完成 1 次，解鎖更高階家庭獎賞",
+    "One more move to unlock higher-tier family rewards",
+    "Encore un transport pour débloquer des récompenses familiales supérieures",
+    "Un traslado más para desbloquear recompensas familiares superiores",
+    "عملية نقل أخرى لفتح مكافآت عائلية أعلى"
+  ],
+  "benefit.nextMilestone.3.title": [
+    "家庭里程碑達成！",
+    "Family milestone reached!",
+    "Étape familiale atteinte !",
+    "¡Hito familiar alcanzado!",
+    "تم بلوغ المحطة العائلية!"
+  ],
+  "benefit.nextMilestone.3.description": [
+    "3 次合資格搬運已全部完成",
+    "All 3 eligible moves completed",
+    "Les 3 transports éligibles sont terminés",
+    "Los 3 traslados elegibles están completados",
+    "اكتملت عمليات النقل المؤهلة الثلاث"
   ],
   "benefit.familyReward": [
     "家庭獎賞",
@@ -5733,11 +5810,11 @@
     "زر {name} في لندن خلال العطلة الدراسية، أو خطّط لعطلة مشتركة تنطلق من لندن."
   ],
   "benefit.occasionText.graduation": [
-    "飛往倫敦出席畢業典禮，並在租約完結前與{name}一起整理行李。",
-    "Fly to London for the graduation ceremony, and pack up with {name} before the tenancy ends.",
-    "Venez à Londres pour la remise des diplômes et préparez les bagages avec {name} avant la fin du bail.",
-    "Viaja a Londres para la graduación y prepara el equipaje con {name} antes de que termine el alquiler.",
-    "سافر إلى لندن لحضور حفل التخرج، وحزّم الأمتعة مع {name} قبل انتهاء عقد الإيجار."
+    "飛往倫敦見證{name}的畢業典禮，一起慶祝這個重要時刻。",
+    "Fly to London for {name}’s graduation ceremony and celebrate this important moment together.",
+    "Envolez-vous pour Londres pour assister à la remise des diplômes de {name} et célébrer ce moment important ensemble.",
+    "Vuela a Londres para asistir a la graduación de {name} y celebrar juntos este momento tan especial.",
+    "سافر إلى لندن لحضور حفل تخرج {name} والاحتفال معاً بهذه اللحظة المهمة."
   ],
   "benefit.promoLabel": [
     "PROMO CODE",
@@ -5745,6 +5822,48 @@
     "CODE PROMO",
     "CÓDIGO PROMOCIONAL",
     "الرمز الترويجي"
+  ],
+  "benefit.visitUnlocked": [
+    "已解鎖家長探訪優惠資格",
+    "Parent visit offer unlocked",
+    "Offre de visite parentale débloquée",
+    "Oferta de visita para padres desbloqueada",
+    "تم استيفاء أهلية عرض زيارة الوالدين"
+  ],
+  "benefit.visitCompleted": [
+    "首次合資格搬運已完成",
+    "Your first eligible move is complete",
+    "Votre premier transport éligible est terminé",
+    "Tu primer traslado elegible está completado",
+    "اكتملت أول عملية نقل مؤهلة"
+  ],
+  "benefit.visitLocked": [
+    "完成首次合資格搬運，解鎖探訪優惠",
+    "Complete your first eligible move to unlock the visit offer",
+    "Effectuez votre premier transport éligible pour débloquer l’offre de visite",
+    "Completa tu primer traslado elegible para desbloquear la oferta de visita",
+    "أكمل أول عملية نقل مؤهلة للاستفادة من عرض الزيارة"
+  ],
+  "benefit.promoDemoLabel": [
+    "Demo · 模擬優惠碼",
+    "Demo · Sample code",
+    "Démo · Code simulé",
+    "Demo · Código de muestra",
+    "عرض تجريبي · رمز محاكاة"
+  ],
+  "benefit.promoUnavailable": [
+    "尚無優惠碼",
+    "Code unavailable",
+    "Code indisponible",
+    "Código no disponible",
+    "الرمز غير متاح"
+  ],
+  "benefit.promoUsage": [
+    "模擬優惠碼已發放，僅供展示，無法用於真實預訂。",
+    "Demo code issued for display only; not valid for real bookings.",
+    "Code de démo émis pour présentation uniquement, non valable pour une réservation réelle.",
+    "Código demo emitido solo como muestra; no es válido para reservas reales.",
+    "صدر الرمز التجريبي للعرض فقط، ولا يصلح للحجوزات الفعلية."
   ],
   "benefit.promoNotIssued": [
     "未發出 · 送達後符合資格",
@@ -5810,7 +5929,7 @@
     "أفراد العائلة المرتبطون الذين أكمل طفلهم عملية نقل عبر Plume Light، ويسافرون على كاثي باسيفيك إلى مدينة دراسته."
   ],
   "benefit.bookCta": [
-    "前往 cathaypacific.com 預訂機票",
+    "前往國泰官網預訂機票",
     "Book flights on cathaypacific.com",
     "Réserver sur cathaypacific.com",
     "Reservar en cathaypacific.com",

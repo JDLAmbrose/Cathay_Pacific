@@ -722,16 +722,6 @@ function familyMilestones() {
     ],
   };
 }
-// A move counts only after the order completes; the code is a fixed demo value, never a live offer.
-function familyPromoCode() {
-  const order = familyLinked() ? familyOrder() : null;
-  if (order?.status !== "completed") return null;
-  const link = familyBenefitMember(),
-    initials =
-      (String(link.givenName).trim()[0] || "F") +
-      (String(link.surname).trim()[0] || "M");
-  return `FAMILY-${/^[A-Za-z]{2}$/.test(initials) ? initials.toUpperCase() : "PL"}${String(order.flight?.flightNo || "").slice(-2)}-${(order.id.split("-").at(-1).replace(/\D/g, "") || "1").padStart(4, "0").slice(-4)}`;
-}
 function itemCategories(item: Bag): string[] {
   return [
     ...new Set<string>(
@@ -2139,7 +2129,6 @@ export {
   familyOrder,
   familyProgressAccess,
   familyMilestones,
-  familyPromoCode,
   itemCategories,
   carriageFor,
   refreshTransport,
