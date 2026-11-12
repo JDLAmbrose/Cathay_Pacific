@@ -7,7 +7,6 @@
 
 .metrics small,
 .note,
-.cards small,
 .gaps span { color: var(--muted); font-size: 12px; }
 
 .metrics b {
@@ -22,63 +21,53 @@
 
 .note { margin: 8px 0 0; }
 
-.layout {
-  display: grid;
-  grid-template-columns: 1.4fr 0.7fr;
-  gap: 12px;
-  align-items: center;
-  margin-top: 8px;
+.scroller {
+  margin-top: 12px;
+  overflow-x: auto;
 }
 
-.diagram {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) max-content;
-  column-gap: 12px;
-  align-items: stretch;
-  min-width: 0;
+.flow {
+  width: 100%;
+  min-width: 720px;
+  height: auto;
+  display: block;
+  overflow: visible;
+  font-family: inherit;
 }
 
-.flow { width: 100%; height: auto; display: block; }
+.source { fill: #02544f; }
 
-.lanes {
-  display: grid;
-  grid-template-rows: 12fr repeat(6, 44fr) 16fr;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  color: #173f39;
-  font-size: 13px;
-  font-weight: 650;
-}
+.sourceLabel { fill: rgba(255, 255, 255, 0.82); font-size: 13px; font-weight: 650; }
 
-.lanes li {
-  display: flex;
-  align-items: center;
-  white-space: nowrap;
-}
+.sourceCount { fill: #fff; font-size: 32px; font-weight: 700; letter-spacing: -0.03em; }
 
-.band { transition: d 400ms ease; }
+.node { fill: #e7f3ec; stroke: #2f9e6b; stroke-width: 1.5; }
 
-.sourceLabel { fill: rgba(255, 255, 255, 0.8); font-size: 13px; }
+.nodeEmpty { fill: #fff; stroke: #d5e2dc; stroke-width: 1.5; }
 
-.sourceCount { fill: #fff; font-size: 28px; font-weight: 700; }
+.nodeLabel { fill: #02544f; font-size: 12px; font-weight: 700; }
 
-.cards { display: flex; flex-direction: column; gap: 10px; }
+.nodeCount { fill: #02544f; font-size: 26px; font-weight: 700; letter-spacing: -0.03em; }
 
-.cardOk,
-.cardGold {
-  background: #fff;
-  border-radius: 12px;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
+.laneName { fill: #173f39; font-size: 13px; font-weight: 650; }
 
-.cardOk { border: 1.5px solid var(--ok); }
-.cardGold { border: 1.5px solid var(--gold); }
+.laneMuted { fill: #6c8079; font-size: 13px; font-weight: 600; }
 
-.cards b { font-size: 28px; line-height: 1; }
+.emptyDot { fill: none; stroke: #c5d0cc; stroke-width: 1.5; }
+
+.cardOk { fill: #fff; stroke: #2f9e6b; stroke-width: 1.5; }
+
+.cardGold { fill: #fff; stroke: #e4b46c; stroke-width: 1.5; }
+
+.cardName { fill: #6c8079; font-size: 12px; font-weight: 650; }
+
+.cardCount { fill: #173f39; font-size: 28px; font-weight: 700; letter-spacing: -0.03em; }
+
+.cardRate { fill: #6c8079; font-size: 12px; }
+
+.chip rect { fill: #fff; stroke: #d5e2dc; stroke-width: 1; }
+
+.chip text { fill: #173f39; font-size: 11px; font-weight: 700; }
 
 .gaps {
   display: grid;
@@ -91,9 +80,8 @@
 
 .gaps b { display: block; font-size: 28px; line-height: 1; }
 
+.gaps p:nth-child(1) b { color: #8a5a12; }
+
 @media (max-width: 720px) {
   .metrics { grid-template-columns: 1fr 1fr; }
-  .layout { grid-template-columns: 1fr; }
 }
-
-.gaps p:nth-child(1) b { color: #8a5a12; }

@@ -1,0 +1,73 @@
+.rows {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: baseline;
+  margin-bottom: 6px;
+  color: var(--ink);
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.top b {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+  white-space: nowrap;
+}
+
+.top em {
+  margin-left: 8px;
+  color: var(--muted);
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.track {
+  display: flex;
+  height: var(--meter-height);
+  background: var(--meter-track);
+  border-radius: var(--meter-radius);
+  overflow: hidden;
+}
+
+.track i {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  flex: none;
+  background: var(--meter-fill);
+  transition: width 400ms ease;
+}
+
+.track i.hatch {
+  background: repeating-linear-gradient(135deg, #f3ecd9, #f3ecd9 3px, #e4b46c 3px, #e4b46c 6px);
+}
+
+.track i.soft { background: #3d8f86; }
+
+.empty {
+  background: transparent;
+  border: 1px dashed #d5e2dc;
+}
+
+.swatch {
+  width: 8px;
+  height: 8px;
+  border-radius: 2px;
+  display: inline-block;
+  margin-right: 5px;
+  background: var(--meter-fill);
+}
+
+.swatch.hatch {
+  background: repeating-linear-gradient(135deg, #f3ecd9, #f3ecd9 3px, #e4b46c 3px, #e4b46c 6px);
+}

@@ -61,14 +61,12 @@
 .bar,
 .hatchline {
   margin-top: 14px;
-  height: 12px;
-  border-radius: 99px;
+  height: var(--meter-height);
+  border-radius: var(--meter-radius);
   display: flex;
   overflow: hidden;
-  background: #e7eeea;
+  background: var(--meter-track);
 }
-
-.hatchline { height: 18px; }
 
 .seg,
 .gain,

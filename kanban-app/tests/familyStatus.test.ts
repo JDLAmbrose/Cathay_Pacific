@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { familyRibbons } from "../src/members/components/familyRibbon";
+import { familyDiagram, familyRibbons } from "../src/members/components/familyRibbon";
 import { linkStatus } from "../src/members/engine/familyStatus";
 import type { FamilyLinkRecord, FamilyLinkStatus } from "../src/members/types";
 
@@ -65,6 +65,18 @@ describe("familyRibbons", () => {
       expect(ribbon.path?.startsWith("M")).toBe(true);
       expect(ribbon.path?.endsWith("Z")).toBe(true);
     }
+  });
+
+  it("draws the accepted count as one trunk that is thicker than the other lanes", () => {
+    const diagram = familyDiagram(counts);
+    const trunk = diagram.trunk;
+    expect(trunk?.path.startsWith("M")).toBe(true);
+    expect(trunk?.path.endsWith("Z")).toBe(true);
+    const tallestBranch = Math.max(...diagram.branches.map((branch) => branch.bar?.height ?? 0));
+    expect(trunk?.thickness).toBeGreaterThan(tallestBranch);
+    expect(diagram.accepted.count).toBe(counts.authorized + counts.linked_unauthorized);
+    expect(diagram.continuations.map((item) => item.count)).toEqual([counts.authorized, counts.linked_unauthorized]);
+    expect(diagram.continuations.every((item) => item.path?.endsWith("Z"))).toBe(true);
   });
 
   it("does not draw an area for a zero count", () => {

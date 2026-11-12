@@ -8,10 +8,10 @@
 
 .mix {
   display: flex;
-  height: 14px;
-  border-radius: 99px;
+  height: var(--meter-height);
+  border-radius: var(--meter-radius);
   overflow: hidden;
-  background: #e7eeea;
+  background: var(--meter-track);
 }
 
 .mix i {

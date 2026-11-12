@@ -3,6 +3,7 @@ import { formatMonthDay, formatRatio } from "../format";
 import { bookmarkNameKey } from "../labels";
 import type { JoinView } from "../types";
 import { MemberCard } from "./MemberCard";
+import meter from "./meter.module.css";
 import styles from "./JoinSpark.module.css";
 
 export function JoinSpark({ join }: { join: JoinView }) {
@@ -53,17 +54,16 @@ export function JoinSpark({ join }: { join: JoinView }) {
         <span>{t("mb.join.parentRate")} {formatRatio(join.parents.conversion, noSample)}</span>
         <span>{t("mb.join.businessRate")} {formatRatio(join.business.conversion, noSample)}</span>
       </p>
-      <div className={styles.funnel}>
+      <div className={meter.rows}>
         {funnel.map((step) => (
-          <div key={step.label} className={styles.step}>
-            <span>{step.label}</span>
-            <span className={styles.track}>
-              <span
-                className={styles.fill}
-                style={{ width: join.reach === 0 ? "0%" : `${(step.count / funnelMax) * 100}%` }}
-              />
-            </span>
-            <b>{step.count}</b>
+          <div key={step.label}>
+            <div className={meter.top}>
+              <span>{step.label}</span>
+              <b>{step.count}</b>
+            </div>
+            <div className={`${meter.track} ${join.reach === 0 ? meter.empty : ""}`}>
+              <i style={{ width: join.reach === 0 ? "0%" : `${(step.count / funnelMax) * 100}%` }} />
+            </div>
           </div>
         ))}
       </div>

@@ -18,39 +18,7 @@
 
 .metrics .mid { font-size: 22px; }
 
-.lanes { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
-
-.top {
-  display: flex;
-  justify-content: space-between;
-  gap: 12px;
-  font-size: 13px;
-  margin-bottom: 6px;
-}
-
-.top span,
-.top b { white-space: nowrap; }
-
-.track {
-  display: flex;
-  height: 14px;
-  background: #e7eeea;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.done,
-.hatch { display: block; height: 100%; transition: width 400ms ease; }
-
-.done { background: #02544f; }
-
-.hatch {
-  background: repeating-linear-gradient(135deg, #f3ecd9, #f3ecd9 3px, #e4b46c 3px, #e4b46c 6px);
-}
-
 .key { display: flex; gap: 16px; margin-top: 8px; }
-
-.key i { width: 8px; height: 8px; border-radius: 2px; display: inline-block; margin-right: 5px; }
 
 .segs { display: flex; gap: 6px; margin-top: 12px; flex-wrap: wrap; }
 
@@ -73,6 +41,4 @@
 
 @media (max-width: 720px) {
   .metrics { grid-template-columns: 1fr; }
-  .top { align-items: baseline; }
-  .top b { text-align: right; }
 }

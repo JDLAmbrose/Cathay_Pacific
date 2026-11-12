@@ -16,6 +16,10 @@
   --seg-cargo: #2c5e5a;
   --seg-pax: #8fb5b1;
   --seg-plume: #2f6fb5;
+  --meter-height: 12px;
+  --meter-track: #e7eeea;
+  --meter-radius: 99px;
+  --meter-fill: #02544f;
   --text-scale: 1;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang TC", "Noto Sans CJK TC", "Microsoft JhengHei", sans-serif;
   color: var(--ink);
