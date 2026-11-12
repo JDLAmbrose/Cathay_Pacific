@@ -52,32 +52,41 @@ export function FamilyFlow({ family, audience }: { family: FamilyView; audience:
         {t("mb.fam.authOfSent")} {formatRatio(family.authorizationAmongSent, noSample)}
       </p>
       <div className={styles.layout}>
-        <svg className={styles.flow} viewBox={`0 0 560 ${FAMILY_FLOW.height}`} role="img" aria-label={t("mb.fam.sent")}>
-          <rect
-            x={FAMILY_FLOW.sourceX}
-            y={FAMILY_FLOW.top}
-            width={FAMILY_FLOW.sourceWidth}
-            height={FAMILY_FLOW.rowHeight * 6 - 8}
-            rx="10"
-            fill="#02544f"
-          />
-          <text x={FAMILY_FLOW.sourceX + 16} y={FAMILY_FLOW.top + 28} className={styles.sourceLabel}>
-            {t("mb.fam.sent")}
-          </text>
-          <text x={FAMILY_FLOW.sourceX + 16} y={FAMILY_FLOW.top + 58} className={styles.sourceCount}>
-            {family.sent}
-          </text>
-          {ribbons.map((ribbon) =>
-            ribbon.path ? (
-              <path key={ribbon.status} d={ribbon.path} fill={RIBBON_COLOR[ribbon.status]} opacity="0.45" className={styles.band} />
-            ) : null,
-          )}
-          {ribbons.map((ribbon) => (
-            <text key={`${ribbon.status}-label`} x="418" y={ribbon.y + 26} className={styles.lane}>
-              {t(familyStatusKey(ribbon.status))} {ribbon.count}
+        <div className={styles.diagram}>
+          <svg
+            className={styles.flow}
+            viewBox={`0 0 ${FAMILY_FLOW.laneX + 8} ${FAMILY_FLOW.height}`}
+            role="img"
+            aria-label={t("mb.fam.sent")}
+          >
+            <rect
+              x={FAMILY_FLOW.sourceX}
+              y={FAMILY_FLOW.top}
+              width={FAMILY_FLOW.sourceWidth}
+              height={FAMILY_FLOW.rowHeight * 6 - 8}
+              rx="10"
+              fill="#02544f"
+            />
+            <text x={FAMILY_FLOW.sourceX + 16} y={FAMILY_FLOW.top + 28} className={styles.sourceLabel}>
+              {t("mb.fam.sent")}
             </text>
-          ))}
-        </svg>
+            <text x={FAMILY_FLOW.sourceX + 16} y={FAMILY_FLOW.top + 58} className={styles.sourceCount}>
+              {family.sent}
+            </text>
+            {ribbons.map((ribbon) =>
+              ribbon.path ? (
+                <path key={ribbon.status} d={ribbon.path} fill={RIBBON_COLOR[ribbon.status]} opacity="0.45" className={styles.band} />
+              ) : null,
+            )}
+          </svg>
+          <ol className={styles.lanes}>
+            {ribbons.map((ribbon, index) => (
+              <li key={ribbon.status} style={{ gridRow: index + 2 }}>
+                {t(familyStatusKey(ribbon.status))} {ribbon.count}
+              </li>
+            ))}
+          </ol>
+        </div>
         <div className={styles.cards}>
           <article className={styles.cardOk}>
             <span>{t("mb.fam.authorized")}</span>

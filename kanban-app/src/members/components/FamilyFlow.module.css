@@ -30,15 +30,38 @@
   margin-top: 8px;
 }
 
+.diagram {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) max-content;
+  column-gap: 12px;
+  align-items: stretch;
+  min-width: 0;
+}
+
 .flow { width: 100%; height: auto; display: block; }
+
+.lanes {
+  display: grid;
+  grid-template-rows: 12fr repeat(6, 44fr) 16fr;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #173f39;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.lanes li {
+  display: flex;
+  align-items: center;
+  white-space: nowrap;
+}
 
 .band { transition: d 400ms ease; }
 
 .sourceLabel { fill: rgba(255, 255, 255, 0.8); font-size: 13px; }
 
 .sourceCount { fill: #fff; font-size: 28px; font-weight: 700; }
-
-.lane { fill: #173f39; font-size: 13px; font-weight: 650; }
 
 .cards { display: flex; flex-direction: column; gap: 10px; }
 

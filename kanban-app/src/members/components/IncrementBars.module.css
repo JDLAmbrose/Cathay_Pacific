@@ -20,7 +20,16 @@
 
 .lanes { display: flex; flex-direction: column; gap: 12px; margin-top: 16px; }
 
-.top { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 6px; }
+.top {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 13px;
+  margin-bottom: 6px;
+}
+
+.top span,
+.top b { white-space: nowrap; }
 
 .track {
   display: flex;
