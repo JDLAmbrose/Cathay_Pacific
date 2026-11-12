@@ -61,7 +61,7 @@
   .map { position: absolute; inset: 0; height: 100%; }
 }
 
-.arc { transition: stroke-width 400ms ease, opacity 400ms ease; }
+.arc { transition: stroke-width 400ms ease, stroke 400ms ease, opacity 400ms ease; }
 
 .city {
   font-size: 13px;
