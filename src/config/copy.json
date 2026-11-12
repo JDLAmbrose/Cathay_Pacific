@@ -3681,6 +3681,55 @@
     "Persona que completa el formulario",
     "بيانات الشخص المساعد"
   ],
+  "helper.guidanceTitle": [
+    "溫馨提醒",
+    "A friendly reminder",
+    "Petit rappel",
+    "Un breve recordatorio",
+    "تذكير ودّي"
+  ],
+  "helper.membershipReminder": [
+    "協助填寫行李及聯絡資料的家庭成員須先成為國泰會員，並完成家庭成員互聯及必要授權。",
+    "Family members helping with luggage and contact details must first join Cathay, link their family accounts and complete the required authorisations.",
+    "Les proches qui vous aident à renseigner vos bagages et coordonnées doivent d’abord devenir membres Cathay, associer leurs comptes familiaux et accorder les autorisations nécessaires.",
+    "Los familiares que ayuden a completar los datos de equipaje y contacto deben registrarse primero como socios Cathay, vincular las cuentas familiares y completar las autorizaciones necesarias.",
+    "يجب على أفراد العائلة الذين يساعدون في تعبئة بيانات الأمتعة والاتصال الانضمام أولًا إلى عضوية كاثي، ثم ربط حسابات العائلة وإتمام التفويضات اللازمة."
+  ],
+  "helper.registerStep": [
+    "① 註冊國泰會員",
+    "① Join Cathay",
+    "① Devenir membre Cathay",
+    "① Registrarse como socio Cathay",
+    "① الانضمام إلى عضوية كاثي"
+  ],
+  "helper.registerBody": [
+    "如代填人尚未成為國泰會員，請先前往國泰官方網站完成會員註冊。",
+    "If your helper is not yet a Cathay member, ask them to sign up on the official Cathay website first.",
+    "Si la personne qui vous aide n’est pas encore membre Cathay, invitez-la à s’inscrire d’abord sur le site officiel de Cathay.",
+    "Si la persona que te ayuda aún no es socia Cathay, pídele que se registre primero en la web oficial de Cathay.",
+    "إذا لم يكن الشخص المساعد عضوًا في كاثي بعد، فاطلب منه التسجيل أولًا عبر موقع كاثي الرسمي."
+  ],
+  "helper.register": [
+    "註冊國泰會員",
+    "Join Cathay",
+    "Devenir membre Cathay",
+    "Registrarse como socio Cathay",
+    "الانضمام إلى عضوية كاثي"
+  ],
+  "helper.linkStep": [
+    "② 完成{link}",
+    "② Complete {link}",
+    "② Configurer les « {link} »",
+    "② Completar « {link} »",
+    "② إكمال {link}"
+  ],
+  "helper.linkBody": [
+    "註冊成功後，請返回 Plume Light，於導航欄選擇「{family}」→「{link}」，完成家庭帳號連結及必要授權，再返回此頁選擇代填人。",
+    "After signing up, return to Plume Light and choose {family} → {link} in the navigation. Link your family accounts and complete the required authorisations, then return here to choose a helper.",
+    "Après l’inscription, revenez sur Plume Light et choisissez « {family} » → « {link} » dans la navigation. Associez les comptes familiaux et accordez les autorisations nécessaires, puis revenez ici choisir la personne qui vous aidera.",
+    "Tras registrarse, vuelve a Plume Light y selecciona « {family} » → « {link} » en la navegación. Vincula las cuentas familiares y completa las autorizaciones necesarias. Después, vuelve aquí para elegir a la persona que te ayudará.",
+    "بعد التسجيل، ارجع إلى Plume Light واختر «{family}» → «{link}» من شريط التنقل. أكمل ربط حسابات العائلة والتفويضات اللازمة، ثم عد إلى هذه الصفحة لاختيار الشخص المساعد."
+  ],
   "helper.relationship": [
     "與乘機人的關係",
     "Relationship to passenger",

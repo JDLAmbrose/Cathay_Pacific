@@ -85,6 +85,15 @@
 .included-allowance{display:flex;align-items:flex-start;gap:14px;margin-top:23px;padding:21px;background:#eaf3e8;border:1px solid #d3e2cf;border-radius:12px}.included-allowance .allowance-symbol{background:#fff8}.included-allowance span{font-size:calc(11px * var(--text-scale,1));color:#59745d}.included-allowance strong{display:block;margin:5px 0;font-size:calc(19px * var(--text-scale,1))}.included-allowance p{color:var(--muted);font-size:calc(11px * var(--text-scale,1))}
 .helper-toggle{margin-top:24px;padding:18px 0;font-size:calc(13px * var(--text-scale,1));font-weight:600}.helper-toggle input{width:19px;height:19px}
 .helper-panel{padding:24px;border:1px solid #d3dfd4;border-inline-start:3px solid #93ac8a;border-radius:12px;background:#f7faf4}.panel-kicker{display:flex;align-items:center;gap:10px}.panel-kicker h3{font-size:calc(17px * var(--text-scale,1))}
+.helper-guidance{margin-top:18px;padding:16px;border:1px solid var(--line);border-radius:10px;background:var(--pale);overflow-wrap:anywhere}
+.helper-guidance h4{display:flex;align-items:center;gap:8px;font-size:calc(13px * var(--text-scale,1));font-weight:600;color:var(--green)}
+.helper-guidance p{margin-top:6px;font-size:calc(12px * var(--text-scale,1));line-height:1.8;color:var(--muted)}
+.helper-guidance-steps{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;list-style:none;margin:14px 0 0;padding:14px 0 0;border-top:1px solid var(--line)}
+.helper-guidance-steps>li{display:flex;flex-direction:column;align-items:flex-start;min-width:0}
+.helper-guidance-steps h5{font-size:calc(12px * var(--text-scale,1));font-weight:600}
+.helper-guidance-steps p{flex:1;margin-bottom:12px}
+.helper-guidance-steps .btn{max-width:100%;white-space:normal;text-align:start;overflow-wrap:anywhere}
+@media(max-width:700px){.helper-guidance-steps{grid-template-columns:1fr;gap:16px}}
 .prototype-note{font-size:calc(10px * var(--text-scale,1));color:var(--muted);line-height:1.8;margin-top:12px}
 .booking-deadlines{display:flex;gap:15px;padding:21px;background:#f6f0df;border:1px solid #e3d7ba;border-radius:12px;margin-bottom:28px}.deadline-symbol{width:36px;height:36px;display:grid;place-items:center;border:1px solid #dbcead;border-radius:50%;flex:none}.booking-deadlines h3{font-size:calc(14px * var(--text-scale,1));margin-bottom:8px}.booking-deadlines p{font-size:calc(11px * var(--text-scale,1));line-height:1.85;color:#7b6947}.booking-deadlines.expired{background:#fff0eb;border-color:#edcec4}
 .address-panel{padding:25px;border:1px solid var(--line);border-radius:14px;margin-top:24px;background:#fdfefb}.address-panel-heading{display:flex;align-items:flex-start;gap:13px;margin-bottom:20px}.panel-number{display:grid;place-items:center;width:34px;height:34px;flex:none;border-radius:50%;background:var(--pale);font-size:calc(11px * var(--text-scale,1));color:var(--green)}.address-panel-heading h3{font-size:calc(20px * var(--text-scale,1))}.address-panel-heading p{font-size:calc(11px * var(--text-scale,1));line-height:1.8;color:var(--muted);margin-top:5px}
