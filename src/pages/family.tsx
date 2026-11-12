@@ -69,7 +69,6 @@ const FAMILY_EDITABLE = [
 ];
 const FAMILY_BENEFIT_ROWS: [string, number[]][] = [
   ["overview", [1, 1, 1, 1, 1]],
-  ["companion", [1, 1, 1, 1, 1]],
   ["milestones", [1, 1, 1, 1, 1]],
   ["priority", [0, 0, 1, 1, 1]],
   ["manager", [0, 0, 0, 0, 1]],
@@ -855,7 +854,11 @@ function tierTableHTML() {
                             : undefined
                         }
                       >
-                        {value ? (
+                        {key === "overview" ? (
+                          <span className={cx("tier-included")} role="img" aria-label={T("benefit.included")}>
+                            {icon("check")}
+                          </span>
+                        ) : value ? (
                           <span className={cx("tier-proposed")}>
                             {T("benefit.proposed")}
                           </span>

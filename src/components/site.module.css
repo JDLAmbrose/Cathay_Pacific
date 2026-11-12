@@ -414,6 +414,8 @@ html[dir=rtl] .milestone-stage-copy,html[dir=rtl] .milestone-summary>p{direction
 .tier-you{font-weight:700}
 .tier-table td.you{background:#fbf6ea}
 .tier-proposed{color:#8b672d;font-weight:650;letter-spacing:.06em}
+.tier-included{display:inline-flex;align-items:center;justify-content:center;vertical-align:middle;color:var(--green)}
+.tier-included>.icon{width:22px;height:22px;stroke-width:2.5}
 .tier-none{color:#a7b5ab}
 .tier-table tbody tr:last-child>*{border-bottom:0}
 .tier-note{margin-top:12px;font-size:calc(12px * var(--text-scale,1));line-height:1.8;color:var(--muted)}

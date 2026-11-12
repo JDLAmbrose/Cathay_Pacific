@@ -5957,11 +5957,11 @@
     "مزايا العائلة في Plume Light"
   ],
   "benefit.tableSub": [
-    "按國泰會籍級別比較擬議的家庭權益。",
-    "Proposed family benefits by Cathay membership status.",
-    "Avantages famille proposés selon le statut de membre Cathay.",
-    "Beneficios familiares propuestos según el nivel de socio Cathay.",
-    "المزايا العائلية المقترحة حسب مستوى عضوية كاثي."
+    "核心家庭服務適用所有會籍級別，增值權益標示為擬議。",
+    "Core family services are available at every tier; additional benefits are marked as proposed.",
+    "Les services familiaux de base sont accessibles à tous les niveaux ; les avantages supplémentaires sont indiqués comme proposés.",
+    "Los servicios familiares básicos están disponibles en todos los niveles; los beneficios adicionales se indican como propuestos.",
+    "الخدمات العائلية الأساسية متاحة لجميع المستويات؛ وتُميّز المزايا الإضافية بأنها مقترحة."
   ],
   "benefit.col.benefit": [
     "權益",
@@ -6020,11 +6020,11 @@
     "اعتباراً من 2027"
   ],
   "benefit.row.overview": [
-    "家庭總覽追蹤及提示",
-    "Family overview, tracking and alerts",
-    "Vue famille, suivi et alertes",
-    "Resumen familiar, seguimiento y avisos",
-    "نظرة عائلية مع التتبع والتنبيهات"
+    "家人代填及合資格家庭探訪優惠",
+    "Family booking assistance and eligible family visit offers",
+    "Aide à la réservation par la famille et offres de visite familiale sous conditions",
+    "Ayuda familiar para reservar y ofertas de visita familiar sujetas a requisitos",
+    "مساعدة العائلة في تعبئة بيانات الحجز وعروض الزيارة العائلية للمؤهلين"
   ],
   "benefit.row.companion": [
     "合資格搬運後的同行優惠碼",
@@ -6062,11 +6062,11 @@
     "غير مشمول"
   ],
   "benefit.tableNote": [
-    "國泰 Hackathon 構思，全部均非已確認權益。鑽石行政卡為國泰會員計劃於 2027 年起推出的會籍級別。",
-    "A Cathay Hackathon concept; none of these are confirmed benefits. Diamond Exec is a Cathay membership status introduced from 2027.",
-    "Concept du Cathay Hackathon ; aucun de ces avantages n’est confirmé. Diamond Exec est un statut de membre Cathay introduit à partir de 2027.",
-    "Concepto del Cathay Hackathon; ninguno de estos beneficios está confirmado. Diamond Exec es un nivel de socio Cathay que se introduce desde 2027.",
-    "فكرة ضمن هاكاثون كاثي، ولا تُعد أيٌّ منها مزايا مؤكدة. Diamond Exec مستوى عضوية تطرحه كاثي اعتباراً من 2027."
+    "標示「擬議」的增值權益屬國泰 Hackathon 構思，並非已確認權益。鑽石行政卡為國泰會員計劃於 2027 年起推出的會籍級別。",
+    "Additional benefits marked as proposed are Cathay Hackathon concepts, not confirmed benefits. Diamond Exec is a Cathay membership status introduced from 2027.",
+    "Les avantages supplémentaires indiqués comme proposés sont des concepts du Cathay Hackathon, non des avantages confirmés. Diamond Exec est un statut de membre Cathay introduit à partir de 2027.",
+    "Los beneficios adicionales marcados como propuestos son conceptos del Cathay Hackathon, no beneficios confirmados. Diamond Exec es un nivel de socio Cathay que se introduce desde 2027.",
+    "المزايا الإضافية المميزة بأنها مقترحة هي أفكار ضمن هاكاثون كاثي وليست مزايا مؤكدة. Diamond Exec مستوى عضوية تطرحه كاثي اعتباراً من 2027."
   ],
   "faq.title": [
     "常見問題",
@@ -6844,5 +6844,12 @@
     "État démo isolé : invitations et droits restent dans la démo. Quitter restaure vos données enregistrées.",
     "Estado demo aislado. Las invitaciones y permisos quedan en la demo; al salir vuelven tus datos guardados.",
     "حالة تجريبية معزولة. تبقى الدعوات والتفويضات ضمن العرض؛ الخروج يعيد سجلاتك المحفوظة."
+  ],
+  "benefit.included": [
+    "適用",
+    "Included",
+    "Inclus",
+    "Incluido",
+    "مشمول"
   ]
 }
