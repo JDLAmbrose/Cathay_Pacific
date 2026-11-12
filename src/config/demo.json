@@ -8,6 +8,13 @@
   "family": false,
   "helper": {},
   "passengerLinks": {},
+  "membership": {
+    "source": "demo",
+    "eligibility": {
+      "lin": { "serviceConsent": "self", "guardianStatus": "notApplicable", "policy": "demo-self-consent" },
+      "child": { "serviceConsent": "guardian", "guardianStatus": "linked", "guardianMemberNo": "9876543210", "policy": "demo-guardian-consent" }
+    }
+  },
   "familyLink": {
     "method": "member",
     "memberNo": "1234567890",

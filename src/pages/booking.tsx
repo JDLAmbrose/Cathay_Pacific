@@ -24,6 +24,7 @@ import {
   pricingLane,
   pricingQuote,
   validateService,
+  familySessionPermission,
 } from "../engine/booking";
 import { language, t } from "../services/i18n";
 import { BOOK_PAGES, href } from "../config/routes";
@@ -960,6 +961,11 @@ function bookingStepHTML(view, index, waiting) {
   );
 }
 function BookingPage({ gesture }: { gesture?: PricingGesture }) {
+  const allowed = familySessionPermission(state.step === 5 ? "payment" : "booking");
+  if (!allowed) return <>
+    {head("book.title", "book.sub")}
+    <div className={cx("card")}><div className={cx("notice")}>{T(state.step === 5 ? "service.paymentDenied" : "service.bookingDenied")}</div>{link("family", T("service.manage"), "btn light")}</div>
+  </>;
   const step = state.step,
     waiting = step === 1 && state.family && !!pendingHelperRequest();
   return (

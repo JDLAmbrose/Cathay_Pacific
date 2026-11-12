@@ -9,3 +9,9 @@ export function cathayMembershipSignUpUrl(locale: string): string {
     ? CATHAY_MEMBERSHIP_SIGN_UP.traditionalChinese
     : CATHAY_MEMBERSHIP_SIGN_UP.english;
 }
+
+// Official FAQ verified on 2026-11-12. This is guidance, not an invented management URL.
+export function cathayGuardianGuidanceUrl(locale: string): string {
+  const language = locale === "zh-Hant" ? "zh_HK" : "en_HK";
+  return `https://www.cathaypacific.com/cx/${language}/faqs/cathay-membership-programme/asia-miles/transfer-asia-miles/how-can-i-add-a-guardians-membership-information-to-a-minors-account.html`;
+}

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import type { FamilyLink } from "../types/domain";
 import {
   fmt,
   hk,
@@ -8,11 +9,6 @@ import {
   FAMILY_FIELDS,
   FAMILY_PARENT,
   MEMBERSHIP_TIERS,
-  familyTravellerId,
-  familyMemberId,
-  linkedFamilyMembers,
-  linkedPassengerContacts,
-  pendingFamilyInvitations,
   familyInvitationId,
   familyIdentifier,
   familyMemberName,
@@ -22,17 +18,23 @@ import {
   familyProgressAccess,
   familyPromoCode,
   state,
+  familyKnownContact,
+  familyPolicy,
+  familyStudentId,
+  familyServiceEstablished,
+  familyPermission,
+  familyVisibleRecords,
 } from "../engine/booking";
 import { t, language } from "../services/i18n";
 import {
   page,
   helperFamilyPage,
-  helperPassengerId,
   familyInvitePassengerId,
   familyDemoTravellerId,
 } from "../services/navigation";
 import { href } from "../config/routes";
-import { cx, keyed, Input } from "../components/primitives";
+import { cathayGuardianGuidanceUrl, cathayMembershipSignUpUrl } from "../config/urls";
+import { cx, keyed, Input, Select, Option } from "../components/primitives";
 import { FamilyMilestonesCard } from "../components/FamilyMilestones";
 import {
   icon,
@@ -205,7 +207,11 @@ function familyFormHTML(fam, error?: string, invalidField?: string) {
   return (
     <form id={"familyInviteForm"} noValidate>
       {familyStepsHTML(1)}
+      {familyStudentChoiceHTML(familyStudentId(fam))}
       <p className={cx("dialog-lead")}>{T("link.formSub")}</p>{" "}
+      <a className={cx("textbtn")} href={href("family", 1, !helperFamilyPage)} data-family-direction="">
+        {T(helperFamilyPage ? "service.switchFamily" : "service.switchStudent")}
+      </a>
       <section
         className={cx("address-panel family-panel")}
         aria-labelledby={"familyNameTitle"}
@@ -307,10 +313,15 @@ function familyFormHTML(fam, error?: string, invalidField?: string) {
         </div>
       </fieldset>{" "}
       {helperFamilyPage ? (
-        ""
+        <>
+          {familyPermissionControls(fam, "draft")}
+          {familyConsentHTML("student", true, fam)}
+        </>
       ) : (
         <div className={cx("note")}>{T("link.privacyNote")}</div>
       )}{" "}
+      <p className={cx("prototype-note")}>{T("service.memberDemo")}</p>
+      <a href={cathayMembershipSignUpUrl(language)} target="_blank" rel="noopener noreferrer" className={cx("textbtn")}>{T("service.register")}</a>
       <p
         className={cx("notice error")}
         id={"familyFormError"}
@@ -323,6 +334,50 @@ function familyFormHTML(fam, error?: string, invalidField?: string) {
       <button type={"submit"} hidden />
     </form>
   );
+}
+export function familyStudentChoiceHTML(studentId = state.travellerId) {
+  return <label className={cx("field family-subject")}>
+    <span>{T("service.student")}</span>
+    {helperFamilyPage ? <strong>{text(PEOPLE.find((p) => p.id === studentId)?.name)}</strong> :
+      <Select className={cx("input")} data-family-student="">
+        {PEOPLE.map((p) => <Option key={p.id} value={p.id} selected={p.id === studentId}>{p.name}</Option>)}
+      </Select>}
+  </label>;
+}
+export function familyRelationshipStatusHTML(fam: FamilyLink) {
+  const policy = familyPolicy(familyStudentId(fam));
+  return <p className={cx("family-official-status")}>
+    {T("service.officialLabel")} · {T("service.official." + policy.guardianStatus)} · {T("common.demo")}
+  </p>;
+}
+export function familyPermissionControls(fam: FamilyLink, mode: "draft" | "consent" | "manage", editable = true) {
+  return <fieldset className={cx("family-permission-options")}>
+    <legend>{T("service.permissions")}</legend>
+    {(["booking", "payment", "progress"] as const).map((permission) =>
+      <label className={cx("check family-permission")} key={permission}>
+        <Input type="checkbox" id={"familyPermission-" + permission}
+          {...(mode === "draft" ? { checked: !!fam.service?.permissions[permission], "data-family-permission": permission }
+            : { defaultChecked: !!fam.service?.permissions[permission] })}
+          disabled={!editable} />
+        <span><strong>{T("service.permission." + permission)}</strong><small>{T("service.permissionHint." + permission)}</small></span>
+      </label>)}
+    <small className={cx("muted")}>{T("service.scope", { journey: fam.service?.journey?.legId ?? state.flight.legId })}</small>
+  </fieldset>;
+}
+export function familyConsentHTML(role: "student" | "guardian" | "family", draft = false, fam?: FamilyLink) {
+  return <label className={cx("check family-share")}>
+    <Input type="checkbox" id="familyConsent" {...(draft ? { checked: !!fam?.service?.studentConfirmed, "data-family-confirm": "" } : {})} />
+    <span><strong>{T("service.consent." + role)}</strong><small>{T("service.consentDemo")}</small></span>
+  </label>;
+}
+export function familyGuardianGuidanceHTML(studentId: string) {
+  return <>
+    {familyStudentChoiceHTML(studentId)}
+    <div className={cx("notice family-warning")}>{icon("shield")}<span>{T("service.guardianRequired")}</span></div>
+    <p className={cx("dialog-lead")}>{T("service.guardianSteps")}</p>
+    <a className={cx("btn light")} href={cathayGuardianGuidanceUrl(language)} target="_blank" rel="noopener noreferrer">{T("service.guardianOfficial")}{icon("arrow")}</a>
+    <p className={cx("prototype-note")}>{T("service.externalDemo")}</p>
+  </>;
 }
 function familySummaryHTML(fam, extra: ReactNode = null) {
   return (
@@ -337,6 +392,7 @@ function familySummaryHTML(fam, extra: ReactNode = null) {
         </>,
       )}
       {row("link.summary.relationship", T("link.rel." + fam.relationship))}
+      {familyRelationshipStatusHTML(fam)}
       {extra}
     </div>
   );
@@ -410,6 +466,8 @@ function familyPendingHTML(invitations) {
                   {" · "}
                   {T("link.rel." + fam.relationship)}
                 </p>{" "}
+                {familyRelationshipStatusHTML(fam)}
+                <p>{T(fam.service?.initiatedBy === "family" ? "service.awaitStudent" : "service.awaitFamily")}</p>
                 <div className={cx("actions")}>
                   <button
                     type={"button"}
@@ -443,124 +501,41 @@ function maskedFamilyAccount(fam) {
     ? maskEmail(value)
     : "•••• " + value.replace(/\D/g, "").slice(-4);
 }
-function familyMemberCard(fam, isHelper = false) {
-  const name = familyMemberName(fam),
-    id = familyMemberId(fam),
-    traveller = familyTravellerId(fam),
-    hasTicket = !!(
-      traveller &&
-      state.drafts[traveller] &&
-      ticketAllowance(traveller)
-    );
-  const access = isHelper ? "" : familyProgressAccess(fam);
-  const progressLabel = {
-    denied: "link.progressDenied",
-    requested: "link.progressRequested",
-    waiting: "link.progressAllowed",
-    ready: "link.progressAllowed",
-  }[access];
-  const status = isHelper ? (
-    ""
-  ) : (
+function familyMemberCard(fam: FamilyLink, isHelper = false) {
+  const studentId = familyStudentId(fam), id = familyInvitationId(fam);
+  const display = isHelper === (fam.service?.initiatedBy === "student") ? fam : familyKnownContact(studentId, isHelper);
+  const established = familyServiceEstablished(fam), revoked = fam.status === "revoked";
+  const hasTicket = !!state.drafts[studentId] && !!ticketAllowance(studentId);
+  const access = familyProgressAccess(fam);
+  return <article className={cx("family-member card")} key={id}>
+    <header className={cx("family-member-top")}>
+      <span className={cx("member-initials")} aria-hidden="true">{text(familyInitials(display))}</span>
+      <div><h3>{text(familyMemberName(display))}</h3><p>{T("link.rel." + fam.relationship)} · <bdi>{text(maskedFamilyAccount(display))}</bdi></p></div>
+      <span className={cx("pill", established ? "" : "gold")}>{T(established ? "service.established" : revoked ? "service.revoked" : "service.notAuthorized")}</span>
+    </header>
+    {familyRelationshipStatusHTML(fam)}
     <div className={cx("member-permissions")}>
-      <span>
-        {icon(hasTicket ? "check" : "clock")}
-        {T(hasTicket ? "link.proxyAllowed" : "link.memberNoTicket")}
-      </span>
-      <span>
-        {icon(fam.shareProgress ? "check" : "shield")}
-        {T(progressLabel)}
-      </span>
+      {(["booking", "payment", "progress"] as const).map((permission) =>
+        <span key={permission}>{icon(familyPermission(fam, permission) ? "check" : "shield")}{T(familyPermission(fam, permission) ? "service.permission." + permission : "service.denied." + permission)}</span>)}
     </div>
-  );
-  const proxy = hasTicket ? (
-    <a
-      className={cx("btn slim light")}
-      href={href("book", 2)}
-      data-family-proxy={text(id)}
-    >
-      {T("link.proxyCta", { name: inlineName(familyGivenName(fam)) })}
-      {icon("arrow")}
-    </a>
-  ) : (
-    ""
-  );
-  const progress =
-    access === "ready" ? (
-      <a
-        className={cx("textbtn")}
-        href={href("journey")}
-        data-family-proxy={text(id)}
-        data-family-progress={""}
-      >
-        {T("link.progressCta")}
-        {icon("arrow")}
-      </a>
-    ) : access === "waiting" ? (
-      <small className={cx("muted")}>{T("link.progressWaiting")}</small>
-    ) : (
-      <button
-        type={"button"}
-        className={cx("textbtn")}
-        data-action={
-          access === "requested"
-            ? "family-progress-preview"
-            : "family-progress-request"
-        }
-        data-id={text(id)}
-      >
-        {T(
-          access === "requested"
-            ? "link.progressPreview"
-            : "link.progressRequest",
-        )}
-        {icon("arrow")}
-      </button>
-    );
-  return (
-    <article className={cx("family-member card")} key={id}>
-      <header className={cx("family-member-top")}>
-        <span className={cx("member-initials")} aria-hidden={"true"}>
-          {text(familyInitials(fam))}
-        </span>
-        <div>
-          <h3>{text(name)}</h3>
-          <p>
-            {T("link.relationshipValue", {
-              relationship: t("link.rel." + fam.relationship),
-            })}
-            {" · "}
-            <bdi>{text(maskedFamilyAccount(fam))}</bdi>
-          </p>
-        </div>
-        <span className={cx("pill")}>
-          {icon("check")}
-          {T("link.statusLinked")}
-        </span>
-      </header>{" "}
-      {status}
-      {isHelper ? (
-        <div className={cx("actions member-review")}>
-          <span className={cx("pill")}>{T("helper.title")}</span>
-          {helperFamilyPage
-            ? ""
-            : link("book", T("helper.select"), "textbtn")}
-          {familyChangeHTML(fam, "helper:" + id)}
-        </div>
-      ) : (
-        <>
-          <div className={cx("actions")}>
-            {proxy}
-            {progress}
-          </div>
-          <div className={cx("member-review")}>{familyChangeHTML(fam, id)}</div>
-        </>
-      )}
-    </article>
-  );
+    <div className={cx("actions")}>
+      {!isHelper && hasTicket && familyPermission(fam, "booking") &&
+        <a className={cx("btn slim light")} href={href("book", 2)} data-family-proxy={id}>{T("link.proxyCta", { name: inlineName(familyGivenName(display)) })}{icon("arrow")}</a>}
+      {!isHelper && hasTicket && familyPermission(fam, "payment") &&
+        <a className={cx("textbtn")} href={href("book", 5)} data-family-proxy={id} data-family-payment="">{T("service.payCta")}{icon("arrow")}</a>}
+      {!isHelper && access === "ready" &&
+        <a className={cx("textbtn")} href={href("journey")} data-family-proxy={id} data-family-progress="">{T("link.progressCta")}{icon("arrow")}</a>}
+      {!isHelper && access === "waiting" && <small className={cx("muted")}>{T("link.progressWaiting")}</small>}
+      {established || fam.status === "linked" ?
+        <button type="button" className={cx("textbtn")} data-action="family-permissions" data-id={id}>{T("service.manage")}</button> :
+        <button type="button" className={cx("textbtn")} data-action="family-add" data-student-id={studentId}>{T(revoked ? "service.inviteAgain" : "service.activate")}</button>}
+      {established && <button type="button" className={cx("textbtn")} data-action="family-revoke" data-id={id}>{T("service.revoke")}</button>}
+    </div>
+    {isHelper && <p className={cx("prototype-note")}>{T("service.studentManage")}</p>}
+  </article>;
 }
 function familyRosterHTML(members, helpers) {
-  const count = members.length + helpers.length;
+  const count = [...members, ...helpers].filter(familyServiceEstablished).length;
   return (
     <section
       className={cx("family-roster card")}
@@ -576,14 +551,14 @@ function familyRosterHTML(members, helpers) {
           {T("link.memberCount", { n: fmt(count) })}
         </span>
       </div>{" "}
-      {count ? (
+      {members.length + helpers.length ? (
         <>
           <div className={cx("family-member-grid")}>
             {keyed(members.map((member) => familyMemberCard(member)))}
             {keyed(helpers.map((member) => familyMemberCard(member, true)))}
           </div>
           {members.length ? (
-            <p className={cx("prototype-note")}>{T("link.lockedNote")}</p>
+            <p className={cx("prototype-note")}>{T("service.separateRelations")}</p>
           ) : (
             ""
           )}
@@ -605,7 +580,7 @@ function familyDemoPassengerLink() {
     <a
       className={cx("btn light")}
       href={href("book")}
-      {...(helperFamilyPage ? {} : { "data-family-proxy": "" })}
+      data-family-self=""
     >
       {T("link.viewPassenger")}
       {icon("arrow", "arrow")}
@@ -630,13 +605,13 @@ function familyDemoControls(unlinked) {
       >
         {T("link.demoUnlink")}
       </button>{" "}
-      {unlinked ? (
+      {unlinked || state.familyDemo ? (
         <button
           type={"button"}
           className={cx("textbtn")}
           data-action={"family-demo-exit"}
         >
-          {T("link.demoExit")}
+          {T(unlinked ? "link.demoExit" : "service.demoExitLinked")}
         </button>
       ) : (
         ""
@@ -646,13 +621,16 @@ function familyDemoControls(unlinked) {
 }
 function FamilyPage() {
   const unlinked = familyDemoUnlinked(familyDemoTravellerId);
-  const members = helperFamilyPage ? [] : linkedFamilyMembers();
-  const helpers = unlinked
-    ? []
-    : linkedPassengerContacts(familyInvitePassengerId ?? state.travellerId);
-  const invitations = unlinked
-    ? []
-    : pendingFamilyInvitations(familyInvitePassengerId);
+  const records = unlinked ? [] : familyVisibleRecords(helperFamilyPage);
+  const members = helperFamilyPage ? [] : records.filter((member) => member.status !== "pending");
+  const helpers = helperFamilyPage ? records.filter((member) => member.status !== "pending") : [];
+  const subject = state.travellerId;
+  const policy = familyPolicy(subject);
+  if (!unlinked && policy.serviceConsent === "guardian" && policy.guardianStatus === "linked" &&
+      ![...members, ...helpers].some((member) => familyStudentId(member) === subject)) {
+    (helperFamilyPage ? helpers : members).push(familyKnownContact(subject, helperFamilyPage));
+  }
+  const invitations = records.filter((member) => member.status === "pending");
   return (
     <>
       {familyHead(
@@ -667,6 +645,10 @@ function FamilyPage() {
           ) : (
             ""
           )}{" "}
+          {state.familyDemo && <p className={cx("prototype-note")}>{T("service.demoOverlay")}</p>}
+          <div className={cx("family-hints")}>
+            <p>{T("service.minorHint")}</p><p>{T("service.adultHint")}</p>
+          </div>
           <div className={cx("actions")}>
             <button
               type={"button"}
@@ -676,9 +658,7 @@ function FamilyPage() {
               {icon("person")}
               {T("link.addMember")}
             </button>
-            {helperFamilyPage || unlinked || members.length || helpers.length
-              ? familyDemoPassengerLink()
-              : ""}
+            {familyDemoPassengerLink()}
           </div>
         </div>
         {familyRosterHTML(members, helpers)}
@@ -687,65 +667,26 @@ function FamilyPage() {
     </>
   );
 }
-function familyEmailHTML(fam) {
-  const sender = helperFamilyPage
-      ? (PEOPLE.find((p) => p.id === helperPassengerId) || PEOPLE[0]).name
-      : FAMILY_PARENT.name,
-    to =
-      fam.method === "email"
-        ? maskEmail(familyIdentifier(fam))
-        : t("link.emailToValue");
-  return (
-    <>
-      <article className={cx("email-preview")}>
-        <dl className={cx("email-meta")}>
-          <div>
-            <dt>{T("link.emailFrom")}</dt>
-            <dd>{T("link.emailFromValue")}</dd>
-          </div>
-          <div>
-            <dt>{T("link.emailTo")}</dt>
-            <dd>
-              <bdi>{text(to)}</bdi>
-            </dd>
-          </div>
-          <div>
-            <dt>{T("link.emailSubjectLabel")}</dt>
-            <dd>{T("link.emailSubject", { parent: sender })}</dd>
-          </div>
-        </dl>
-        <div className={cx("email-body")}>
-          {productMark()}
-          <p>
-            <strong>
-              {T("link.emailGreeting", { name: familyGivenName(fam) })}
-            </strong>
-          </p>
-          <p>
-            {T(helperFamilyPage ? "helper.linkEmailBody" : "link.emailBody", {
-              parent: sender,
-            })}
-          </p>
-          <div className={cx("email-details")}>
-            {row("link.emailRequester", text(sender))}
-            {row("link.emailRelationship", T("link.rel." + fam.relationship))}
-          </div>
-          {helperFamilyPage ? (
-            ""
-          ) : (
-            <label className={cx("check family-share")}>
-              <Input type={"checkbox"} id={"familyShare"} />
-              <span>
-                <strong>{T("link.emailShare")}</strong>
-                <small>{T("link.emailShareHint")}</small>
-              </span>
-            </label>
-          )}
-        </div>
-      </article>
-      <p className={cx("prototype-note")}>{T("link.emailDemo")}</p>
-    </>
-  );
+function familyEmailHTML(fam: FamilyLink) {
+  const student = PEOPLE.find((p) => p.id === familyStudentId(fam));
+  const fromStudent = fam.service?.initiatedBy === "student";
+  const role = familyPolicy(familyStudentId(fam)).serviceConsent === "self" ? (fromStudent ? "family" : "student") : "guardian";
+  return <>
+    <article className={cx("email-preview")}>
+      <div className={cx("email-meta")}>
+        <strong>{T("service.recipientPreview", { name: fromStudent ? familyMemberName(fam) : student?.name ?? familyMemberName(fam) })}</strong>
+        <p>{T("service.invitedBy", { name: fromStudent ? student?.name ?? "" : FAMILY_PARENT.name })}</p>
+      </div>
+      <div className={cx("email-body")}>
+        {productMark()}
+        <p>{T(role === "guardian" ? "service.guardianExisting" : fromStudent ? "service.studentInvitation" : "service.familyInvitation")}</p>
+        {familySummaryHTML(fam)}
+        {familyPermissionControls(fam, "consent", !fromStudent)}
+        {familyConsentHTML(role)}
+      </div>
+    </article>
+    <p className={cx("prototype-note")}>{T("service.externalDemo")}</p>
+  </>;
 }
 function proposedBadge() {
   return <span className={cx("proposed-badge")}>{T("benefit.proposed")}</span>;

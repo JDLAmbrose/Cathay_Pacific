@@ -6,17 +6,28 @@ import {
   linkedPassengerContacts,
   state,
   familyMemberId,
+  familyInvitationId,
   familyMemberName,
-  newFamilyContact,
   pendingFamilyInvitation,
   validateFamilyInvitation,
+  familyTravellerId,
+  familyKnownContact,
+  familyStudentId,
+  familyPolicy,
+  familyServiceRecord,
+  familyConnectionRecords,
+  parentFamilyRecords,
+  submitFamilyInvitation,
+  respondFamilyInvite,
+  updateFamilyPermissions,
+  revokeFamilyService,
+  familyVisibleRecords,
 } from "../engine/booking";
 import {
   familyInvitePassengerId,
-  familyPageLink,
   helperFamilyPage,
 } from "./navigation";
-import { closeModal, modal, richModal, updateDialogBody } from "./runtime";
+import { closeModal, modal, richModal, updateDialogBody, toast, render } from "./runtime";
 import { t } from "./i18n";
 import { cx } from "../components/primitives";
 import { icon } from "../components/shared";
@@ -26,8 +37,12 @@ import {
   familyFormHTML,
   familyStepsHTML,
   familySummaryHTML,
+  familyGuardianGuidanceHTML,
+  familyStudentChoiceHTML,
+  familyPermissionControls,
+  familyConsentHTML,
 } from "../pages/family";
-import type { FamilyLink } from "../types/domain";
+import type { FamilyLink, FamilyPermissions, FamilyConsent } from "../types/domain";
 
 export let familyInviteDraft: FamilyLink;
 let error: string;
@@ -42,13 +57,36 @@ export function focusFamilyHeading() {
   );
 }
 
-export function openFamilyInvite() {
-  const current = familyPageLink();
-  familyInviteDraft = ["draft", "declined", "cancelled"].includes(
-    current.status,
-  )
-    ? clone(current)
-    : newFamilyContact(helperFamilyPage ? "email" : "member");
+export function openFamilyInvite(studentId = state.travellerId) {
+  familyInviteDraft = familyKnownContact(studentId, helperFamilyPage);
+  const policy = familyPolicy(studentId);
+  if (policy.serviceConsent === "unknown") {
+    richModal(t("service.eligibilityTitle"), <>{familyStudentChoiceHTML(studentId)}<p className={cx("notice")}>{t("service.eligibilityUnknown")}</p><p className={cx("prototype-note")}>{t("service.externalDemo")}</p></>, [{ text: t("common.close"), action: "close-dialog", light: true }]);
+    return;
+  }
+  if (policy.serviceConsent === "guardian" && policy.guardianStatus !== "linked") {
+    richModal(t("service.guardianTitle"), familyGuardianGuidanceHTML(studentId), [{ text: t("common.close"), action: "close-dialog", light: true }]);
+    return;
+  }
+  if (policy.serviceConsent === "guardian") {
+    const records = familyVisibleRecords(helperFamilyPage, studentId);
+    const existing = records.find((member) => familyStudentId(member) === studentId && member.status === "linked");
+    if (existing) {
+      familyPermissionsDialog(familyInvitationId(existing));
+      return;
+    }
+    const pending = records.find((member) => familyStudentId(member) === studentId && member.status === "pending");
+    if (pending) { familyPreview(familyInvitationId(pending)); return; }
+    richModal(t("service.activate"), <>
+      {familyStudentChoiceHTML(studentId)}
+      <p className={cx("dialog-lead")}>{t("service.guardianExisting")}</p>
+      {familySummaryHTML(familyInviteDraft)}
+      {familyPermissionControls(familyInviteDraft, "consent")}
+      {familyConsentHTML("guardian")}
+      <p className={cx("prototype-note")}>{t("service.externalDemo")}</p>
+    </>, [{ text: t("common.cancel"), action: "close-dialog", light: true }, { text: t("service.activate"), action: "family-activate" }]);
+    return;
+  }
   editFamilyInvite();
 }
 
@@ -89,11 +127,64 @@ export function setFamilyField(element: HTMLInputElement) {
   )
     return;
   Object.assign(familyInviteDraft, { [key]: element.value });
+  if (!helperFamilyPage) familyInviteDraft.service.studentId = familyTravellerId(familyInviteDraft);
   error = undefined;
   updateDialogBody(familyFormHTML(familyInviteDraft));
 }
 
+export function setFamilyDraftPermission(element: HTMLInputElement) {
+  if (!familyInviteDraft?.service) return;
+  const key = element.dataset.familyPermission as keyof FamilyPermissions;
+  if (["booking", "payment", "progress"].includes(key)) familyInviteDraft.service.permissions[key] = element.checked;
+  else if (element.hasAttribute("data-family-confirm")) familyInviteDraft.service.studentConfirmed = element.checked;
+  updateDialogBody(familyFormHTML(familyInviteDraft));
+}
+
+export function readFamilyPermissions(): FamilyPermissions {
+  const checked = (key: string) => !!document.getElementById("familyPermission-" + key) && (document.getElementById("familyPermission-" + key) as HTMLInputElement).checked;
+  return { booking: checked("booking"), payment: checked("payment"), progress: checked("progress") };
+}
+export function readFamilyConsent(link: FamilyLink, recipient = false): FamilyConsent {
+  const role = familyPolicy(familyStudentId(link)).serviceConsent === "self"
+    ? recipient && link.service?.initiatedBy === "student" ? "family" : "student" : "guardian";
+  return { role, confirmed: !!(document.getElementById("familyConsent") as HTMLInputElement)?.checked, permissions: readFamilyPermissions() };
+}
+export function activateFamilyService() {
+  const consent = readFamilyConsent(familyInviteDraft);
+  if (!consent.confirmed) { toast("service.confirmRequired"); return; }
+  const error = submitFamilyInvitation(familyInviteDraft, familyInvitePassengerId);
+  if (error) { toast(error); return; }
+  const link = (helperFamilyPage ? familyConnectionRecords(familyInvitePassengerId) : parentFamilyRecords()).find((member) => member.status === "pending" && familyStudentId(member) === familyStudentId(familyInviteDraft));
+  if (link && respondFamilyInvite(true, false, link, consent)) {
+    closeModal(); render(); toast("notice.familyLinked"); focusFamilyHeading();
+  }
+}
+export function familyPermissionsDialog(id: string, revoke = false) {
+  const member = familyServiceRecord(id);
+  if (!member || member.status !== "linked") return;
+  const role = familyPolicy(familyStudentId(member)).serviceConsent === "self" ? "student" : "guardian";
+  const preview = clone(member);
+  preview.service.journey = { bookingId: state.flight.bookingId, legId: state.flight.legId };
+  richModal(t(revoke ? "service.revoke" : "service.manage"), <>
+    <p className={cx("dialog-lead")}>{t(revoke ? "service.revokeBody" : "service.manageBody")}</p>
+    {familySummaryHTML(member)}
+    {!revoke && familyPermissionControls(preview, "manage")}
+    {familyConsentHTML(role)}
+  </>, [{ text: t("common.cancel"), action: "close-dialog", light: true }, { text: t(revoke ? "service.revoke" : "service.save"), action: revoke ? "family-revoke-confirm" : "family-permissions-save", id }]);
+}
+export function saveFamilyPermissions(id: string, revoke = false) {
+  const member = familyServiceRecord(id);
+  if (!member) return;
+  const consent = readFamilyConsent(member);
+  const changed = revoke ? revokeFamilyService(member, consent) : updateFamilyPermissions(member, readFamilyPermissions(), consent);
+  if (!changed) { toast("service.confirmRequired"); return; }
+  closeModal(); render(); toast(revoke ? "service.revoked" : "service.saved"); focusFamilyHeading();
+}
+
 export function familyConfirm() {
+  if (!helperFamilyPage && familyPolicy(familyTravellerId(familyInviteDraft)).serviceConsent === "guardian") {
+    openFamilyInvite(familyTravellerId(familyInviteDraft)); return;
+  }
   const message = validateFamilyInvitation(
     familyInviteDraft,
     familyInvitePassengerId,
@@ -198,8 +289,9 @@ export function familyChangeDialog(id: string, preview = false) {
 }
 
 export function familyProgressDialog(id: string, preview = false) {
-  const member = linkedFamilyMember(id);
+  const member = familyServiceRecord(id);
   if (!member || !member.progressRequested || member.shareProgress) return;
+  if (preview) { familyPermissionsDialog(id); return; }
   const args = { name: familyMemberName(member), parent: FAMILY_PARENT.name };
   const buttons = preview
     ? [

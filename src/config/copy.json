@@ -3815,11 +3815,11 @@
     "أدخل رقم عضوية كاثي ورقم الهاتف المحمول والبريد الإلكتروني للربط وطلبات المساعدة."
   ],
   "helper.linkSub": [
-    "與成員互聯後，即可在乘機人頁面向對方發送代填請求。",
-    "Once linked, you can send them a request for help from the passenger page.",
-    "Une fois le lien établi, vous pourrez leur demander de l’aide depuis la page du passager.",
-    "Una vez vinculados, podrás pedirles ayuda desde la página del pasajero.",
-    "بعد الربط، يمكنك طلب مساعدتهم من صفحة المسافر."
+    "邀請家人建立 Plume Light 服務協助關係，並自行管理所需權限。",
+    "Invite family to assist with Plume Light and manage their service permissions.",
+    "Invitez vos proches à aider avec Plume Light et gérez leurs autorisations.",
+    "Invita a familiares a ayudar en Plume Light y gestiona sus permisos.",
+    "ادعُ العائلة للمساعدة في Plume Light وأدِر تفويضات الخدمة."
   ],
   "helper.linkEmailBody": [
     "{parent} 邀請你建立成員互聯。接受後，對方可另外向你發送代填行李與聯絡資料的請求。",
@@ -4515,11 +4515,11 @@
     "ربط الأعضاء"
   ],
   "link.sub": [
-    "互聯成功後，你可以為對方代填行李預報；經對方授權，亦可在服務開始後查看行李進度。",
-    "Once linked, you can complete their luggage details. With their permission, you can also follow luggage progress after service begins.",
-    "Une fois reliés, vous pouvez remplir sa déclaration de bagages. Avec son accord, vous pouvez aussi suivre ses bagages dès le début du service.",
-    "Una vez vinculados, puedes completar su declaración de equipaje. Con su permiso, también podrás seguirlo cuando empiece el servicio.",
-    "بعد الربط يمكنك إكمال بيانات الأمتعة نيابةً عن العضو، وبموافقته يمكنك أيضًا متابعة تقدّم الأمتعة بعد بدء الخدمة."
+    "在現有國泰會員資料基礎上，邀請家人協助行李服務，並分別確認預約、付款與進度共享授權。",
+    "Invite family to help with luggage services using existing Cathay membership details. Authorise booking, payment and progress sharing separately.",
+    "Invitez vos proches à aider avec vos bagages via les profils Cathay existants. Autorisez séparément réservation, paiement et suivi.",
+    "Invita a familiares a ayudar con el equipaje mediante los perfiles Cathay actuales. Autoriza reserva, pago y seguimiento por separado.",
+    "ادعُ العائلة للمساعدة بخدمات الأمتعة باستخدام عضوية كاثي الحالية. فوّض الحجز والدفع ومشاركة التتبع بشكل منفصل."
   ],
   "link.demoLink": [
     "模擬關聯聯絡人（Demo）",
@@ -4788,11 +4788,11 @@
     "صلتك بالعضو"
   ],
   "link.relationshipSub": [
-    "以下三選一。關係一經確認，如需更改須經人工審核。",
-    "Choose one. Once confirmed, any change needs a manual review.",
-    "Choisissez une option. Une fois confirmé, tout changement nécessite une vérification manuelle.",
-    "Elige una opción. Una vez confirmada, cualquier cambio requiere una revisión manual.",
-    "اختر خياراً واحداً. بعد التأكيد يتطلب أي تغيير مراجعة يدوية."
+    "只作服務協助關係描述，不代表已核實國泰官方或法定監護人身份。",
+    "Describes the service relationship only; does not verify official Cathay or legal guardianship.",
+    "Décrit uniquement le lien de service, sans vérifier la tutelle légale ou officielle Cathay.",
+    "Describe solo la relación de servicio; no verifica tutela legal ni oficial de Cathay.",
+    "وصف لصلة المساعدة فقط؛ لا يثبت وصاية قانونية أو رسمية لدى كاثي."
   ],
   "link.rel.parent": [
     "父母",
@@ -4802,11 +4802,11 @@
     "أحد الوالدين"
   ],
   "link.rel.parentHint": [
-    "你是對方的父親或母親。",
-    "You are their mother or father.",
-    "Vous êtes sa mère ou son père.",
-    "Eres su madre o su padre.",
-    "أنت والدته أو والده."
+    "家庭成員為學生的父親或母親。",
+    "The family member is the student’s mother or father.",
+    "Le proche est le père ou la mère de l’étudiant.",
+    "El familiar es el padre o la madre del estudiante.",
+    "فرد العائلة هو والد الطالب أو والدته."
   ],
   "link.rel.guardian": [
     "法定監護人",
@@ -4816,11 +4816,11 @@
     "وصي قانوني"
   ],
   "link.rel.guardianHint": [
-    "你依法負責照顧對方。",
-    "You are legally responsible for their care.",
-    "Vous êtes légalement responsable de ce membre.",
-    "Eres legalmente responsable de su cuidado.",
-    "أنت المسؤول قانونياً عن رعايته."
+    "只作關係描述；官方監護人身份須另依國泰會員資料確認。",
+    "A relationship description only; official guardianship depends on the Cathay membership record.",
+    "Description du lien uniquement ; la tutelle officielle dépend du dossier membre Cathay.",
+    "Solo describe la relación; la tutela oficial depende del registro de socio Cathay.",
+    "وصف للصلة فقط؛ تعتمد الوصاية الرسمية على سجل عضوية كاثي."
   ],
   "link.rel.other": [
     "其他成員",
@@ -4837,11 +4837,11 @@
     "مثل الأخ أو الأخت أو الجدّ أو الزوج."
   ],
   "link.privacyNote": [
-    "系統只會向對方會員賬戶登記的電郵發送邀請，不會向你顯示對方的聯絡資料。互聯不會分享任何一方的付款資料。",
-    "We send the invitation only to the email registered to their account and never show you their contact details. Linking doesn’t share anyone’s payment details.",
-    "L’invitation est envoyée uniquement à l’e-mail enregistré sur son compte, et ses coordonnées ne vous sont jamais affichées. La liaison ne partage aucune donnée de paiement.",
-    "La invitación solo se envía al correo registrado en su cuenta y nunca verás sus datos de contacto. La vinculación no comparte datos de pago de nadie.",
-    "نرسل الدعوة فقط إلى البريد الإلكتروني المسجّل في حسابه، ولا نعرض لك بيانات الاتصال الخاصة به. ولا يشارك الربط بيانات الدفع لأي طرف."
+    "服務互聯不開放其他訂單或付款資料。此 Demo 僅模擬會員匹配與邀請，不會傳送真實郵件。",
+    "Service links do not share other orders or payment details. This Demo only simulates member matching and invitations; no emails are sent.",
+    "Le lien ne partage aucune autre commande ou donnée de paiement. La démo simule les membres et invitations, sans e-mail réel.",
+    "El vínculo no comparte otros pedidos ni datos de pago. La demo simula socios e invitaciones y no envía correos.",
+    "لا يشارك ربط الخدمة طلبات أو بيانات دفع أخرى. يحاكي العرض مطابقة الأعضاء والدعوات دون إرسال بريد حقيقي."
   ],
   "link.submit": [
     "確認關係並發送邀請",
@@ -4851,18 +4851,18 @@
     "تأكيد الصلة وإرسال الدعوة"
   ],
   "link.confirmTitle": [
-    "確認成員關係",
-    "Confirm member relationship",
-    "Confirmer le lien entre membres",
-    "Confirmar la relación entre miembros",
-    "تأكيد العلاقة بين الأعضاء"
+    "確認服務協助邀請",
+    "Review service invitation",
+    "Vérifier l’invitation de service",
+    "Revisar invitación de servicio",
+    "مراجعة دعوة المساعدة"
   ],
   "link.confirmIntro": [
-    "請核對以下資料。確認後，系統會向對方會員賬戶登記的電郵發送邀請。",
-    "Check the details below. Once you confirm, we’ll send an invitation to the email registered to their account.",
-    "Vérifiez les informations ci-dessous. Après confirmation, une invitation sera envoyée à l’e-mail enregistré sur son compte.",
-    "Revisa los datos. Al confirmar, enviaremos una invitación al correo registrado en su cuenta.",
-    "راجع البيانات أدناه. بعد التأكيد سنرسل دعوة إلى البريد الإلكتروني المسجّل في حسابه."
+    "請核對邀請資料。確認後只建立待接受邀請；Demo 不會發送真實郵件。",
+    "Review the invitation. Confirming only creates a pending invitation; Demo sends no real email.",
+    "Vérifiez l’invitation. La confirmation crée seulement une invitation en attente ; aucun e-mail réel n’est envoyé.",
+    "Revisa la invitación. Al confirmar solo se crea una invitación pendiente; la demo no envía correos reales.",
+    "راجع الدعوة. التأكيد ينشئ دعوة معلقة فقط؛ لا يُرسل العرض بريداً حقيقياً."
   ],
   "link.summary.member": [
     "成員",
@@ -4893,11 +4893,11 @@
     "وقت إرسال الدعوة"
   ],
   "link.confirmWarning": [
-    "該關係一旦確認，如需更改或解除，須提交人工審核。",
-    "Once confirmed, changing or removing this relationship requires a manual review.",
-    "Une fois confirmé, toute modification ou suppression de ce lien nécessite une vérification manuelle.",
-    "Una vez confirmada, cambiar o eliminar esta relación requiere una revisión manual.",
-    "بعد التأكيد، يتطلب تغيير هذه الصلة أو إلغاؤها مراجعة يدوية."
+    "邀請不代表互聯成功。只有受邀人確認及完成相應授權後，服務權限才會生效；學生可管理或撤銷授權。",
+    "Sending is not acceptance. Permissions take effect only after recipient confirmation and consent; the student can manage or revoke them.",
+    "L’envoi ne vaut pas acceptation. Les droits exigent confirmation et accord ; l’étudiant peut les gérer ou les retirer.",
+    "Enviar no equivale a aceptar. Los permisos requieren confirmación y consentimiento; el estudiante puede gestionarlos o retirarlos.",
+    "الإرسال لا يعني القبول. تسري التفويضات بعد تأكيد المدعو وموافقته؛ ويمكن للطالب إدارتها أو سحبها."
   ],
   "link.confirmSend": [
     "確認並發送邀請",
@@ -4928,11 +4928,11 @@
     "أُرسلت الدعوة، ولم يُفعَّل الربط بعد."
   ],
   "link.statusPending": [
-    "待對方確認",
-    "Awaiting acceptance",
-    "En attente",
-    "Pendiente",
-    "بانتظار القبول"
+    "Plume Light 服務：待接受",
+    "Plume Light service: pending acceptance",
+    "Service Plume Light : en attente",
+    "Servicio Plume Light: pendiente de aceptación",
+    "خدمة Plume Light: بانتظار القبول"
   ],
   "link.pendingTitle": [
     "邀請已發送至對方的電郵",
@@ -5103,11 +5103,11 @@
     "الأعضاء: {n}"
   ],
   "link.membersEmpty": [
-    "已接受邀請的成員會顯示在這裡。",
-    "Members appear here after accepting an invitation.",
-    "Les membres apparaissent ici après avoir accepté une invitation.",
-    "Los miembros aparecen aquí tras aceptar una invitación.",
-    "يظهر الأعضاء هنا بعد قبول الدعوة."
+    "使用上方「添加關聯成員」邀請家人建立服務協助關係，並選擇所需授權。",
+    "Use “Add a linked member” above to invite family and choose service permissions.",
+    "Utilisez « Ajouter un membre » ci-dessus pour inviter un proche et choisir les droits.",
+    "Usa «Añadir miembro» arriba para invitar a familiares y elegir permisos.",
+    "استخدم «إضافة عضو مرتبط» أعلاه لدعوة العائلة واختيار تفويضات الخدمة."
   ],
   "link.inviteAnother": [
     "邀請另一位成員",
@@ -6284,5 +6284,446 @@
     "Demande de suppression refusée (démo).",
     "Solicitud de eliminación rechazada (demo).",
     "رُفض طلب إلغاء الربط (تجريبي)."
+  ],
+  "service.minorHint": [
+    "未成年會員已連結國泰監護人？無需重複建立會員關係，只需完成 Plume Light 服務授權。",
+    "Minor already linked to a Cathay guardian? Simply authorise Plume Light assistance; no need to link again.",
+    "Mineur déjà lié à un tuteur Cathay ? Autorisez simplement l’aide Plume Light, sans recréer ce lien.",
+    "¿El menor ya tiene tutor en Cathay? Solo falta autorizar la ayuda de Plume Light, sin repetir el vínculo.",
+    "هل القاصر مرتبط بوصي في كاثي؟ يكفي تفويض مساعدة Plume Light دون إنشاء الصلة مجدداً."
+  ],
+  "service.adultHint": [
+    "成年留學生可邀請家人協助預約，並自行決定是否共享行李進度。",
+    "Adult students can invite family to help book and choose whether to share luggage progress.",
+    "Les étudiants majeurs peuvent inviter leur famille à réserver et choisir de partager le suivi des bagages.",
+    "Los estudiantes adultos pueden invitar a familiares a reservar y decidir si comparten el seguimiento.",
+    "يمكن للطلاب البالغين دعوة العائلة للمساعدة في الحجز وتحديد مشاركة تتبع الأمتعة."
+  ],
+  "service.student": [
+    "服務所屬學生（Demo 乘機人）",
+    "Student receiving assistance (Demo passenger)",
+    "Étudiant bénéficiaire (passager démo)",
+    "Estudiante asistido (pasajero demo)",
+    "الطالب المستفيد (مسافر تجريبي)"
+  ],
+  "service.switchFamily": [
+    "改由家庭成員發起邀請",
+    "Invite as a family member instead",
+    "Inviter en tant que membre de la famille",
+    "Invitar como familiar",
+    "إرسال الدعوة بصفة فرد من العائلة"
+  ],
+  "service.switchStudent": [
+    "改由學生發起邀請",
+    "Invite as the student instead",
+    "Inviter en tant qu’étudiant",
+    "Invitar como estudiante",
+    "إرسال الدعوة بصفة الطالب"
+  ],
+  "service.officialLabel": [
+    "國泰會員關係",
+    "Cathay membership relationship",
+    "Lien de membre Cathay",
+    "Relación de socio Cathay",
+    "صلة عضوية كاثي"
+  ],
+  "service.official.linked": [
+    "已有監護人關係",
+    "Guardian relationship on record",
+    "Lien de tutelle enregistré",
+    "Tutela registrada",
+    "صلة وصاية مسجّلة"
+  ],
+  "service.official.unknown": [
+    "未確認",
+    "Unconfirmed",
+    "Non confirmé",
+    "Sin confirmar",
+    "غير مؤكدة"
+  ],
+  "service.official.notApplicable": [
+    "不適用",
+    "Not applicable",
+    "Sans objet",
+    "No corresponde",
+    "لا تنطبق"
+  ],
+  "service.permissions": [
+    "Plume Light 服務授權",
+    "Plume Light service permissions",
+    "Autorisations de service Plume Light",
+    "Permisos de servicio Plume Light",
+    "تفويضات خدمات Plume Light"
+  ],
+  "service.permission.booking": [
+    "可協助預約",
+    "May assist with booking",
+    "Aide à la réservation autorisée",
+    "Puede ayudar a reservar",
+    "مسموح بالمساعدة في الحجز"
+  ],
+  "service.permission.payment": [
+    "可協助付款",
+    "May assist with payment",
+    "Aide au paiement autorisée",
+    "Puede ayudar a pagar",
+    "مسموح بالمساعدة في الدفع"
+  ],
+  "service.permission.progress": [
+    "可查看行李進度",
+    "May view luggage progress",
+    "Suivi des bagages autorisé",
+    "Puede consultar el seguimiento",
+    "مسموح بتتبع الأمتعة"
+  ],
+  "service.permissionHint.booking": [
+    "沿用資訊預留 → 行李預報 → 價格計算 → 確認結算；付款另需授權。",
+    "Use the existing details → luggage → pricing → checkout flow. Payment needs separate permission.",
+    "Parcours existant : informations → bagages → prix → paiement. Le paiement exige une autorisation distincte.",
+    "Usa el flujo actual: datos → equipaje → precio → confirmación. El pago necesita un permiso aparte.",
+    "اتبع المسار الحالي: المعلومات ← الأمتعة ← التسعير ← التأكيد. الدفع يتطلب تفويضاً منفصلاً."
+  ],
+  "service.permissionHint.payment": [
+    "僅協助本旅程行李服務結算，不開放其他訂單或付款資料。",
+    "Pay for luggage services on this journey only; no access to other orders or payment details.",
+    "Payer uniquement les bagages de ce trajet, sans accès aux autres commandes ni données de paiement.",
+    "Solo paga el equipaje de este viaje; sin acceso a otros pedidos ni datos de pago.",
+    "دفع خدمة أمتعة هذه الرحلة فقط، دون الاطلاع على طلبات أو بيانات دفع أخرى."
+  ],
+  "service.permissionHint.progress": [
+    "僅共享下列旅程；服務開始後於現有行程概覽查看。",
+    "Share only the journey below; use the existing Journey Overview after service begins.",
+    "Partager uniquement le trajet ci-dessous dans l’aperçu du voyage après le début du service.",
+    "Comparte solo el viaje indicado; consulta el resumen del viaje cuando comience el servicio.",
+    "مشاركة الرحلة أدناه فقط، وعرضها في ملخص الرحلة الحالي بعد بدء الخدمة."
+  ],
+  "service.scope": [
+    "授權旅程：{journey}；其他旅程須另行授權。",
+    "Authorised journey: {journey}. Other journeys need separate consent.",
+    "Trajet autorisé : {journey}. Les autres trajets nécessitent un nouvel accord.",
+    "Viaje autorizado: {journey}. Otros viajes necesitan consentimiento aparte.",
+    "الرحلة المفوضة: {journey}. تتطلب الرحلات الأخرى موافقة منفصلة."
+  ],
+  "service.consent.student": [
+    "我以成年學生本人身份確認以上授權（Demo）",
+    "I confirm these permissions as the adult student (Demo)",
+    "Je confirme ces autorisations en tant qu’étudiant majeur (démo)",
+    "Confirmo estos permisos como estudiante adulto (demo)",
+    "أؤكد هذه التفويضات بصفتي الطالب البالغ (تجريبي)"
+  ],
+  "service.consent.guardian": [
+    "我以資料所示監護人身份確認，並按適用規則同意服務授權（Demo）",
+    "I confirm as the guardian on record and consent under the applicable rules (Demo)",
+    "Je confirme en tant que tuteur enregistré et consens selon les règles applicables (démo)",
+    "Confirmo como tutor registrado y doy consentimiento conforme a las reglas aplicables (demo)",
+    "أؤكد بصفتي الوصي المسجّل وأوافق وفق القواعد المعمول بها (تجريبي)"
+  ],
+  "service.consent.family": [
+    "我以受邀家庭成員身份接受學生設定的授權（Demo）",
+    "I accept the student’s permissions as the invited family member (Demo)",
+    "J’accepte les autorisations de l’étudiant en tant que proche invité (démo)",
+    "Acepto los permisos del estudiante como familiar invitado (demo)",
+    "أقبل تفويضات الطالب بصفتي فرد العائلة المدعو (تجريبي)"
+  ],
+  "service.consentDemo": [
+    "此確認僅模擬本人操作；沒有真實登入或身份核實。",
+    "This simulates the named person’s action; no real sign-in or identity verification.",
+    "Cette confirmation simule l’action de la personne ; aucune connexion ni vérification réelle.",
+    "Esta confirmación simula la acción de esa persona; no hay inicio de sesión ni verificación real.",
+    "يحاكي هذا التأكيد إجراء الشخص المعني؛ دون تسجيل دخول أو تحقق حقيقي من الهوية."
+  ],
+  "service.confirmRequired": [
+    "請由相應學生、監護人或受邀成員勾選身份及授權確認。",
+    "The relevant student, guardian or invited member must confirm their role and consent.",
+    "L’étudiant, le tuteur ou le proche invité doit confirmer son rôle et son accord.",
+    "El estudiante, tutor o familiar invitado correspondiente debe confirmar su identidad y consentimiento.",
+    "يجب أن يؤكد الطالب أو الوصي أو فرد العائلة المدعو صفته وموافقته."
+  ],
+  "service.guardianTitle": [
+    "確認會員及監護人資料",
+    "Check membership and guardian details",
+    "Vérifier le compte et le tuteur",
+    "Comprobar socio y tutor",
+    "التحقق من بيانات العضوية والوصي"
+  ],
+  "service.guardianRequired": [
+    "監護人關係尚未確認。請先於國泰官方會員資料完成設定；普通服務邀請不能代替監護人核實。",
+    "Guardian relationship is unconfirmed. Complete Cathay’s official profile steps first; a service invitation cannot verify guardianship.",
+    "Le lien de tutelle n’est pas confirmé. Suivez d’abord les étapes officielles Cathay ; une invitation ne vérifie pas la tutelle.",
+    "La tutela no está confirmada. Completa primero el perfil oficial de Cathay; una invitación de servicio no verifica la tutela.",
+    "لم تُؤكد صلة الوصاية. أكمل إعداد ملف كاثي الرسمي أولاً؛ دعوة الخدمة لا تتحقق من الوصاية."
+  ],
+  "service.guardianSteps": [
+    "請登入未成年會員的國泰賬戶，前往「更新資料」→「新增監護人資料」，按官方說明完成適用步驟。返回後仍須取得 Plume Light 服務授權。",
+    "Sign in to the minor’s Cathay account, select “Update profile” → “Add guardian’s contact”, and follow the official instructions. Plume Light consent is still required afterwards.",
+    "Connectez-vous au compte Cathay du mineur, puis « Update profile » → « Add guardian’s contact » et suivez les instructions officielles. L’accord Plume Light reste nécessaire.",
+    "Entra en la cuenta Cathay del menor, ve a «Update profile» → «Add guardian’s contact» y sigue las instrucciones oficiales. Después se requiere autorización de Plume Light.",
+    "ادخل حساب القاصر في كاثي ثم «Update profile» ← «Add guardian’s contact» واتبع التعليمات الرسمية. يلزم تفويض Plume Light بعد ذلك."
+  ],
+  "service.guardianOfficial": [
+    "國泰官方監護人設定說明",
+    "Official Cathay guardian instructions",
+    "Instructions officielles Cathay pour les tuteurs",
+    "Instrucciones oficiales de tutela de Cathay",
+    "تعليمات كاثي الرسمية لإعداد الوصي"
+  ],
+  "service.externalDemo": [
+    "國泰關係及確認均為 Demo 模擬，未連接真實國泰會員 API，也不會發送真實邀請郵件。",
+    "Cathay relationships and confirmations are Demo simulations. No live Cathay membership API or real invitation emails.",
+    "Les liens Cathay et confirmations sont simulés. Aucune API membre Cathay réelle ni e-mail envoyé.",
+    "Las relaciones Cathay y confirmaciones son simuladas. Sin API real de socios Cathay ni correos enviados.",
+    "صلات كاثي والتأكيدات محاكاة تجريبية. لا يوجد اتصال بواجهة عضوية كاثي الفعلية أو إرسال دعوات حقيقية."
+  ],
+  "service.guardianExisting": [
+    "Demo 會員資料已有國泰監護人關係，無需重填身份關係資料。請由資料所示監護人確認所需的 Plume Light 服務權限。",
+    "The Demo membership record already includes a Cathay guardian. No repeated identity details are needed. The guardian on record must confirm the Plume Light permissions.",
+    "Le dossier démo contient déjà un tuteur Cathay. Inutile de ressaisir l’identité ; le tuteur enregistré doit confirmer les autorisations Plume Light.",
+    "El registro demo ya incluye un tutor Cathay. No repitas los datos de identidad; el tutor registrado debe confirmar los permisos de Plume Light.",
+    "يتضمن سجل العضوية التجريبي وصياً لدى كاثي. لا حاجة لتكرار بيانات الهوية؛ يجب أن يؤكد الوصي المسجل تفويضات Plume Light."
+  ],
+  "service.memberDemo": [
+    "Demo 僅可匹配現有 Lin Chen、Alex Chen 及 Mei Chen 的國泰會員樣本。",
+    "Demo matches only the existing Cathay member samples for Lin Chen, Alex Chen and Mei Chen.",
+    "La démo reconnaît uniquement les membres exemples Lin Chen, Alex Chen et Mei Chen.",
+    "La demo reconoce solo los socios de ejemplo Lin Chen, Alex Chen y Mei Chen.",
+    "يتعرف العرض فقط على نماذج أعضاء كاثي الحالية Lin Chen وAlex Chen وMei Chen."
+  ],
+  "service.memberUnknown": [
+    "此識別資料未匹配 Demo 國泰會員。請使用現有樣本；未註冊者請前往國泰官方註冊。",
+    "These details do not match a Demo Cathay member. Use a supplied sample, or sign up on Cathay if not yet a member.",
+    "Ces données ne correspondent à aucun membre démo Cathay. Utilisez un exemple ou inscrivez-vous chez Cathay.",
+    "Los datos no coinciden con un socio demo Cathay. Usa un ejemplo o regístrate en Cathay si aún no eres socio.",
+    "لا تطابق هذه البيانات عضواً تجريبياً في كاثي. استخدم نموذجاً موجوداً أو سجّل لدى كاثي إن لم تكن عضواً."
+  ],
+  "service.selfInvite": [
+    "不能邀請自己作為家庭協助成員，請選擇另一位國泰會員。",
+    "You cannot invite yourself as a family helper. Choose another Cathay member.",
+    "Vous ne pouvez pas vous inviter comme proche aidant. Choisissez un autre membre Cathay.",
+    "No puedes invitarte como ayudante familiar. Elige otro socio Cathay.",
+    "لا يمكنك دعوة نفسك كمساعد من العائلة. اختر عضواً آخر في كاثي."
+  ],
+  "service.studentUnknown": [
+    "無法匹配現有 Demo 學生乘機人資料。",
+    "Cannot match an existing Demo student passenger.",
+    "Aucun étudiant passager démo correspondant.",
+    "No se encuentra un estudiante pasajero demo coincidente.",
+    "تعذر مطابقة بيانات طالب مسافر تجريبي."
+  ],
+  "service.eligibilityTitle": [
+    "確認服務同意規則",
+    "Check service consent requirements",
+    "Vérifier les règles de consentement",
+    "Comprobar las reglas de consentimiento",
+    "التحقق من متطلبات الموافقة على الخدمة"
+  ],
+  "service.eligibilityUnknown": [
+    "服務同意規則尚未配置，請先確認會員資料及適用規則，不能直接啟用授權。",
+    "Service consent rules are not configured. Check membership details and the applicable rules before granting permissions.",
+    "Les règles de consentement ne sont pas configurées. Vérifiez le profil et les règles avant toute autorisation.",
+    "No están configuradas las reglas de consentimiento. Verifica el perfil y las reglas antes de autorizar.",
+    "لم تُضبط قواعد الموافقة على الخدمة. تحقق من العضوية والقواعد المعمول بها قبل منح التفويضات."
+  ],
+  "service.register": [
+    "尚未成為會員？前往國泰官方註冊",
+    "Not a member? Sign up with Cathay",
+    "Pas encore membre ? S’inscrire chez Cathay",
+    "¿Aún no eres socio? Regístrate en Cathay",
+    "لست عضواً؟ سجّل في موقع كاثي الرسمي"
+  ],
+  "service.established": [
+    "Plume Light 服務：已建立",
+    "Plume Light service: established",
+    "Service Plume Light : établi",
+    "Servicio Plume Light: establecido",
+    "خدمة Plume Light: مرتبطة"
+  ],
+  "service.revoked": [
+    "Plume Light 服務：已撤銷",
+    "Plume Light service: revoked",
+    "Service Plume Light : révoqué",
+    "Servicio Plume Light: revocado",
+    "خدمة Plume Light: ملغاة"
+  ],
+  "service.notAuthorized": [
+    "Plume Light 服務：尚未授權",
+    "Plume Light service: not authorised",
+    "Service Plume Light : non autorisé",
+    "Servicio Plume Light: sin autorizar",
+    "خدمة Plume Light: غير مفوضة"
+  ],
+  "service.denied.booking": [
+    "預約未授權",
+    "Booking not authorised",
+    "Réservation non autorisée",
+    "Reserva sin autorizar",
+    "الحجز غير مفوض"
+  ],
+  "service.denied.payment": [
+    "付款未授權",
+    "Payment not authorised",
+    "Paiement non autorisé",
+    "Pago sin autorizar",
+    "الدفع غير مفوض"
+  ],
+  "service.denied.progress": [
+    "進度未共享",
+    "Progress not shared",
+    "Suivi non partagé",
+    "Seguimiento no compartido",
+    "التتبع غير مشارك"
+  ],
+  "service.activate": [
+    "啟用 Plume Light 服務協助",
+    "Enable Plume Light assistance",
+    "Activer l’aide Plume Light",
+    "Activar ayuda de Plume Light",
+    "تفعيل مساعدة Plume Light"
+  ],
+  "service.inviteAgain": [
+    "重新邀請",
+    "Invite again",
+    "Inviter à nouveau",
+    "Invitar de nuevo",
+    "إعادة الدعوة"
+  ],
+  "service.manage": [
+    "管理服務授權",
+    "Manage service permissions",
+    "Gérer les autorisations",
+    "Gestionar permisos de servicio",
+    "إدارة تفويضات الخدمة"
+  ],
+  "service.save": [
+    "確認並儲存授權",
+    "Confirm and save permissions",
+    "Confirmer et enregistrer",
+    "Confirmar y guardar permisos",
+    "تأكيد التفويضات وحفظها"
+  ],
+  "service.saved": [
+    "服務授權已更新",
+    "Service permissions updated",
+    "Autorisations mises à jour",
+    "Permisos actualizados",
+    "تم تحديث التفويضات"
+  ],
+  "service.manageBody": [
+    "請由學生本人或符合適用規則的監護人確認。三項權限分開選擇，取消勾選即可停止相應協助。",
+    "The student or eligible guardian must confirm. Choose each permission separately; uncheck one to stop that assistance.",
+    "L’étudiant ou le tuteur habilité doit confirmer. Choisissez chaque droit séparément ; décochez-le pour l’arrêter.",
+    "Debe confirmar el estudiante o tutor habilitado. Elige cada permiso por separado; desmárcalo para detener esa ayuda.",
+    "يجب تأكيد الطالب أو الوصي المؤهل. اختر كل تفويض بشكل مستقل؛ ألغِ تحديده لإيقاف المساعدة المقابلة."
+  ],
+  "service.revoke": [
+    "撤銷服務互聯",
+    "Revoke service link",
+    "Révoquer le lien de service",
+    "Revocar vínculo de servicio",
+    "إلغاء ربط الخدمة"
+  ],
+  "service.revokeBody": [
+    "確認後立即停止此 Plume Light 服務互聯的所有協助及共享權限。國泰官方會員關係維持原有狀態。",
+    "Confirmation immediately stops all assistance and sharing under this Plume Light link. The official Cathay relationship keeps its existing status.",
+    "La confirmation arrête immédiatement toute aide et tout partage liés à Plume Light. Le lien officiel Cathay reste inchangé.",
+    "La confirmación detiene toda la ayuda y el uso compartido de este vínculo Plume Light. La relación oficial de Cathay conserva su estado.",
+    "يوقف التأكيد فوراً جميع المساعدات والمشاركة في ربط Plume Light هذا. تبقى صلة كاثي الرسمية بحالتها."
+  ],
+  "service.separateRelations": [
+    "國泰會員關係與 Plume Light 服務授權分開管理；服務互聯不建立或修改官方監護人或里數轉移關係。",
+    "Cathay relationships and Plume Light permissions are separate. Service links do not establish or change official guardianship or mileage-transfer relationships.",
+    "Les liens Cathay et droits Plume Light sont distincts. Le service ne crée ni ne modifie la tutelle officielle ou les liens de transfert de miles.",
+    "Las relaciones Cathay y los permisos Plume Light son independientes. El servicio no crea ni modifica tutelas oficiales ni relaciones de transferencia de millas.",
+    "صلات كاثي وتفويضات Plume Light منفصلة. ربط الخدمة لا ينشئ أو يعدّل الوصاية الرسمية أو صلات تحويل الأميال."
+  ],
+  "service.studentManage": [
+    "學生可在此管理或撤銷授權，只有已授權的成員才會出現在乘機人頁面的協助預約選項。",
+    "The student can manage or revoke consent here. Only members with booking permission appear as helpers on the passenger page.",
+    "L’étudiant peut gérer ou retirer son accord ici. Seuls les proches autorisés à réserver apparaissent sur la page passager.",
+    "El estudiante puede gestionar o retirar el consentimiento aquí. Solo quienes pueden reservar aparecen como ayudantes en la página del pasajero.",
+    "يمكن للطالب إدارة الموافقة أو سحبها هنا. يظهر في صفحة المسافر فقط الأعضاء المفوضون بالمساعدة في الحجز."
+  ],
+  "service.payCta": [
+    "協助本旅程付款",
+    "Help pay for this journey",
+    "Aider à payer ce trajet",
+    "Ayudar a pagar este viaje",
+    "المساعدة في دفع هذه الرحلة"
+  ],
+  "service.awaitStudent": [
+    "待學生本人確認並選擇授權範圍，不計入有效互聯成員。",
+    "Awaiting the student’s confirmation and permission choices; not counted as an active link.",
+    "En attente de la confirmation et des droits choisis par l’étudiant ; exclu des liens actifs.",
+    "Pendiente de confirmación y permisos del estudiante; no cuenta como vínculo activo.",
+    "بانتظار تأكيد الطالب واختياره للتفويضات؛ لا يُحتسب ربطاً نشطاً."
+  ],
+  "service.awaitFamily": [
+    "待受邀家人接受；學生已選擇的授權在接受前不生效。",
+    "Awaiting the invited family member’s acceptance; the student’s selected permissions are not yet active.",
+    "En attente de l’acceptation du proche ; les droits choisis par l’étudiant sont encore inactifs.",
+    "Pendiente de aceptación del familiar; los permisos del estudiante aún no están activos.",
+    "بانتظار قبول فرد العائلة؛ تفويضات الطالب المختارة غير سارية حتى القبول."
+  ],
+  "service.recipientPreview": [
+    "受邀人確認（Demo）：{name}",
+    "Recipient confirmation (Demo): {name}",
+    "Confirmation du destinataire (démo) : {name}",
+    "Confirmación del destinatario (demo): {name}",
+    "تأكيد المدعو (تجريبي): {name}"
+  ],
+  "service.invitedBy": [
+    "邀請人：{name}",
+    "Invited by: {name}",
+    "Invitation de : {name}",
+    "Invitación de: {name}",
+    "الداعي: {name}"
+  ],
+  "service.studentInvitation": [
+    "學生已設定以下服務授權。請由受邀家人接受；接受並不增加其他權限。",
+    "The student selected the permissions below. The invited family member must accept; acceptance adds no other permissions.",
+    "L’étudiant a choisi les droits ci-dessous. Le proche invité doit accepter, sans obtenir d’autres droits.",
+    "El estudiante eligió los permisos siguientes. El familiar invitado debe aceptar; la aceptación no añade otros permisos.",
+    "اختار الطالب التفويضات أدناه. يجب أن يقبل فرد العائلة المدعو؛ القبول لا يضيف تفويضات أخرى."
+  ],
+  "service.familyInvitation": [
+    "家人希望協助你的行李服務。請由學生本人確認，並自行選擇授權範圍；所有權限預設關閉。",
+    "A family member wants to help with your luggage service. The student must confirm and choose permissions; all are off by default.",
+    "Un proche souhaite vous aider avec vos bagages. L’étudiant doit confirmer et choisir les droits, tous désactivés par défaut.",
+    "Un familiar desea ayudarte con el equipaje. El estudiante debe confirmar y elegir permisos; todos están desactivados inicialmente.",
+    "يرغب فرد من العائلة في مساعدتك بخدمة الأمتعة. يجب أن يؤكد الطالب ويختار التفويضات؛ جميعها معطلة افتراضياً."
+  ],
+  "service.progressDenied": [
+    "此服務互聯未獲本旅程的行李進度共享授權，無法查看行程概覽中的行李狀態。請由學生或符合規則的監護人管理授權。",
+    "This service link has no luggage-progress permission for this journey. Ask the student or eligible guardian to manage consent.",
+    "Ce lien n’autorise pas le suivi des bagages de ce trajet. L’étudiant ou le tuteur habilité doit gérer l’accord.",
+    "Este vínculo no permite seguir el equipaje de este viaje. El estudiante o tutor habilitado debe gestionar el consentimiento.",
+    "لا يملك هذا الربط تفويض تتبع أمتعة هذه الرحلة. يجب أن يدير الطالب أو الوصي المؤهل الموافقة."
+  ],
+  "service.paymentDenied": [
+    "尚未取得本旅程的付款協助授權，請由學生或符合規則的監護人確認。",
+    "Payment assistance is not authorised for this journey. The student or eligible guardian must confirm.",
+    "L’aide au paiement n’est pas autorisée pour ce trajet. L’étudiant ou le tuteur habilité doit confirmer.",
+    "La ayuda para pagar no está autorizada para este viaje. El estudiante o tutor habilitado debe confirmar.",
+    "المساعدة في دفع هذه الرحلة غير مفوضة. يجب أن يؤكد الطالب أو الوصي المؤهل."
+  ],
+  "service.bookingDenied": [
+    "尚未取得本旅程的預約協助授權。請回成員互聯頁管理授權。",
+    "Booking assistance is not authorised for this journey. Return to member links to manage permissions.",
+    "L’aide à la réservation n’est pas autorisée pour ce trajet. Gérez les droits dans les liens membres.",
+    "La ayuda para reservar este viaje no está autorizada. Vuelve a vínculos de miembros para gestionar los permisos.",
+    "المساعدة في حجز هذه الرحلة غير مفوضة. عُد إلى روابط الأعضاء لإدارة التفويضات."
+  ],
+  "service.demoExitLinked": [
+    "退出關聯演示",
+    "Exit linked demo",
+    "Quitter la démo d’association",
+    "Salir de la demo de vínculos",
+    "الخروج من عرض الربط"
+  ],
+  "service.demoOverlay": [
+    "正在使用獨立 Demo 狀態；邀請及授權只保存在演示資料中，退出後還原原有操作資料。",
+    "Using an isolated Demo state. Invitations and permissions stay in Demo data; exiting restores your saved records.",
+    "État démo isolé : invitations et droits restent dans la démo. Quitter restaure vos données enregistrées.",
+    "Estado demo aislado. Las invitaciones y permisos quedan en la demo; al salir vuelven tus datos guardados.",
+    "حالة تجريبية معزولة. تبقى الدعوات والتفويضات ضمن العرض؛ الخروج يعيد سجلاتك المحفوظة."
   ]
 }

@@ -276,6 +276,17 @@
 .family-summary .row+.row{border-top:1px solid #edf1ec}
 .family-actions{margin-top:20px}
 .family-demo-actions{margin-bottom:24px}
+.family-hints{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.family-hints p{padding:12px 14px;border-radius:10px;background:var(--pale);color:var(--green);font-size:calc(12px * var(--text-scale,1));line-height:1.75;overflow-wrap:anywhere}
+.family-official-status{margin-top:12px;color:var(--green);font-size:calc(11px * var(--text-scale,1));line-height:1.7;overflow-wrap:anywhere}
+.family-permission-options{margin:18px 0 0;padding:12px 14px;border:1px solid var(--line);border-radius:12px;min-width:0}
+.family-permission-options legend{padding-inline:6px;color:var(--green);font-size:calc(13px * var(--text-scale,1))}
+.family-permission{align-items:flex-start;margin:8px 0 14px}
+.family-permission input{flex:none;margin-top:4px}
+.family-permission span{min-width:0;overflow-wrap:anywhere}
+.family-permission small{display:block;margin-top:3px;color:var(--muted);font-size:calc(11px * var(--text-scale,1));line-height:1.7}
+.family-subject{margin-bottom:16px}
+@media(max-width:700px){.family-hints{grid-template-columns:1fr;gap:8px}.family-hints p{padding:10px 12px}}
 .family-actions .btn .icon{width:18px;height:18px}
 .member-initials{display:grid;place-items:center;flex:none;width:54px;height:54px;border-radius:50%;background:var(--green);color:#fff;font-size:calc(17px * var(--text-scale,1));font-weight:600;letter-spacing:.04em}
 dialog .body.rich{white-space:normal}

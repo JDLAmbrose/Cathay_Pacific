@@ -10,6 +10,7 @@ import {
   checked,
   demand,
   eventCounts,
+  familySessionPermission,
 } from "../engine/booking";
 import { cx, keyed } from "../components/primitives";
 import { HandoverTracking } from "../components/Tracking";
@@ -26,9 +27,13 @@ import {
 } from "../components/shared";
 
 function JourneyPage() {
+  if (!familySessionPermission("progress")) return <>
+    {head("journey.title", "journey.sub")}
+    <div className={cx("card")}><div className={cx("notice")}>{T("service.progressDenied")}</div>{link("family", T("service.manage"), "btn light")}</div>
+  </>;
   const o = activeOrder(),
     last = state.orders
-      .filter((o) => o.travellerId === state.travellerId)
+      .filter((o) => o.travellerId === state.travellerId && (!state.familyAccess || o.flight.bookingId === state.flight.bookingId && o.flight.legId === state.flight.legId))
       .at(-1),
     d = demand(o?.declaration || draft()),
     c = eventCounts(o),
@@ -123,13 +128,13 @@ function JourneyPage() {
                 <button className={cx("textbtn")} data-action={"contact"}>
                   {T("journey.contact")}
                 </button>
-                <button
+                {!state.familyAccess && <button
                   className={cx("textbtn")}
                   data-action={"cancel-order"}
                   data-id={o.id}
                 >
                   {T("journey.cancel")}
-                </button>
+                </button>}
               </div>
             </>
           ) : (
@@ -194,7 +199,7 @@ function JourneyPage() {
           }),
         )}
       </div>
-      {o ? (
+      {o && !state.familyAccess ? (
         <details className={cx("controlbar")}>
           <summary>{T("demo.events")}</summary>
           <div className={cx("actions", "marginTop-18px")}>
