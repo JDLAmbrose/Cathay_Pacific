@@ -56,11 +56,11 @@ it("sends only the allowlisted context, preserves turns, and escapes assistant t
 it("reports failures and retries without duplicating the user message", async () => {
   const askAssistant = vi
     .fn()
-    .mockRejectedValueOnce(new Error("provider_subscription_expired"))
+    .mockRejectedValueOnce(new Error("provider_quota"))
     .mockResolvedValueOnce({ reply: "Recovered", tools: [] });
   setDataSource({ ...browserDataSource, askAssistant });
   await sendQuestion("Hello");
-  expect(agentRuntime.error).toBe("agent.expired");
+  expect(agentRuntime.error).toBe("agent.quota");
   await sendQuestion("Hello", true);
   expect(state.agent.messages.map((message) => message.role)).toEqual([
     "user",
@@ -92,4 +92,36 @@ it("does not call the assistant provider in local mode", async () => {
   await sendQuestion("power bank 74 Wh");
   expect(askAssistant).not.toHaveBeenCalled();
   expect(state.agent.answer).toMatchObject({ category: "battery" });
+});
+
+
+it("sends image-only turns and retains photos on retry without persisting bytes", async () => {
+  const image = { dataUrl: "data:image/jpeg;base64,/9j/2Q==", name: "item.jpg" };
+  const saveBooking = vi.fn();
+  const askAssistant = vi.fn().mockRejectedValueOnce(new Error("provider_rate_limit"))
+    .mockResolvedValue({ reply: "Cannot yet confirm", tools: [] });
+  setDataSource({ ...browserDataSource, askAssistant, saveBooking });
+  agentRuntime.image = image;
+  await sendQuestion("");
+  expect(askAssistant.mock.calls[0][0].messages[0].images).toEqual([image.dataUrl]);
+  expect(askAssistant.mock.calls[0][0].messages[0].content.length).toBeGreaterThan(0);
+  expect(agentRuntime.image).toBeNull();
+  expect(JSON.stringify(saveBooking.mock.calls)).not.toContain("data:image");
+  const question = state.agent.messages[0].text;
+  await sendQuestion(question, true);
+  expect(askAssistant.mock.calls[1][0].messages[0].images).toEqual([image.dataUrl]);
+  expect(state.agent.messages).toHaveLength(2);
+  await sendQuestion("What else?");
+  expect(askAssistant.mock.calls[2][0].messages[0].images).toEqual([image.dataUrl]);
+  const restored = JSON.parse(JSON.stringify(state));
+  restoreBooking(restored);
+  await sendQuestion("Check it again");
+  expect(askAssistant.mock.calls[3][0].messages[0].images).toBeUndefined();
+  expect(askAssistant.mock.calls[3][0].messages[0].content).toContain("Earlier image unavailable");
+});
+
+it("clears a pending image with a new conversation", () => {
+  agentRuntime.image = { dataUrl: "data:image/jpeg;base64,/9j/2Q==", name: "item.jpg" };
+  clearAgentConversation(false);
+  expect(agentRuntime.image).toBeNull();
 });

@@ -6174,11 +6174,11 @@
     "جهّز أمتعتك وقارن الخيارات وخطّط لرحلتك."
   ],
   "agent.liveLabel": [
-    "GLM 智能助手",
-    "GLM assistant",
-    "Assistant GLM",
-    "Asistente GLM",
-    "مساعد GLM"
+    "OpenAI 智能助手",
+    "OpenAI assistant",
+    "Assistant OpenAI",
+    "Asistente OpenAI",
+    "مساعد OpenAI"
   ],
   "agent.localLabel": [
     "離線規則演示",
@@ -6188,11 +6188,11 @@
     "عرض القواعد دون اتصال"
   ],
   "agent.ready": [
-    "GLM 已配置 · 可開始對話",
-    "GLM configured · Ready to chat",
-    "GLM configuré · Prêt à discuter",
-    "GLM configurado · Listo para conversar",
-    "تم إعداد GLM · جاهز للمحادثة"
+    "OpenAI 已配置 · 可開始對話",
+    "OpenAI configured · Ready to chat",
+    "OpenAI configuré · Prêt à discuter",
+    "OpenAI configurado · Listo para conversar",
+    "تم إعداد OpenAI · جاهز للمحادثة"
   ],
   "agent.checking": [
     "正在檢查助手連線…",
@@ -6251,11 +6251,11 @@
     "أعد المحاولة"
   ],
   "agent.privacy": [
-    "發送問題時，對話及行程／行李摘要會交由 GLM 處理；不會自動傳送聯絡資料、詳細地址或證件。請勿在問題中輸入敏感資料。",
-    "Sending a question shares the conversation and trip/luggage summary with GLM. Contact details, full addresses and identity documents are not sent automatically. Avoid sensitive details in your messages.",
-    "L’envoi partage la conversation et un résumé du voyage et des bagages avec GLM, sans transmettre automatiquement coordonnées, adresses complètes ou pièces d’identité. Évitez les données sensibles.",
-    "Al enviar, se comparte la conversación y un resumen del viaje y equipaje con GLM. No se envían automáticamente contactos, direcciones completas ni documentos. Evita datos sensibles.",
-    "يشارك الإرسال المحادثة وملخص الرحلة والأمتعة مع GLM. لا تُرسل بيانات الاتصال أو العناوين التفصيلية أو وثائق الهوية تلقائياً. تجنّب المعلومات الحساسة في الرسائل."
+    "發送問題時，對話及行程／行李摘要會交由 OpenAI 處理；不會自動傳送聯絡資料、詳細地址或證件。請勿在問題中輸入敏感資料。",
+    "Sending a question shares the conversation and trip/luggage summary with OpenAI. Contact details, full addresses and identity documents are not sent automatically. Avoid sensitive details in your messages.",
+    "L’envoi partage la conversation et un résumé du voyage et des bagages avec OpenAI, sans transmettre automatiquement coordonnées, adresses complètes ou pièces d’identité. Évitez les données sensibles.",
+    "Al enviar, se comparte la conversación y un resumen del viaje y equipaje con OpenAI. No se envían automáticamente contactos, direcciones completas ni documentos. Evita datos sensibles.",
+    "يشارك الإرسال المحادثة وملخص الرحلة والأمتعة مع OpenAI. لا تُرسل بيانات الاتصال أو العناوين التفصيلية أو وثائق الهوية تلقائياً. تجنّب المعلومات الحساسة في الرسائل."
   ],
   "agent.contextNote": [
     "詢問其他目的地不會更改機票。價格、訂單及截止為演示資料，尚未接入即時官方規則。行李或預訂變更請到對應頁面確認。",
@@ -6300,25 +6300,18 @@
     "قواعد الخدمة التجريبية"
   ],
   "agent.authError": [
-    "GLM 拒絕了目前的 API key，請聯絡團隊更新配置。",
-    "GLM rejected the API key. Ask the team to update the configuration.",
-    "GLM a refusé la clé API. Demandez à l’équipe de la mettre à jour.",
-    "GLM rechazó la clave API. Pide al equipo que actualice la configuración.",
-    "رفض GLM مفتاح API. اطلب من الفريق تحديث الإعدادات."
-  ],
-  "agent.expired": [
-    "GLM 套餐已到期，請團隊續訂或更換可用的 API key；也可切換離線演示。",
-    "The GLM subscription has expired. The team needs to renew or use a working API key. The offline demo is still available.",
-    "L’abonnement GLM a expiré. L’équipe doit le renouveler ou changer de clé. La démo hors ligne reste disponible.",
-    "La suscripción GLM ha caducado. El equipo debe renovarla o cambiar la clave. La demo sin conexión sigue disponible.",
-    "انتهى اشتراك GLM. على الفريق التجديد أو استخدام مفتاح صالح. العرض دون اتصال متاح."
+    "OpenAI 拒絕了目前的 API key，請聯絡團隊更新配置。",
+    "OpenAI rejected the API key. Ask the team to update the configuration.",
+    "OpenAI a refusé la clé API. Demandez à l’équipe de la mettre à jour.",
+    "OpenAI rechazó la clave API. Pide al equipo que actualice la configuración.",
+    "رفض OpenAI مفتاح API. اطلب من الفريق تحديث الإعدادات."
   ],
   "agent.quota": [
-    "GLM API 額度不足，請團隊檢查帳戶餘額或切換離線演示。",
-    "GLM API quota is insufficient. Ask the team to check the account, or use the offline demo.",
-    "Quota GLM insuffisant. Demandez à l’équipe de vérifier le compte ou utilisez la démo hors ligne.",
-    "La cuota de GLM es insuficiente. Pide al equipo que revise la cuenta o usa la demo sin conexión.",
-    "حصة GLM غير كافية. اطلب من الفريق التحقق من الحساب أو استخدم العرض دون اتصال."
+    "OpenAI API 額度不足，請團隊檢查帳戶餘額或切換離線演示。",
+    "OpenAI API quota is insufficient. Ask the team to check the account, or use the offline demo.",
+    "Quota OpenAI insuffisant. Demandez à l’équipe de vérifier le compte ou utilisez la démo hors ligne.",
+    "La cuota de OpenAI es insuficiente. Pide al equipo que revise la cuenta o usa la demo sin conexión.",
+    "حصة OpenAI غير كافية. اطلب من الفريق التحقق من الحساب أو استخدم العرض دون اتصال."
   ],
   "agent.rateLimit": [
     "助手目前繁忙或達到調用限制，請稍後重試。",
@@ -6342,11 +6335,11 @@
     "لم تكتمل الإجابة. جرّب سؤالاً أقصر."
   ],
   "agent.connectionError": [
-    "暫時無法取得 GLM 回答。請重試，或選擇離線規則演示。",
-    "A GLM reply is unavailable. Retry or select the offline rule demo.",
-    "Réponse GLM indisponible. Réessayez ou choisissez la démo hors ligne.",
-    "No se pudo obtener una respuesta de GLM. Reintenta o elige la demo sin conexión.",
-    "إجابة GLM غير متاحة الآن. أعد المحاولة أو اختر عرض القواعد دون اتصال."
+    "暫時無法取得 OpenAI 回答。請重試，或選擇離線規則演示。",
+    "A OpenAI reply is unavailable. Retry or select the offline rule demo.",
+    "Réponse OpenAI indisponible. Réessayez ou choisissez la démo hors ligne.",
+    "No se pudo obtener una respuesta de OpenAI. Reintenta o elige la demo sin conexión.",
+    "إجابة OpenAI غير متاحة الآن. أعد المحاولة أو اختر عرض القواعد دون اتصال."
   ],
   "agent.contextChanged": [
     "等待時行程或行李已變更，請重試以取得最新回答。",
@@ -6851,5 +6844,89 @@
     "Inclus",
     "Incluido",
     "مشمول"
+  ],
+  "agent.upload": [
+    "上傳物品照片",
+    "Upload an item photo",
+    "Ajouter une photo de l’objet",
+    "Subir foto del artículo",
+    "رفع صورة للغرض"
+  ],
+  "agent.photoAlt": [
+    "準備諮詢的物品照片",
+    "Item photo for assessment",
+    "Photo de l’objet à examiner",
+    "Foto del artículo a consultar",
+    "صورة الغرض المراد فحصه"
+  ],
+  "agent.removePhoto": [
+    "移除照片",
+    "Remove photo",
+    "Retirer la photo",
+    "Quitar foto",
+    "إزالة الصورة"
+  ],
+  "agent.imageHelp": [
+    "每次一張 JPG、PNG 或 WebP，最大 8 MB。發送後才交由 OpenAI 處理；照片只留在本頁記憶體，重新整理後需重傳。請避開證件、臉孔及地址。照片不能代替航空公司或海關許可。",
+    "One JPG, PNG or WebP, up to 8 MB per turn. Sent to OpenAI only when you send the question. Photos stay in page memory; re-upload after refresh. Avoid IDs, faces and addresses. Photos cannot establish airline or customs permission.",
+    "Une photo JPG, PNG ou WebP, 8 Mo max. Transmise à OpenAI uniquement à l’envoi. Conservée en mémoire de la page ; à renvoyer après actualisation. Évitez documents, visages et adresses. Une photo ne vaut pas autorisation de transport.",
+    "Una foto JPG, PNG o WebP, hasta 8 MB. Se envía a OpenAI al enviar la pregunta. Solo se guarda en la memoria de la página; vuelve a subirla tras recargar. Evita documentos, caras y direcciones. Una foto no acredita permiso de transporte.",
+    "صورة JPG أو PNG أو WebP واحدة، حتى 8 ميغابايت. تُرسل إلى OpenAI عند إرسال السؤال فقط. تبقى في ذاكرة الصفحة وتحتاج لإعادة الرفع بعد التحديث. تجنّب الوثائق والوجوه والعناوين. الصورة لا تعني تصريحاً بالنقل."
+  ],
+  "agent.imageLoading": [
+    "正在準備照片…",
+    "Preparing photo…",
+    "Préparation de la photo…",
+    "Preparando foto…",
+    "جارٍ تجهيز الصورة…"
+  ],
+  "agent.imageType": [
+    "請選擇 JPG、PNG 或 WebP 照片；不支援 HEIC、GIF 或 SVG。",
+    "Choose a JPG, PNG or WebP photo. HEIC, GIF and SVG are not supported.",
+    "Choisissez une photo JPG, PNG ou WebP. HEIC, GIF et SVG ne sont pas pris en charge.",
+    "Elige una foto JPG, PNG o WebP. No se admite HEIC, GIF ni SVG.",
+    "اختر صورة JPG أو PNG أو WebP. صيغ HEIC وGIF وSVG غير مدعومة."
+  ],
+  "agent.imageSize": [
+    "照片太大或過於複雜，請選擇 8 MB 以內的較小照片。",
+    "The photo is too large or complex. Choose a smaller photo under 8 MB.",
+    "Photo trop grande ou complexe. Choisissez une photo plus petite de moins de 8 Mo.",
+    "La foto es demasiado grande o compleja. Elige una de menos de 8 MB.",
+    "الصورة كبيرة أو معقدة جداً. اختر صورة أصغر من 8 ميغابايت."
+  ],
+  "agent.imageRead": [
+    "無法讀取這張照片，請重新選擇清晰的 JPG、PNG 或 WebP。",
+    "Cannot read this photo. Select a clear JPG, PNG or WebP again.",
+    "Photo illisible. Sélectionnez une photo JPG, PNG ou WebP nette.",
+    "No se puede leer la foto. Selecciona una imagen JPG, PNG o WebP clara.",
+    "تعذّرت قراءة الصورة. اختر صورة واضحة بصيغة JPG أو PNG أو WebP."
+  ],
+  "agent.imageQuestion": [
+    "請查看這張物品照片，分開說明可確認的資訊、缺少的規格及需要官方核實的攜帶要求。",
+    "Please assess this item photo: separate visible facts, missing specifications and carriage requirements needing official verification.",
+    "Examinez cette photo : distinguez les faits visibles, les caractéristiques manquantes et les règles de transport à vérifier officiellement.",
+    "Revisa esta foto: separa los datos visibles, especificaciones faltantes y requisitos de transporte que necesitan verificación oficial.",
+    "افحص صورة الغرض: افصل الحقائق الظاهرة والمواصفات الناقصة ومتطلبات النقل التي تحتاج إلى تحقق رسمي."
+  ],
+  "agent.imageExpired": [
+    "先前照片已不在本頁，需重新上傳才能再次看圖。",
+    "The earlier photo is no longer available. Re-upload it for another visual check.",
+    "La photo précédente n’est plus disponible. Renvoyez-la pour un nouvel examen.",
+    "La foto anterior ya no está disponible. Súbela otra vez para revisarla.",
+    "الصورة السابقة لم تعد متاحة. أعد رفعها لفحصها مجدداً."
+  ],
+  "agent.modelError": [
+    "目前模型不可用，請團隊確認 OpenAI 模型名稱及存取權限。",
+    "This model is unavailable. Ask the team to check the OpenAI model name and access.",
+    "Modèle indisponible. Demandez à l’équipe de vérifier le nom et l’accès OpenAI.",
+    "Modelo no disponible. Pide al equipo revisar el nombre y acceso a OpenAI.",
+    "النموذج غير متاح. اطلب من الفريق التحقق من اسمه وصلاحية الوصول في OpenAI."
+  ],
+  "agent.refusal": [
+    "助手無法處理這項請求，請換一張物品照片或調整問題。",
+    "The assistant cannot process this request. Try another item photo or rephrase.",
+    "L’assistant ne peut pas traiter cette demande. Changez de photo ou reformulez.",
+    "El asistente no puede procesar la solicitud. Cambia la foto o reformula.",
+    "لا يستطيع المساعد معالجة هذا الطلب. جرّب صورة أخرى أو أعد صياغة السؤال."
   ]
 }

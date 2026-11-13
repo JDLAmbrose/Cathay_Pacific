@@ -147,7 +147,7 @@ class Handler(SimpleHTTPRequestHandler):
             return
         try:
             length = int(self.headers.get("Content-Length", "0"))
-            if length > (131_072 if path == CHAT_PATH else 1_048_576):
+            if length > (assistant.MAX_REQUEST_BYTES if path == CHAT_PATH else 1_048_576):
                 self.send_json(413, {"error": "request_too_large"})
                 return
             if length <= 0:
@@ -199,10 +199,10 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--bind", default="0.0.0.0" if os.environ.get("PORT") else "127.0.0.1")
     parser.add_argument("--port", type=int, default=int(os.environ.get("PORT", "8000")))
-    parser.add_argument("--api-key-file", help="Read GLM key from a private file outside the website")
+    parser.add_argument("--api-key-file", help="Read OpenAI key from a private file outside the website")
     args = parser.parse_args()
     if args.api_key_file:
-        os.environ["GLM_API_KEY_FILE"] = args.api_key_file
+        os.environ["OPENAI_API_KEY_FILE"] = args.api_key_file
     with ThreadingHTTPServer((args.bind, args.port), Handler) as server:
         print(f"Plume Light: http://{args.bind}:{server.server_port}/", flush=True)
         try:

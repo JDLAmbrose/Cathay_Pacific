@@ -465,3 +465,9 @@ html[dir=rtl] .milestone-stage-copy,html[dir=rtl] .milestone-summary>p{direction
   @keyframes icon-arrival{from{transform:translateY(6px) scale(.84);opacity:.55}65%{transform:translateY(-2px) scale(1.08);opacity:1}to{transform:none;opacity:1}}
   @media (max-width:580px){.heroart{--ticket-lift:-11px;--tag-travel:10px}}
 }
+
+.agent-upload{margin-block:16px;padding:14px;border:1px solid var(--line);border-radius:12px}
+.agent-upload input{max-width:100%;font:inherit}
+.agent-preview{display:flex;align-items:center;flex-wrap:wrap;gap:12px;margin-top:12px;overflow-wrap:anywhere}
+.agent-preview span{max-width:100%;overflow-wrap:anywhere}
+.agent-image{display:block;max-width:min(100%,240px);max-height:180px;object-fit:contain;border-radius:8px;margin-block:8px}

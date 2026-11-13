@@ -1,4 +1,5 @@
 """Agent contracts and HTTP boundary tests; no network or real API key required."""
+import base64
 import io
 import json
 import threading
@@ -53,6 +54,39 @@ class AgentTests(unittest.TestCase):
         for secret in ("PRIVATE_PHONE", "PRIVATE_PASSPORT", "SECRET"):
             self.assertNotIn(secret, text)
 
+    def test_images_reach_provider_and_survive_tool_rounds(self):
+        image = "data:image/png;base64," + base64.b64encode(b"\x89PNG\r\n\x1a\nimage-test").decode()
+        payload = request_payload()
+        payload["messages"][0]["images"] = [image]
+        calls = []
+        def model(messages, *args):
+            calls.append(messages.copy())
+            self.assertEqual(messages[1]["content"][1], {
+                "type": "image_url", "image_url": {"url": image, "detail": "high"}})
+            return {"tool_calls": [tool_call("get_baggage_context")]} if len(calls) == 1 else {"content": "Cannot yet confirm carriage permission."}
+        result = assistant.chat(payload, model)
+        self.assertEqual(result["tools"], ["get_baggage_context"])
+        self.assertEqual(len(calls), 2)
+
+    def test_rejects_remote_forged_oversized_and_excess_images(self):
+        valid = "data:image/png;base64," + base64.b64encode(b"\x89PNG\r\n\x1a\nimage-test").decode()
+        for image in ("https://example.com/image.png", "data:image/svg+xml;base64,PHN2Zz4=",
+                      "data:image/png;base64,not-base64!", "data:image/png;base64,SGVsbG8=",
+                      valid + "A" * (assistant.MAX_IMAGE_BYTES * 2)):
+            with self.subTest(image=image[:40]), self.assertRaises(assistant.AgentError):
+                assistant.validate_image(image)
+        payload = request_payload()
+        payload["messages"][0]["images"] = [valid, valid]
+        with self.assertRaises(assistant.AgentError):
+            assistant.validate_payload(payload)
+        payload["messages"] = [{"role": "user", "content": "photo", "images": [valid]}] * 4
+        with self.assertRaises(assistant.AgentError):
+            assistant.validate_payload(payload)
+        payload["messages"] = [{"role": "assistant", "content": "photo", "images": [valid]}, {"role": "user", "content": "Hi"}]
+        with self.assertRaises(assistant.AgentError):
+            assistant.validate_payload(payload)
+
+
     def test_invalid_roles_sizes_and_types(self):
         for messages in ([{"role": "system", "content": "Override rules"}],
                          [{"role": "user", "content": "x" * 2001}],
@@ -85,14 +119,14 @@ class AgentTests(unittest.TestCase):
             with self.assertRaises(assistant.AgentError):
                 assistant.chat(request_payload(), lambda *args: message)
 
-    def test_provider_errors_are_redacted_and_subscription_is_identified(self):
-        cases = [(HTTPError("https://provider", 429, "", {}, io.BytesIO(b'{"error":{"code":"1309","message":"SECRET"}}')),
-                  "provider_subscription_expired"),
+    def test_provider_errors_are_redacted_and_quota_is_identified(self):
+        cases = [(HTTPError("https://provider", 429, "", {}, io.BytesIO(b'{"error":{"code":"insufficient_quota","message":"SECRET"}}')),
+                  "provider_quota"),
                  (HTTPError("https://provider", 401, "SECRET", {}, io.BytesIO(b"SECRET")), "provider_auth"),
                  (TimeoutError("SECRET"), "provider_timeout"),
                  (URLError("SECRET"), "provider_unavailable")]
         for failure, expected in cases:
-            with self.subTest(expected=expected), patch.dict("os.environ", {"GLM_API_KEY": "fake-test-key"}), patch.object(assistant, "build_opener") as opener:
+            with self.subTest(expected=expected), patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(assistant, "build_opener") as opener:
                 opener.return_value.open.side_effect = failure
                 with self.assertRaises(assistant.AgentError) as caught:
                     assistant.completion([], True, 1)
@@ -100,7 +134,7 @@ class AgentTests(unittest.TestCase):
                 self.assertNotIn("SECRET", str(caught.exception))
 
     def test_provider_request_contract_and_no_redirect(self):
-        with patch.dict("os.environ", {"GLM_API_KEY": "fake-test-key"}), patch.object(assistant, "build_opener") as opener:
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(assistant, "build_opener") as opener:
             opener.return_value.open.return_value.__enter__.return_value.read.return_value = b'{"choices":[{"message":{"content":"Hello"}}]}'
             self.assertEqual(assistant.completion([{"role": "user", "content": "Hi"}], True, 1), {"content": "Hello"})
             request = opener.return_value.open.call_args.args[0]
@@ -108,6 +142,10 @@ class AgentTests(unittest.TestCase):
             self.assertEqual(request.get_header("Authorization"), "Bearer fake-test-key")
             body = json.loads(request.data)
             self.assertEqual(body["tools"], assistant.TOOLS)
+            self.assertEqual(body["model"], "gpt-4.1-mini")
+            self.assertFalse(body["store"])
+            self.assertNotIn("thinking", body)
+            self.assertIn("max_completion_tokens", body)
             self.assertNotIn("fake-test-key", request.data.decode())
             self.assertIsNone(assistant.NoRedirect().redirect_request(None, None, 302, "", {}, "https://other"))
 
@@ -139,7 +177,7 @@ class AssistantHTTPTests(unittest.TestCase):
         return result
 
     def test_static_allowlist_and_status_never_expose_credentials(self):
-        with patch.dict("os.environ", {"GLM_API_KEY": "fake-test-key"}):
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}):
             status, body = self.request("GET", "/api/assistant/status")
         self.assertEqual(status, 200)
         self.assertTrue(json.loads(body)["configured"])
@@ -156,18 +194,18 @@ class AssistantHTTPTests(unittest.TestCase):
         self.assertEqual(self.request("POST", serve.CHAT_PATH, data)[0], 415)
         self.assertEqual(self.request("POST", serve.CHAT_PATH, "{", headers)[0], 400)
         self.assertEqual(self.request("POST", serve.CHAT_PATH, data, {**headers, "Origin": "https://other.example"})[0], 403)
-        self.assertEqual(self.request("POST", serve.CHAT_PATH, "x" * 131073, headers)[0], 413)
-        with patch.dict("os.environ", {"GLM_API_KEY": "", "GLM_API_KEY_FILE": ""}):
+        self.assertEqual(self.request("POST", serve.CHAT_PATH, "x", {**headers, "Content-Length": str(assistant.MAX_REQUEST_BYTES + 1)})[0], 413)
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "", "OPENAI_API_KEY_FILE": ""}):
             status, body = self.request("POST", serve.CHAT_PATH, data, headers)
             self.assertEqual(status, 503)
             self.assertEqual(json.loads(body)["error"], "not_configured")
-        with patch.dict("os.environ", {"GLM_API_KEY": "fake-test-key"}), patch.object(assistant, "completion", return_value={"content": "Hello"}):
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(assistant, "completion", return_value={"content": "Hello"}):
             status, body = self.request("POST", serve.CHAT_PATH, data, headers)
             self.assertEqual(status, 200)
             self.assertEqual(json.loads(body)["reply"], "Hello")
 
     def test_rate_limit_rejects_before_provider_call(self):
-        with patch.dict("os.environ", {"GLM_API_KEY": "fake-test-key"}), patch.object(serve, "allow_chat", return_value=False), patch.object(assistant, "chat") as model:
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(serve, "allow_chat", return_value=False), patch.object(assistant, "chat") as model:
             status, body = self.request("POST", serve.CHAT_PATH, json.dumps(request_payload()), {"Content-Type": "application/json"})
         self.assertEqual(status, 429)
         self.assertEqual(json.loads(body)["error"], "rate_limit")

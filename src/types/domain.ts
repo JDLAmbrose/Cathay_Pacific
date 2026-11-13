@@ -188,6 +188,7 @@ export type Message = {
   mode?: string;
   tools?: string[];
   failed?: boolean;
+  imageCount?: number;
 };
 export type AssistantAnswer = {
   kind: string;
@@ -312,7 +313,7 @@ export type TrackingRecord =
       demo?: boolean;
     };
 export type AssistantInput = {
-  messages: { role: string; content: string }[];
+  messages: { role: string; content: string; images?: string[] }[];
   language: Locale;
   context: object;
 };

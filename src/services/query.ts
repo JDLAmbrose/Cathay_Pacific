@@ -39,6 +39,7 @@ export function requestAssistantReply(
     queryClient,
     {
       mutationFn: (payload) => dataSource.askAssistant(payload, signal),
+      gcTime: 0,
     },
   );
   return request.mutate(input);

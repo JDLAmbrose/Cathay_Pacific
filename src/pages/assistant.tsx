@@ -9,7 +9,10 @@ import {
   displayValue,
   agentRuntime,
   liveAgent,
+  selectAgentImage,
+  removeAgentImage,
 } from "../engine/booking";
+import { messageImage } from "../services/assistantImages";
 import { t } from "../services/i18n";
 import { cx, keyed, Input, Select, Option } from "../components/primitives";
 import { useQuery } from "@tanstack/react-query";
@@ -355,6 +358,7 @@ function rulesAnswerHTML(ans) {
   );
 }
 function agentMessageHTML(m) {
+  const image = messageImage(m);
   const tools = {
     get_trip_context: "agent.toolTrip",
     get_baggage_context: "agent.toolBaggage",
@@ -373,6 +377,8 @@ function agentMessageHTML(m) {
       <div className={cx("message-text")}>
         {m.key ? T(m.key) : text(m.text)}
       </div>
+      {image ? <img className={cx("agent-image")} src={image.dataUrl} alt={T("agent.photoAlt")} />
+        : m.imageCount ? <small className={cx("message-source")}>{T("agent.imageExpired")}</small> : null}
       {m.tools?.length ? (
         <small className={cx("message-source")}>
           {T("agent.consulted")}{" "}
@@ -489,6 +495,26 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
                 ? serviceAnswerHTML(ans)
                 : rulesAnswerHTML(ans)
               : ""}{" "}
+            {live && <div className={cx("agent-upload")}>
+              <label className={cx("field")}>
+                <span>{T("agent.upload")}</span>
+                <input type="file" accept="image/jpeg,image/png,image/webp"
+                  aria-label={T("agent.upload")} disabled={busy || agentRuntime.imageLoading}
+                  onChange={(event) => {
+                    const file = event.currentTarget.files?.[0];
+                    event.currentTarget.value = "";
+                    void selectAgentImage(file);
+                  }} />
+              </label>
+              <p className={cx("note")}>{T("agent.imageHelp")}</p>
+              {agentRuntime.imageLoading && <p role="status">{T("agent.imageLoading")}</p>}
+              {agentRuntime.imageError && <p className={cx("notice error")} role="alert">{T(agentRuntime.imageError)}</p>}
+              {agentRuntime.image && <div className={cx("agent-preview")}>
+                <img className={cx("agent-image")} src={agentRuntime.image.dataUrl} alt={T("agent.photoAlt")} />
+                <span>{agentRuntime.image.name}</span>
+                <button type="button" className={cx("textbtn")} disabled={busy} onClick={() => removeAgentImage()}>{T("agent.removePhoto")}</button>
+              </div>}
+            </div>}
             <form id={"chatForm"} className={cx("chatinput")}>
               <label className={cx("sr-only")} htmlFor={"chatQuestion"}>
                 {T("ai.input")}
@@ -500,14 +526,14 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
                 maxLength={2000}
                 placeholder={T("ai.placeholder")}
                 value={text(a.questionDraft || "")}
-                required
+                required={!agentRuntime.image}
                 autoComplete={"off"}
-                {...(busy ? { disabled: true } : {})}
+                {...(busy || agentRuntime.imageLoading ? { disabled: true } : {})}
               />
               <button
                 className={cx("btn")}
                 type={"submit"}
-                {...(busy ? { disabled: true } : {})}
+                {...(busy || agentRuntime.imageLoading ? { disabled: true } : {})}
               >
                 {T("ai.send")}
                 {icon("arrow", "arrow")}

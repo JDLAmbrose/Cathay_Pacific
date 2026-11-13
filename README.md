@@ -26,7 +26,7 @@ macOS 也可雙擊 [start.command](start.command)，或執行 `sh start.command`
 
 - 想自行開啟瀏覽器，可執行 `npm start -- --no-open`。
 - 8000 已被佔用時，macOS / Linux 可執行 `PLUME_PORT=8001 npm start`，PowerShell 可先執行 `$env:PLUME_PORT = '8001'` 再執行 `npm start`。
-- 沒有 GLM 密鑰時，進入「AI 出行助手」並選擇「離線規則演示」。啟用 GLM 的方式見 [AI 助手接入指南](doc/AI_AGENT.md)。
+- 沒有 OpenAI 密鑰時，進入「AI 出行助手」並選擇「離線規則演示」。啟用 OpenAI 的方式見 [AI 助手接入指南](doc/AI_AGENT.md)。
 
 請透過 HTTP 開啟網站。首頁與各功能頁需要載入 JavaScript modules，直接雙擊 HTML 無法啟動。演示時請固定使用同一瀏覽器、主機名與連接埠，因為 `localhost`、`127.0.0.1` 和不同連接埠各有自己的瀏覽器資料。
 
@@ -37,7 +37,7 @@ npm ci
 npm run dev
 ```
 
-開啟 Vite 終端列出的網址，預設為 [http://localhost:5173/](http://localhost:5173/)。如需 GLM 或模擬查件，另開終端執行 `python3 tools/serve.py --port 8000`，Windows 可使用 `py`。Vite 會把 `/api` 轉發至 `http://127.0.0.1:8000`，可透過 `PLUME_API_ORIGIN` 調整。使用 GLM 時，可在 Python 命令加上 `--api-key-file /path/to/glm-key.txt`。
+開啟 Vite 終端列出的網址，預設為 [http://localhost:5173/](http://localhost:5173/)。如需 OpenAI 或模擬查件，另開終端執行 `python3 tools/serve.py --port 8000`，Windows 可使用 `py`。Vite 會把 `/api` 轉發至 `http://127.0.0.1:8000`，可透過 `PLUME_API_ORIGIN` 調整。使用 OpenAI 時，可在 Python 命令加上 `--api-key-file /path/to/openai-key.txt`。
 
 ### Docker 啟動
 
@@ -57,7 +57,7 @@ npm run dev
 | ③ 行李預報 | `/pages/baggage.html` | 逐件填寫物品類別、重量及尺寸，區分全部托運預報和需要取送的行李。頁面提醒如實填報，因為資料會影響報價及上門核對。 |
 | ④ 價格計算 | `/pages/pricing.html` | 以拖曳或鍵盤把行李分配到隨身、隨航班、Cargo 三個泳道。隨身件須填有效重量且低於 7 kg；跟機先核對票據免費額及超額加購，Cargo 按實重與體積重較高者逐件計價。 |
 | ⑤ 確認結算 | `/pages/checkout.html` | 核對取送、運輸費及里數，模擬現金付款或里數兌換。完成後保存當時的訂單資料與報價。 |
-| AI 出行助手 | `/pages/assistant.html` | 可從主導覽獨立進入。支援 GLM 多輪問答及離線規則樣本；GLM 透過只讀工具取得行程、行李、報價與服務資訊，離線清單建議需由旅客確認後回寫。 |
+| AI 出行助手 | `/pages/assistant.html` | 可從主導覽獨立進入。支援 OpenAI 多輪問答及離線規則樣本；OpenAI 透過只讀工具取得行程、行李、報價與服務資訊，離線清單建議需由旅客確認後回寫。 |
 | 行程概覽 | `/pages/journey.html` | 查看訂單、模擬取消與退款，逐件確認到達機場、裝機與當地物流交接。全部服務行李完成當地交接後，Python API 可返回演示查件資料。 |
 | 家庭專區 | `/pages/benefits.html`、`/pages/family.html` | 「家庭權益」展示里程碑與會籍方案；「家庭互聯」處理邀請、成員及行程權限。 |
 | 營運看板 | `/pages/operations.html` | 從入口選擇「貨物」或「用戶」，可在看板內切換。 |
@@ -102,7 +102,7 @@ npm --prefix kanban-app run dev -- --port 5174
 | [src/engine/booking.ts](src/engine/booking.ts)、[src/services/](src/services/) | 報價、訂單、家庭權限、里程碑、瀏覽器儲存與 API |
 | [src/config/](src/config/) | 路徑、五語文案、演示資料與設計變量 |
 | [kanban-app/](kanban-app/)、[pages/hold-pressure/](pages/hold-pressure/) | 營運看板源碼與靜態構建產物 |
-| [tools/](tools/) | 啟動腳本、Python 靜態服務、GLM 及模擬查件 API |
+| [tools/](tools/) | 啟動腳本、Python 靜態服務、OpenAI 及模擬查件 API |
 
 旅客草稿、預報、訂單、家庭狀態與里數等資料保存在瀏覽器的 `plume-light-multipage-v2`，語言偏好保存在 `plume-light-language`。可從演示控制台重設場景。
 
@@ -114,7 +114,7 @@ python3 -m unittest discover -s tools/tests -p 'test_*.py'
 
 `npm run build` 會檢查 TypeScript 並產出完整的 `dist/`。可用 `npm run preview` 查看構建結果，或執行 `python3 tools/serve.py --port 8000` 同時提供網站與 API。看板子工程安裝依賴後可獨立執行 `npm --prefix kanban-app test`。
 
-[GitHub Actions](.github/workflows/preview.yml) 會在 PR 中檢查並產出 `plume-light-preview`。下載並解壓該產物後，可用其中的 `preview.command` 或 `preview.bat` 啟動，只需 Python 3.9+。工作流另為 GitHub Pages 構建子路徑版本，`main` 的部署會提供主站與兩個靜態看板。Pages 不運行 Python API，助手可使用離線模式。需要 GLM 或查件 API 的部署方式見 [Cloud Run 指引](doc/AI_AGENT.md#google-cloud-run)。
+[GitHub Actions](.github/workflows/preview.yml) 會在 PR 中檢查並產出 `plume-light-preview`。下載並解壓該產物後，可用其中的 `preview.command` 或 `preview.bat` 啟動，只需 Python 3.9+。工作流另為 GitHub Pages 構建子路徑版本，`main` 的部署會提供主站與兩個靜態看板。Pages 不運行 Python API，助手可使用離線模式。需要 OpenAI 或查件 API 的部署方式見 [Cloud Run 指引](doc/AI_AGENT.md#google-cloud-run)。
 
 延伸閱讀：[產品需求與演示設計](doc/Plume_Light_PRD.md) · [AI 助手接入](doc/AI_AGENT.md) · [貨艙壓力指標與規則](kanban/Kanban_Requirements.md) · [會員追蹤指標](kanban/Member_Kanban_Requirements.md) · [演示影片分鏡](doc/Plume_Light_Video_Storyboard_v2.2.md)
 

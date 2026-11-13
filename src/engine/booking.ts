@@ -1,6 +1,7 @@
 import { language, t } from "../services/i18n";
 import { dataSource } from "../services/dataSource";
 import { requestAssistantReply } from "../services/query";
+import { assistantHistory, attachImage, messageImage, prepareAssistantImage, type AssistantImage } from "../services/assistantImages";
 import { closeModal, go, modal, render, toast } from "../services/runtime";
 import type {
   BookingState,
@@ -1801,13 +1802,45 @@ function resetDemo(scenario: string) {
   go(target, step);
 }
 
-// GLM UI state is transient: a refresh must never restore a stuck request.
+// Requests and image bytes are transient; neither is restored from localStorage.
 const agentRuntime: {
   pending: boolean;
   error: string | null;
   controller: AbortController | null;
   requestId: number;
-} = { pending: false, error: null, controller: null, requestId: 0 };
+  image: AssistantImage | null;
+  imageLoading: boolean;
+  imageError: string | null;
+  imageVersion: number;
+} = { pending: false, error: null, controller: null, requestId: 0,
+  image: null, imageLoading: false, imageError: null, imageVersion: 0 };
+
+async function selectAgentImage(file?: File) {
+  if (!file || agentRuntime.pending || !liveAgent()) return;
+  const version = ++agentRuntime.imageVersion;
+  agentRuntime.image = null;
+  agentRuntime.imageError = null;
+  agentRuntime.imageLoading = true;
+  render();
+  try {
+    const image = await prepareAssistantImage(file);
+    if (version === agentRuntime.imageVersion) agentRuntime.image = image;
+  } catch (error) {
+    if (version === agentRuntime.imageVersion) {
+      const code = (error as Error).message;
+      agentRuntime.imageError = ["agent.imageSize", "agent.imageType"].includes(code) ? code : "agent.imageRead";
+    }
+  } finally {
+    if (version === agentRuntime.imageVersion) { agentRuntime.imageLoading = false; render(); }
+  }
+}
+function removeAgentImage() {
+  agentRuntime.imageVersion++;
+  agentRuntime.image = null;
+  agentRuntime.imageLoading = false;
+  agentRuntime.imageError = null;
+  render();
+}
 function liveAgent() {
   return (
     state.agent.mode !== "local" &&
@@ -1902,6 +1935,10 @@ function agentContext() {
 }
 
 function clearAgentConversation(renderAfter = true) {
+  agentRuntime.imageVersion++;
+  agentRuntime.image = null;
+  agentRuntime.imageLoading = false;
+  agentRuntime.imageError = null;
   agentRuntime.requestId++;
   agentRuntime.controller?.abort();
   agentRuntime.controller = null;
@@ -1923,8 +1960,12 @@ function agentErrorKey(code) {
       not_configured: "agent.notConfigured",
       invalid_configuration: "agent.notConfigured",
       provider_auth: "agent.authError",
-      provider_subscription_expired: "agent.expired",
       provider_quota: "agent.quota",
+      provider_model: "agent.modelError",
+      provider_refusal: "agent.refusal",
+      invalid_image: "agent.imageRead",
+      too_many_images: "agent.imageSize",
+      request_too_large: "agent.imageSize",
       provider_rate_limit: "agent.rateLimit",
       rate_limit: "agent.rateLimit",
       busy: "agent.rateLimit",
@@ -1936,8 +1977,8 @@ function agentErrorKey(code) {
   );
 }
 async function sendQuestion(question: string, retry = false) {
-  const text = String(question).trim();
-  if (!text || agentRuntime.pending) return;
+  const text = String(question).trim() || (agentRuntime.image ? t("agent.imageQuestion") : "");
+  if (!text || agentRuntime.pending || agentRuntime.imageLoading) return;
   if (!liveAgent()) {
     sendLocalQuestion(text);
     return;
@@ -1951,23 +1992,24 @@ async function sendQuestion(question: string, retry = false) {
   a.answer = null;
   a.pending = null;
   a.stale = false;
+  if (retry && a.messages.at(-1)?.imageCount && !messageImage(a.messages.at(-1))) {
+    agentRuntime.error = "agent.imageExpired";
+    render();
+    return;
+  }
   if (
     !retry ||
     a.messages.at(-1)?.role !== "user" ||
     a.messages.at(-1)?.text !== text
-  )
+  ) {
     a.messages.push({ role: "user", text });
+    if (agentRuntime.image && !retry) {
+      attachImage(a.messages.at(-1), agentRuntime.image);
+      agentRuntime.image = null;
+    }
+  }
   a.messages = a.messages.slice(-24);
-  const messages = a.messages
-    .filter((m) => m.text && !m.key && !m.failed)
-    .slice(-16)
-    .map((m) => ({ role: m.role, content: m.text }));
-  // Keep complete recent turns within the server history budget.
-  while (
-    messages.length > 1 &&
-    messages.reduce((n, m) => n + m.content.length, 0) > 40000
-  )
-    messages.shift();
+  const messages = assistantHistory(a.messages);
   agentRuntime.pending = true;
   agentRuntime.error = null;
   const controller = new AbortController();
@@ -2186,6 +2228,8 @@ export {
   cancelOrder,
   resetDemo,
   agentRuntime,
+  selectAgentImage,
+  removeAgentImage,
   liveAgent,
   agentQuote,
   agentContext,
