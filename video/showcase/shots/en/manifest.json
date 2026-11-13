@@ -1,0 +1,721 @@
+{
+ "lang": "en",
+ "vw": 1440,
+ "vh": 810,
+ "shots": {
+  "home": {
+   "file": "home.jpg",
+   "w": 1440,
+   "h": 2764
+  },
+  "home-story2": {
+   "file": "home-story2.jpg",
+   "w": 1280,
+   "h": 821,
+   "x": 80,
+   "y": 1595.9
+  },
+  "home-story3": {
+   "file": "home-story3.jpg",
+   "w": 1280,
+   "h": 821,
+   "x": 80,
+   "y": 1595.9
+  },
+  "home-zh-Hant": {
+   "file": "home-zh-Hant.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "home-en": {
+   "file": "home-en.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "home-fr": {
+   "file": "home-fr.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "home-es": {
+   "file": "home-es.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "home-ar": {
+   "file": "home-ar.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "prepare": {
+   "file": "prepare.jpg",
+   "w": 1440,
+   "h": 1637
+  },
+  "info-hk": {
+   "file": "info-hk.jpg",
+   "w": 1440,
+   "h": 2564
+  },
+  "info-gba": {
+   "file": "info-gba.jpg",
+   "w": 1440,
+   "h": 2564
+  },
+  "info-cn": {
+   "file": "info-cn.jpg",
+   "w": 1440,
+   "h": 2564
+  },
+  "baggage": {
+   "file": "baggage.jpg",
+   "w": 1440,
+   "h": 2801
+  },
+  "baggage-weight": {
+   "frames": [
+    "baggage-weight-00.png",
+    "baggage-weight-01.png",
+    "baggage-weight-02.png"
+   ],
+   "w": 219,
+   "h": 57.4,
+   "x": 285,
+   "y": 993.8
+  },
+  "pricing": {
+   "file": "pricing.jpg",
+   "w": 1440,
+   "h": 1986
+  },
+  "pricing-card": {
+   "file": "pricing-card.png",
+   "w": 369.3,
+   "h": 141.3,
+   "x": 535.3,
+   "y": 1223.1
+  },
+  "pricing-after": {
+   "file": "pricing-after.jpg",
+   "w": 1440,
+   "h": 1739
+  },
+  "checkout": {
+   "file": "checkout.jpg",
+   "w": 1440,
+   "h": 2212
+  },
+  "checkout-miles": {
+   "file": "checkout-miles.jpg",
+   "w": 1440,
+   "h": 2212
+  },
+  "checkout-agreed": {
+   "file": "checkout-agreed.jpg",
+   "w": 1440,
+   "h": 2212
+  },
+  "journey-0": {
+   "file": "journey-0.jpg",
+   "w": 1440,
+   "h": 1775
+  },
+  "journey-open": {
+   "file": "journey-open.jpg",
+   "w": 1440,
+   "h": 1864
+  },
+  "journey-1": {
+   "file": "journey-1.jpg",
+   "w": 1440,
+   "h": 1864
+  },
+  "journey-2": {
+   "file": "journey-2.jpg",
+   "w": 1440,
+   "h": 1864
+  },
+  "journey-3": {
+   "file": "journey-3.jpg",
+   "w": 1440,
+   "h": 1864
+  },
+  "journey-4": {
+   "file": "journey-4.jpg",
+   "w": 1440,
+   "h": 2033
+  },
+  "journey-5": {
+   "file": "journey-5.jpg",
+   "w": 1440,
+   "h": 2033
+  },
+  "agent-0": {
+   "file": "agent-0.jpg",
+   "w": 1440,
+   "h": 1634
+  },
+  "agent-type": {
+   "frames": [
+    "agent-type-00.png",
+    "agent-type-01.png",
+    "agent-type-02.png",
+    "agent-type-03.png",
+    "agent-type-04.png",
+    "agent-type-05.png",
+    "agent-type-06.png",
+    "agent-type-07.png",
+    "agent-type-08.png",
+    "agent-type-09.png",
+    "agent-type-10.png",
+    "agent-type-11.png",
+    "agent-type-12.png",
+    "agent-type-13.png",
+    "agent-type-14.png",
+    "agent-type-15.png",
+    "agent-type-16.png",
+    "agent-type-17.png",
+    "agent-type-18.png",
+    "agent-type-19.png",
+    "agent-type-20.png",
+    "agent-type-21.png",
+    "agent-type-22.png",
+    "agent-type-23.png",
+    "agent-type-24.png",
+    "agent-type-25.png",
+    "agent-type-26.png",
+    "agent-type-27.png",
+    "agent-type-28.png"
+   ],
+   "w": 858,
+   "h": 55.4,
+   "x": 103,
+   "y": 802.5
+  },
+  "agent-1": {
+   "file": "agent-1.jpg",
+   "w": 1440,
+   "h": 1692
+  },
+  "agent-type2": {
+   "frames": [
+    "agent-type2-00.png",
+    "agent-type2-01.png",
+    "agent-type2-02.png",
+    "agent-type2-03.png",
+    "agent-type2-04.png",
+    "agent-type2-05.png",
+    "agent-type2-06.png",
+    "agent-type2-07.png",
+    "agent-type2-08.png",
+    "agent-type2-09.png",
+    "agent-type2-10.png",
+    "agent-type2-11.png",
+    "agent-type2-12.png",
+    "agent-type2-13.png",
+    "agent-type2-14.png",
+    "agent-type2-15.png",
+    "agent-type2-16.png",
+    "agent-type2-17.png"
+   ],
+   "w": 858,
+   "h": 55.4,
+   "x": 103,
+   "y": 860.5
+  },
+  "agent-2": {
+   "file": "agent-2.jpg",
+   "w": 1440,
+   "h": 2266
+  },
+  "agent-3": {
+   "file": "agent-3.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 483
+  },
+  "family-0": {
+   "file": "family-0.jpg",
+   "w": 1440,
+   "h": 1115
+  },
+  "family-1": {
+   "file": "family-1.jpg",
+   "w": 1440,
+   "h": 1317
+  },
+  "benefits": {
+   "file": "benefits.jpg",
+   "w": 1440,
+   "h": 2343
+  },
+  "ops": {
+   "file": "ops.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "cargo": {
+   "file": "cargo.jpg",
+   "w": 1440,
+   "h": 2531
+  },
+  "cargo-hover": {
+   "file": "cargo-hover.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 104
+  },
+  "cargo-detail": {
+   "file": "cargo-detail.jpg",
+   "w": 1440,
+   "h": 1312
+  },
+  "cargo-vol": {
+   "file": "cargo-vol.jpg",
+   "w": 1440,
+   "h": 2531
+  },
+  "cargo-mel": {
+   "file": "cargo-mel.jpg",
+   "w": 1440,
+   "h": 1543
+  },
+  "members-0": {
+   "file": "members-0.jpg",
+   "w": 1440,
+   "h": 2906
+  },
+  "members-1": {
+   "file": "members-1.jpg",
+   "w": 1440,
+   "h": 2906
+  },
+  "members-2": {
+   "file": "members-2.jpg",
+   "w": 1440,
+   "h": 2906
+  },
+  "members-3": {
+   "file": "members-3.jpg",
+   "w": 1440,
+   "h": 2906
+  },
+  "members-4": {
+   "file": "members-4.jpg",
+   "w": 1440,
+   "h": 2906
+  },
+  "members-5": {
+   "file": "members-5.jpg",
+   "w": 1440,
+   "h": 2906
+  }
+ },
+ "rects": {
+  "home.lang": {
+   "x": 1246,
+   "y": 67.1,
+   "w": 70,
+   "h": 33
+  },
+  "home.cta": {
+   "x": 128,
+   "y": 762.3,
+   "w": 199.3,
+   "h": 47.4
+  },
+  "home.stories": {
+   "x": 80,
+   "y": 1595.9,
+   "w": 1280,
+   "h": 821
+  },
+  "home.next": {
+   "x": 1320,
+   "y": 1709.8,
+   "w": 40,
+   "h": 40
+  },
+  "steps": {
+   "x": 267,
+   "y": 476.7,
+   "w": 906,
+   "h": 48
+  },
+  "info.region": {
+   "x": 293,
+   "y": 1143.6,
+   "w": 417.5,
+   "h": 45
+  },
+  "baggage.bag1": {
+   "x": 267,
+   "y": 793.2,
+   "w": 906,
+   "h": 322
+  },
+  "baggage.bag2": {
+   "x": 267,
+   "y": 1138.2,
+   "w": 906,
+   "h": 322
+  },
+  "baggage.bag3": {
+   "x": 267,
+   "y": 1483.1,
+   "w": 906,
+   "h": 322
+  },
+  "baggage.bag4": {
+   "x": 267,
+   "y": 1828.1,
+   "w": 906,
+   "h": 322
+  },
+  "baggage-weight": {
+   "x": 291,
+   "y": 999.8,
+   "w": 207,
+   "h": 45.4
+  },
+  "baggage.save": {
+   "x": 998.1,
+   "y": 2380,
+   "w": 174.9,
+   "h": 47.4
+  },
+  "pricing.lane.cabin": {
+   "x": 107,
+   "y": 734.5,
+   "w": 399.3,
+   "h": 742.1
+  },
+  "pricing.lane.flight": {
+   "x": 520.3,
+   "y": 734.5,
+   "w": 399.3,
+   "h": 742.1
+  },
+  "pricing.lane.cargo": {
+   "x": 933.7,
+   "y": 734.5,
+   "w": 399.3,
+   "h": 742.1
+  },
+  "pricing.excess": {
+   "x": 535.3,
+   "y": 1420.7,
+   "w": 202.2,
+   "h": 37
+  },
+  "pricing-card": {
+   "x": 535.3,
+   "y": 1223.1,
+   "w": 369.3,
+   "h": 141.3
+  },
+  "pricing.dropped": {
+   "x": 948.7,
+   "y": 916.5,
+   "w": 369.3,
+   "h": 141.3
+  },
+  "pricing.next": {
+   "x": 1202.4,
+   "y": 1317.6,
+   "w": 130.6,
+   "h": 47.4
+  },
+  "checkout.cash": {
+   "x": 267,
+   "y": 1378.1,
+   "w": 445.5,
+   "h": 142.9
+  },
+  "checkout.miles": {
+   "x": 727.5,
+   "y": 1378.1,
+   "w": 445.5,
+   "h": 142.9
+  },
+  "checkout.agree": {
+   "x": 267,
+   "y": 1665,
+   "w": 17,
+   "h": 17
+  },
+  "checkout.pay": {
+   "x": 267,
+   "y": 1691,
+   "w": 297.6,
+   "h": 47.4
+  },
+  "journey.controls": {
+   "x": 80,
+   "y": 1426.3,
+   "w": 1280,
+   "h": 144.6
+  },
+  "journey.m1": {
+   "x": 80,
+   "y": 1167.7,
+   "w": 414.7,
+   "h": 226.6
+  },
+  "journey.m2": {
+   "x": 512.7,
+   "y": 1167.7,
+   "w": 414.7,
+   "h": 226.6
+  },
+  "journey.m3": {
+   "x": 945.3,
+   "y": 1167.7,
+   "w": 414.7,
+   "h": 226.6
+  },
+  "journey.btn.airport": {
+   "x": 102,
+   "y": 1482.1,
+   "w": 146.5,
+   "h": 37
+  },
+  "journey.btn.partial": {
+   "x": 260.5,
+   "y": 1482.1,
+   "w": 150.4,
+   "h": 37
+  },
+  "journey.btn.loaded": {
+   "x": 422.9,
+   "y": 1482.1,
+   "w": 124.9,
+   "h": 37
+  },
+  "journey.btn.handover": {
+   "x": 559.8,
+   "y": 1482.1,
+   "w": 166.3,
+   "h": 37
+  },
+  "journey.btn.complete": {
+   "x": 738.1,
+   "y": 1650.8,
+   "w": 198.3,
+   "h": 37
+  },
+  "journey.order": {
+   "x": 731,
+   "y": 449.7,
+   "w": 629,
+   "h": 570.1
+  },
+  "agent.input": {
+   "x": 107,
+   "y": 806.5,
+   "w": 850,
+   "h": 47.4
+  },
+  "agent-type": {
+   "x": 107,
+   "y": 806.5,
+   "w": 850,
+   "h": 47.4
+  },
+  "agent.input2": {
+   "x": 107,
+   "y": 864.5,
+   "w": 850,
+   "h": 47.4
+  },
+  "agent-type2": {
+   "x": 107,
+   "y": 864.5,
+   "w": 850,
+   "h": 47.4
+  },
+  "agent.layer1": {
+   "x": 128,
+   "y": 1080,
+   "w": 300,
+   "h": 69
+  },
+  "agent.layer2": {
+   "x": 440,
+   "y": 1080,
+   "w": 300,
+   "h": 69
+  },
+  "agent.layer3": {
+   "x": 752,
+   "y": 1080,
+   "w": 300,
+   "h": 69
+  },
+  "agent.review": {
+   "x": 128,
+   "y": 1255.3,
+   "w": 249.6,
+   "h": 38
+  },
+  "agent.confirm": {
+   "x": 461,
+   "y": 928.8,
+   "w": 199.6,
+   "h": 47.4
+  },
+  "family.demo": {
+   "x": 267,
+   "y": 389.2,
+   "w": 209.5,
+   "h": 37
+  },
+  "benefits.table": {
+   "x": 81,
+   "y": 1095.6,
+   "w": 1278,
+   "h": 349.4
+  },
+  "ops.cargo": {
+   "x": 154,
+   "y": 141,
+   "w": 556,
+   "h": 629
+  },
+  "ops.member": {
+   "x": 730,
+   "y": 141,
+   "w": 556,
+   "h": 629
+  },
+  "cargo.bar": {
+   "x": 827.8,
+   "y": 549.5,
+   "w": 113,
+   "h": 364.2
+  },
+  "cargo.flow": {
+   "x": 55,
+   "y": 843.2,
+   "w": 1330,
+   "h": 317.7
+  },
+  "cargo.btn.vol": {
+   "x": 154.8,
+   "y": 190.1,
+   "w": 102.7,
+   "h": 28.3
+  },
+  "cargo.btn.mel": {
+   "x": 511,
+   "y": 122.4,
+   "w": 126.7,
+   "h": 28.3
+  },
+  "members.mark0": {
+   "x": 390.5,
+   "y": 80.6,
+   "w": 110.9,
+   "h": 42.3
+  },
+  "members.mark1": {
+   "x": 676,
+   "y": 80.6,
+   "w": 64.5,
+   "h": 42.3
+  },
+  "members.mark2": {
+   "x": 791,
+   "y": 80.6,
+   "w": 55,
+   "h": 42.3
+  },
+  "members.mark3": {
+   "x": 897,
+   "y": 80.6,
+   "w": 55,
+   "h": 42.3
+  },
+  "members.mark4": {
+   "x": 1055.5,
+   "y": 80.6,
+   "w": 52,
+   "h": 42.3
+  },
+  "members.mark5": {
+   "x": 1184.4,
+   "y": 80.6,
+   "w": 55.6,
+   "h": 42.3
+  },
+  "benefits.milestone": {
+   "x": 80,
+   "y": 362.2,
+   "w": 629,
+   "h": 576.4
+  },
+  "benefits.gauge": {
+   "x": 111,
+   "y": 483.6,
+   "w": 567,
+   "h": 313.5
+  }
+ },
+ "text": {
+  "locales": [
+   {
+    "value": "zh-Hant",
+    "label": "繁體中文"
+   },
+   {
+    "value": "en",
+    "label": "English"
+   },
+   {
+    "value": "fr",
+    "label": "Français"
+   },
+   {
+    "value": "es",
+    "label": "Español"
+   },
+   {
+    "value": "ar",
+    "label": "العربية"
+   }
+  ],
+  "regions": [
+   "Hong Kong · Book 24 h before departure",
+   "Other covered Greater Bay Area locations · Book 48 h before departure",
+   "Within the departure country · Book 120 h before departure"
+  ],
+  "bags": 4,
+  "dragged": "Bag 3 Box · Books 10 kg 60 × 40 × 40 cm Books",
+  "cargoCount": 1,
+  "pay": "Simulate cash payment · HKD 1,450",
+  "question": "Can I check in a power bank?",
+  "cargoHoverScroll": 104,
+  "bookmarks": [
+   "Before summer 6/17",
+   "Pre-dep 8/12",
+   "Arrival 9/16",
+   "Easing 10/21",
+   "Demo 11/10",
+   "Return 1/13"
+  ]
+ }
+}

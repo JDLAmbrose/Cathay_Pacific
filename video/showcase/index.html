@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plume Light · 前端成果演示（90 秒）</title>
+<link rel="icon" type="image/svg+xml" href="../../assets/plume_light_icon.svg">
+<link rel="stylesheet" href="film.css">
+</head>
+<body>
+<!--
+  Plume Light 前端成果演示影片（1920×1080，90 秒）。
+  画面是时间 t 的纯函数：film.js 的 render(t) 对同一个 t 永远画出同一帧，
+  所以既能在浏览器里实时播放，也能被 tools/render.mjs 逐帧导出成 MP4。
+  界面画面全部来自 tools/capture.mjs 对真实站点的截图（shots/<语言>/）。
+  用法：index.html            繁體中文
+        index.html?lang=en    English
+        index.html?t=42       停在第 42 秒
+-->
+<div id="stage" aria-label="Plume Light frontend showcase film"></div>
+<div id="player">
+  <button id="play" type="button" aria-label="Play / Pause">▶</button>
+  <div id="seek"><i></i></div>
+  <span id="clock">0:00 / 1:30</span>
+</div>
+<script>
+  // 按语言载入对应的截图清单
+  window.FILM_LANG = new URLSearchParams(location.search).get('lang') === 'en' ? 'en' : 'zh-Hant';
+  document.write('<script src="shots/' + window.FILM_LANG + '/manifest.js"><\/script>');
+</script>
+<script src="film.js"></script>
+</body>
+</html>

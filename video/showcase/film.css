@@ -1,0 +1,136 @@
+/* Plume Light 前端成果演示影片 · 样式
+   舞台固定 1920×1080，由 film.js 整体缩放适配窗口。所有运动都由 film.js 按时间写入行内样式，
+   这里不使用 CSS transition / animation，保证逐帧导出时画面可复现。 */
+:root {
+  --night: #021c19;
+  --deep: #043f39;
+  --jade: #02544f;
+  --leaf: #0f6b5c;
+  --mint: #b6d2bf;
+  --pale: #eaf3ed;
+  --gold: #e4b46c;
+  --cream: #f3ecd9;
+  --ink: #173f39;
+  --sans: "SF Pro Display", -apple-system, BlinkMacSystemFont, "PingFang TC", "PingFang HK", "Noto Sans TC", "Microsoft JhengHei", "Helvetica Neue", Arial, sans-serif;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+body { font-family: var(--sans); color: #fff; -webkit-font-smoothing: antialiased; font-synthesis: none; }
+
+#stage {
+  position: absolute; left: 50%; top: 50%; width: 1920px; height: 1080px;
+  transform-origin: 0 0; overflow: hidden; background: var(--night); contain: strict;
+}
+.scene { position: absolute; inset: 0; display: none; }
+.abs { position: absolute; left: 0; top: 0; will-change: transform, opacity; }
+
+/* ---------- 背景 ---------- */
+#bg { position: absolute; inset: 0; background: radial-gradient(120% 90% at 50% 40%, #06493f 0%, #032b27 46%, #021613 100%); }
+#bg .glow { position: absolute; width: 1300px; height: 1300px; border-radius: 50%; left: 0; top: 0; }
+#bg .g1 { background: radial-gradient(closest-side, rgba(40, 150, 120, .42), rgba(40, 150, 120, 0)); }
+#bg .g2 { background: radial-gradient(closest-side, rgba(228, 180, 108, .2), rgba(228, 180, 108, 0)); }
+#bg .grid {
+  position: absolute; inset: -80px; opacity: .5;
+  background-image: linear-gradient(rgba(255, 255, 255, .035) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, .035) 1px, transparent 1px);
+  background-size: 80px 80px;
+  -webkit-mask-image: radial-gradient(70% 70% at 50% 45%, #000 20%, transparent 100%); mask-image: radial-gradient(70% 70% at 50% 45%, #000 20%, transparent 100%);
+}
+#vignette { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(110% 100% at 50% 50%, transparent 55%, rgba(0, 12, 10, .6) 100%); }
+#scrim { position: absolute; left: 0; right: 0; bottom: 0; height: 350px; background: linear-gradient(180deg, rgba(2, 24, 21, 0) 0, rgba(2, 24, 21, .9) 30%, rgba(2, 22, 19, .985) 44%, rgba(2, 22, 19, .985) 100%); }
+#topscrim { position: absolute; left: 0; right: 0; top: 0; height: 132px; background: linear-gradient(180deg, rgba(2, 24, 21, .96) 0, rgba(2, 24, 21, .96) 92px, rgba(2, 24, 21, 0) 100%); }
+#flash { position: absolute; inset: 0; background: #f7efdc; opacity: 0; pointer-events: none; }
+
+/* ---------- 顶部 HUD 与进度 ---------- */
+#hud { position: absolute; inset: 0; pointer-events: none; }
+#hud .logo { position: absolute; left: 40px; top: 10px; height: 76px; }
+#hud .chapter { position: absolute; right: 64px; top: 30px; display: flex; align-items: baseline; gap: 14px; font-size: 20px; letter-spacing: .08em; color: #d7e7dc; }
+#hud .chapter b { font-size: 34px; font-weight: 650; color: var(--gold); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+#hud .chapter i { font-style: normal; color: #7fa596; font-size: 16px; }
+#bar { position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: rgba(255, 255, 255, .08); }
+#bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: 0 50%; background: linear-gradient(90deg, #2c8f77, var(--gold)); }
+#bar s { position: absolute; top: -3px; width: 2px; height: 11px; background: rgba(255, 255, 255, .35); }
+
+/* ---------- 浏览器窗口 ---------- */
+.rig { position: absolute; left: 0; top: 0; transform-origin: 0 0; will-change: transform; }
+.win {
+  position: relative; width: 1440px; border-radius: 14px; overflow: hidden; background: #f6f8f5;
+  box-shadow: 0 0 0 1px rgba(255, 255, 255, .16), 0 50px 120px -20px rgba(0, 10, 8, .75), 0 18px 40px rgba(0, 12, 10, .45);
+  will-change: transform; backface-visibility: hidden;
+}
+.win-bar { height: 44px; background: linear-gradient(#f0f3ef, #e3e9e3); display: flex; align-items: center; gap: 8px; padding: 0 16px; border-bottom: 1px solid #cfd9d0; }
+.win-bar i { width: 12px; height: 12px; border-radius: 50%; background: #d3dbd3; }
+.win-bar i:nth-child(1) { background: #ee6a5f; } .win-bar i:nth-child(2) { background: #f5bd4f; } .win-bar i:nth-child(3) { background: #61c454; }
+.win-bar .url { margin: 0 auto; transform: translateX(-30px); min-width: 520px; height: 26px; border-radius: 7px; background: #fff; border: 1px solid #d5ded6; color: #5d736b; font-size: 13px; line-height: 24px; text-align: center; letter-spacing: .01em; }
+.win-bar .url b { color: #173f39; font-weight: 500; }
+.win-view { position: relative; width: 1440px; height: 810px; overflow: hidden; background: #f6f8f5; }
+.win-page { position: absolute; left: 0; top: 0; width: 1440px; transform-origin: 0 0; will-change: transform; }
+.win-page img { position: absolute; display: block; max-width: none; }
+.cursor { position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -3px 0 0 -5px; filter: drop-shadow(0 3px 5px rgba(0, 20, 16, .45)); z-index: 30; transform-origin: 6px 4px; }
+.ripple { position: absolute; left: 0; top: 0; width: 90px; height: 90px; margin: -45px 0 0 -45px; border-radius: 50%; border: 3px solid var(--gold); background: rgba(228, 180, 108, .28); opacity: 0; z-index: 29; }
+.hl { position: absolute; left: 0; top: 0; border-radius: 14px; border: 3px solid var(--gold); box-shadow: 0 0 0 6px rgba(228, 180, 108, .2), 0 0 40px rgba(228, 180, 108, .45); opacity: 0; z-index: 20; }
+.hole { position: absolute; border-radius: 12px; border: 2px dashed #9fbaa8; background: rgba(232, 242, 236, .96); opacity: 0; z-index: 10; }
+.ghost { position: absolute; left: 0; top: 0; z-index: 25; border-radius: 12px; box-shadow: 0 30px 60px rgba(0, 30, 24, .35), 0 0 0 2px rgba(228, 180, 108, .9); opacity: 0; transform-origin: 50% 30%; }
+.tag {
+  position: absolute; left: 0; top: 0; z-index: 22; white-space: nowrap; opacity: 0; transform-origin: 0 50%;
+  padding: 9px 18px 9px 14px; border-radius: 40px; background: rgba(3, 40, 35, .94); color: #fff; font-size: 19px; font-weight: 560; letter-spacing: .02em;
+  box-shadow: 0 10px 30px rgba(0, 20, 16, .4), 0 0 0 1.5px rgba(228, 180, 108, .7);
+}
+.tag::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: var(--gold); margin-right: 10px; vertical-align: 2px; }
+
+/* ---------- 字幕 ---------- */
+.cap { position: absolute; left: 0; top: 0; }
+.cap-eb { font-size: 21px; font-weight: 600; letter-spacing: .26em; color: var(--gold); text-transform: uppercase; margin-bottom: 12px; white-space: nowrap; }
+.cap-ti { font-size: 60px; line-height: 1.18; font-weight: 650; letter-spacing: -.015em; color: #fff; }
+.cap-ti em { font-style: normal; color: var(--gold); }
+.cap-su { font-size: 25px; color: #b9d4c6; margin-top: 12px; letter-spacing: .02em; white-space: nowrap; }
+.ln { display: block; overflow: hidden; padding: .06em 0 .12em; margin: -.06em 0 -.12em; white-space: nowrap; }
+.ln > span { display: inline-block; will-change: transform; }
+html[lang=en] .cap-ti { font-size: 54px; letter-spacing: -.025em; }
+
+/* 字幕右侧的进度小组件（语言、步骤、节点…） */
+.steps { position: absolute; left: 0; top: 0; display: flex; gap: 10px; align-items: center; justify-content: flex-end; }
+.steps .pill { display: flex; align-items: center; gap: 10px; padding: 11px 18px; border-radius: 40px; font-size: 20px; white-space: nowrap; color: #9dbcae; border: 1.5px solid rgba(255, 255, 255, .16); background: rgba(255, 255, 255, .04); }
+.steps .pill b { font-weight: 600; font-size: 15px; width: 26px; height: 26px; border-radius: 50%; display: grid; place-items: center; background: rgba(255, 255, 255, .1); color: #cfe2d8; font-variant-numeric: tabular-nums; }
+.steps .pill.on { color: #062f2a; background: var(--gold); border-color: var(--gold); font-weight: 600; }
+.steps .pill.on b { background: #062f2a; color: var(--gold); }
+.steps .pill.done { color: #e9f4ee; border-color: rgba(228, 180, 108, .55); }
+.steps .pill.done b { background: var(--gold); color: #062f2a; }
+
+/* 悬浮数据卡 */
+.card { position: absolute; left: 0; top: 0; padding: 22px 28px 24px; border-radius: 20px; background: rgba(3, 38, 33, .92); box-shadow: 0 30px 70px rgba(0, 14, 11, .55), 0 0 0 1.5px rgba(228, 180, 108, .55); opacity: 0; transform-origin: 100% 0; }
+.card small { display: block; font-size: 18px; letter-spacing: .12em; color: #a9c8b9; margin-bottom: 6px; }
+.card strong { display: block; font-size: 66px; font-weight: 650; letter-spacing: -.03em; font-variant-numeric: tabular-nums; line-height: 1.1; white-space: nowrap; }
+.card strong span { font-size: 28px; color: var(--gold); letter-spacing: .04em; margin-right: 10px; font-weight: 600; }
+.card em { display: block; font-style: normal; font-size: 20px; color: var(--gold); margin-top: 6px; white-space: nowrap; }
+
+/* ---------- 标志 ---------- */
+.ring { position: absolute; left: 960px; top: 400px; width: 600px; height: 600px; margin: -300px 0 0 -300px; border-radius: 50%; border: 2px solid rgba(228, 180, 108, .7); opacity: 0; }
+.logo-big { position: absolute; left: 960px; top: 380px; width: 980px; margin: -157px 0 0 -490px; }
+.sweep { position: absolute; left: 0; top: 0; width: 260px; height: 420px; background: linear-gradient(100deg, transparent, rgba(255, 246, 220, .5), transparent); mix-blend-mode: screen; opacity: 0; filter: blur(14px); }
+.tagline { position: absolute; left: 0; right: 0; text-align: center; font-size: 88px; font-weight: 650; letter-spacing: .04em; }
+.tagline em { font-style: normal; color: var(--gold); }
+.tag-en { position: absolute; left: 0; right: 0; text-align: center; font-size: 30px; letter-spacing: .34em; color: #b9d4c6; text-transform: uppercase; }
+.chip { position: absolute; left: 0; top: 0; padding: 12px 26px; border-radius: 40px; font-size: 22px; letter-spacing: .16em; color: #062f2a; background: var(--gold); font-weight: 650; white-space: nowrap; }
+.chip.ghosty { position: static; padding: 14px 28px; font-size: 26px; background: rgba(4, 50, 43, .85); color: #f2f8f4; border: 1.5px solid rgba(228, 180, 108, .55); font-weight: 560; letter-spacing: .04em; }
+.feather { position: absolute; left: 0; top: 0; width: 220px; opacity: 0; will-change: transform; }
+
+/* ---------- 截图墙与数据 ---------- */
+.wall { position: absolute; left: 960px; top: 540px; width: 0; height: 0; transform-style: preserve-3d; }
+.tile { position: absolute; width: 560px; height: 350px; border-radius: 14px; overflow: hidden; background: #f6f8f5; box-shadow: 0 30px 60px rgba(0, 10, 8, .6), 0 0 0 1px rgba(255, 255, 255, .14); }
+.tile img { width: 100%; display: block; }
+.wall-shade { position: absolute; inset: 0; background: radial-gradient(75% 65% at 50% 46%, rgba(2, 26, 22, .78) 0, rgba(2, 24, 21, .62) 55%, rgba(2, 20, 17, .86) 100%); }
+.kpis { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 70px; }
+.kpi { text-align: center; min-width: 250px; }
+.kpi b { display: block; font-size: 150px; line-height: 1; font-weight: 700; letter-spacing: -.05em; font-variant-numeric: tabular-nums; color: #fff; }
+.kpi span { display: block; margin-top: 12px; font-size: 28px; font-weight: 600; letter-spacing: .2em; color: var(--gold); white-space: nowrap; }
+.techs { position: absolute; left: 0; right: 0; display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; padding: 0 200px; }
+.center-title { position: absolute; left: 0; right: 0; text-align: center; font-size: 64px; font-weight: 650; letter-spacing: .01em; }
+.center-title em { font-style: normal; color: var(--gold); }
+.fine { position: absolute; left: 0; right: 0; text-align: center; font-size: 22px; color: #a9c8b9; letter-spacing: .08em; }
+
+/* ---------- 浏览器内播放控件（导出时隐藏） ---------- */
+#player { position: fixed; left: 0; right: 0; bottom: 0; height: 44px; display: flex; align-items: center; gap: 14px; padding: 0 18px; background: rgba(0, 0, 0, .6); font: 13px/1 var(--sans); color: #cfe2d8; z-index: 10; }
+#player button { width: 30px; height: 30px; border-radius: 50%; border: 1px solid #ffffff40; background: none; color: #fff; cursor: pointer; }
+#seek { flex: 1; height: 6px; border-radius: 6px; background: #ffffff25; cursor: pointer; position: relative; }
+#seek i { position: absolute; left: 0; top: 0; bottom: 0; width: 0; border-radius: 6px; background: var(--gold); }
+body.render #player { display: none; }
