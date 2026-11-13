@@ -14,6 +14,7 @@ import { useI18n } from "../../i18n/useI18n";
 import type { DeferralPlan, HoldLoadView, LoadMetric } from "../../types/kanban";
 import { floatingStyle, floatingUi } from "../common/floating";
 import { InfoPopover } from "../common/InfoPopover";
+import { CHART_Y_MAX, chartStyle } from "./chartScale";
 import { FlightBarColumn } from "./FlightBarColumn";
 import { FlightBarTooltip } from "./FlightBarTooltip";
 import styles from "./HoldLoadBarChart.module.css";
@@ -47,7 +48,7 @@ function BarWithTip({
 
   return (
     <div className={styles.slot}>
-      <div ref={refs.setReference} {...getReferenceProps()}>
+      <div className={styles.hit} ref={refs.setReference} {...getReferenceProps()}>
         <FlightBarColumn
           load={load}
           plan={plan}
@@ -75,6 +76,10 @@ function BarWithTip({
 
 const COLS_PER_ROW = 5;
 const TICKS = [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2];
+
+function tickBottom(tick: number): string {
+  return `calc(${tick} / ${CHART_Y_MAX} * var(--chart-plot) + var(--chart-footer))`;
+}
 
 function chunk<T>(items: T[], size: number): T[][] {
   const rows: T[][] = [];
@@ -105,14 +110,14 @@ function PlotRow({
     <div className={styles.plot}>
       <div className={styles.axis}>
         {TICKS.map((tick) => (
-          <span key={tick} style={{ bottom: `${(tick / 1.2) * 250 + 46}px` }}>
+          <span key={tick} style={{ bottom: tickBottom(tick) }}>
             {Math.round(tick * 100)}%
           </span>
         ))}
       </div>
       <div className={styles.grid}>
         {TICKS.map((tick) => (
-          <i key={tick} style={{ bottom: `${(tick / 1.2) * 250 + 46}px` }} />
+          <i key={tick} style={{ bottom: tickBottom(tick) }} />
         ))}
         <b className={styles.line90} />
         <b className={styles.line100} />
@@ -151,7 +156,7 @@ export function HoldLoadBarChart({
   const { t } = useI18n();
   const rows = chunk(flights, COLS_PER_ROW);
   return (
-    <section className={styles.card}>
+    <section className={styles.card} style={chartStyle}>
       <div className={styles.head}>
         <h3>{t("kb.chart.title")}</h3>
         <span className={styles.note}>{t("kb.chart.sort")}</span>

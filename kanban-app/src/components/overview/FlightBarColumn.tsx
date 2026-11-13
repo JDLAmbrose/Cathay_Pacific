@@ -1,15 +1,8 @@
 import { formatDep, formatIntPct } from "../../format/display";
 import type { DeferralPlan, HoldLoadView, LoadMetric } from "../../types/kanban";
 import { StatusBadge } from "../common/StatusBadge";
+import { CHART_SVG_H, CHART_VB_W, chartY } from "./chartScale";
 import styles from "./FlightBarColumn.module.css";
-
-const Y_MAX = 1.2;
-const PLOT_H = 250;
-const PLOT_T = 8;
-
-function y(ratio: number): number {
-  return PLOT_T + PLOT_H - (ratio / Y_MAX) * PLOT_H;
-}
 
 export function FlightBarColumn({
   load,
@@ -41,7 +34,7 @@ export function FlightBarColumn({
     : `${formatIntPct(governing)}${load.hasVolumeBottleneck ? " ▲" : ""}`;
   const stackTop = cargoRatio + paxRatio + keepRatio + deferRatio;
   const bw = 52;
-  const x = 24;
+  const x = (CHART_VB_W - bw) / 2;
 
   return (
     <button
@@ -49,7 +42,14 @@ export function FlightBarColumn({
       className={`${styles.col} ${selected ? styles.selected : ""} ${load.status === "OVER" ? styles.hot : ""}`}
       onClick={() => onSelect(load.flightId)}
     >
-      <svg viewBox={`0 0 100 ${PLOT_T + PLOT_H + 4}`} className={styles.bar} aria-hidden="true">
+      <svg
+        viewBox={`0 0 ${CHART_VB_W} ${CHART_SVG_H}`}
+        width={CHART_VB_W}
+        height={CHART_SVG_H}
+        className={styles.bar}
+        preserveAspectRatio="xMidYMax meet"
+        aria-hidden="true"
+      >
         <defs>
           <pattern id={`defer-${load.flightId}`} width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
             <rect width="6" height="6" fill="#fff" />
@@ -57,28 +57,28 @@ export function FlightBarColumn({
           </pattern>
         </defs>
         {cargo != null ? (
-          <rect x={x} y={y(cargoRatio)} width={bw} height={y(0) - y(cargoRatio)} fill="var(--seg-cargo)" />
+          <rect x={x} y={chartY(cargoRatio)} width={bw} height={chartY(0) - chartY(cargoRatio)} fill="var(--seg-cargo)" />
         ) : null}
         <rect
           x={x}
-          y={y(cargoRatio + paxRatio)}
+          y={chartY(cargoRatio + paxRatio)}
           width={bw}
-          height={y(cargoRatio) - y(cargoRatio + paxRatio)}
+          height={chartY(cargoRatio) - chartY(cargoRatio + paxRatio)}
           fill="var(--seg-pax)"
         />
         <rect
           x={x}
-          y={y(cargoRatio + paxRatio + keepRatio)}
+          y={chartY(cargoRatio + paxRatio + keepRatio)}
           width={bw}
-          height={y(cargoRatio + paxRatio) - y(cargoRatio + paxRatio + keepRatio)}
+          height={chartY(cargoRatio + paxRatio) - chartY(cargoRatio + paxRatio + keepRatio)}
           fill="var(--seg-plume)"
         />
         {deferRatio > 0 ? (
           <rect
             x={x}
-            y={y(stackTop)}
+            y={chartY(stackTop)}
             width={bw}
-            height={y(cargoRatio + paxRatio + keepRatio) - y(stackTop)}
+            height={chartY(cargoRatio + paxRatio + keepRatio) - chartY(stackTop)}
             fill={`url(#defer-${load.flightId})`}
             stroke="#2f6fb5"
           />
@@ -87,14 +87,14 @@ export function FlightBarColumn({
           <>
             <rect
               x={x}
-              y={y(1)}
+              y={chartY(1)}
               width={bw}
-              height={Math.max(0, y(stackTop) - y(1))}
+              height={Math.max(0, chartY(stackTop) - chartY(1))}
               fill="#f6f8f8"
               stroke="#9aa5a3"
               strokeDasharray="4 3"
             />
-            <text x="50" y={(y(1) + y(stackTop)) / 2 + 4} textAnchor="middle" fontSize="9" fill="#5d6f6d" fontWeight="600">
+            <text x="50" y={(chartY(1) + chartY(stackTop)) / 2 + 4} textAnchor="middle" fontSize="9" fill="#5d6f6d" fontWeight="600">
               CARGO UNK
             </text>
           </>
@@ -102,18 +102,18 @@ export function FlightBarColumn({
         {stackTop > 1.0001 ? (
           <rect
             x={x - 1.5}
-            y={y(stackTop) - 1.5}
+            y={chartY(stackTop) - 1.5}
             width={bw + 3}
-            height={y(1) - y(stackTop) + 1.5}
+            height={chartY(1) - chartY(stackTop) + 1.5}
             fill="none"
             stroke="#d6453d"
             strokeWidth="2.2"
           />
         ) : null}
-        <rect x="22" y={y(Math.max(stackTop, isUnk ? 1 : stackTop)) - 20} width="56" height="16" rx="3" fill="#fff" />
+        <rect x="22" y={chartY(Math.max(stackTop, isUnk ? 1 : stackTop)) - 20} width="56" height="16" rx="3" fill="#fff" />
         <text
           x="50"
-          y={y(Math.max(stackTop, isUnk ? 1 : stackTop)) - 8}
+          y={chartY(Math.max(stackTop, isUnk ? 1 : stackTop)) - 8}
           textAnchor="middle"
           fontSize="12"
           fontWeight="700"
@@ -122,9 +122,11 @@ export function FlightBarColumn({
           {topLabel}
         </text>
       </svg>
-      <div className={styles.flight}>{load.flightId}</div>
-      <div className={styles.dep}>{formatDep(load.dep)}</div>
-      <StatusBadge status={load.status} />
+      <div className={styles.meta}>
+        <div className={styles.flight}>{load.flightId}</div>
+        <div className={styles.dep}>{formatDep(load.dep)}</div>
+        <StatusBadge status={load.status} />
+      </div>
     </button>
   );
 }
