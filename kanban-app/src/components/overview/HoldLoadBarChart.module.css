@@ -4,14 +4,21 @@
   border-radius: 12px;
   padding: 20px 22px 16px;
   min-width: 0;
+  max-width: 100%;
+}
+
+@media (max-width: 480px) {
+  .card { padding: 16px 12px 12px; }
 }
 
 .head {
   display: flex;
   justify-content: space-between;
   align-items: baseline;
-  gap: 16px;
+  flex-wrap: wrap;
+  gap: 8px 16px;
   margin-bottom: 8px;
+  min-width: 0;
 }
 
 .head h3 { margin: 0; font-size: 15px; }
@@ -53,7 +60,7 @@
 .grid i {
   position: absolute;
   left: 0;
-  right: 96px;
+  right: 0;
   height: 0;
   border-top: 1px solid #e6eceb;
 }
@@ -62,7 +69,7 @@
 .line100 {
   position: absolute;
   left: 0;
-  right: 96px;
+  right: 0;
   height: 0;
   pointer-events: none;
 }
@@ -93,16 +100,24 @@
 .cap90 { bottom: calc(0.9 / var(--chart-ymax) * var(--chart-plot) + var(--chart-footer)); color: #a07000; }
 .cap100 { bottom: calc(1 / var(--chart-ymax) * var(--chart-plot) + var(--chart-footer)); color: var(--bad); font-weight: 700; }
 
+.withCaps .grid i,
+.withCaps .line90,
+.withCaps .line100 {
+  right: 96px;
+}
+
 .cols {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(var(--chart-cols, 5), minmax(0, 1fr));
   height: 100%;
-  padding: 0 100px 0 8px;
+  padding: 0 8px;
   position: relative;
   z-index: 0;
-  min-width: 720px;
+  min-width: 0;
   column-gap: 10px;
 }
+
+.withCaps .cols { padding-right: 104px; }
 
 .slot,
 .hit {
@@ -127,6 +142,21 @@
   border-radius: 2px;
   margin-right: 5px;
   vertical-align: middle;
+}
+
+.rule100,
+.rule90 {
+  display: inline-block;
+  width: 18px;
+  height: 0;
+  margin-right: 5px;
+  border-top: 2px solid var(--bad);
+  vertical-align: middle;
+}
+
+.rule90 {
+  border-top-style: dashed;
+  border-top-color: var(--warn);
 }
 
 .cargo { background: var(--seg-cargo); }
