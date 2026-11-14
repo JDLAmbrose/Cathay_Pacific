@@ -113,7 +113,8 @@
 }
 
 @media (max-width: 800px) {
-  .top { padding: 10px 12px; }
+  .top { padding: 10px 12px; min-width: 0; }
   .brush { display: none; }
   .logo { height: 28px; }
+  .staff { white-space: normal; max-width: 100%; }
 }
