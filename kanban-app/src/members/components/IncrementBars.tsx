@@ -2,6 +2,7 @@ import { useI18n } from "../../i18n/useI18n";
 import { formatHkd } from "../format";
 import type { IncrementView } from "../types";
 import { MemberCard } from "./MemberCard";
+import meter from "./meter.module.css";
 import styles from "./IncrementBars.module.css";
 
 export function IncrementBars({ increment }: { increment: IncrementView }) {
@@ -28,25 +29,25 @@ export function IncrementBars({ increment }: { increment: IncrementView }) {
           <b className={styles.mid}>{formatHkd(increment.weekToDateHkd)}</b>
         </p>
       </div>
-      <div className={styles.lanes}>
+      <div className={meter.rows}>
         {rows.map((row) => (
           <div key={row.label}>
-            <div className={styles.top}>
+            <div className={meter.top}>
               <span>{row.label}</span>
               <b>
                 {formatHkd(row.slice.completedHkd)} + {formatHkd(row.slice.weekToDateHkd)}
               </b>
             </div>
-            <div className={styles.track}>
-              <i className={styles.done} style={{ width: `${(row.slice.completedHkd / max) * 100}%` }} />
-              <i className={styles.hatch} style={{ width: `${(row.slice.weekToDateHkd / max) * 100}%` }} />
+            <div className={meter.track}>
+              <i style={{ width: `${(row.slice.completedHkd / max) * 100}%` }} />
+              <i className={meter.hatch} style={{ width: `${(row.slice.weekToDateHkd / max) * 100}%` }} />
             </div>
           </div>
         ))}
       </div>
       <div className={styles.key}>
-        <span><i className={styles.done} />{t("mb.inc.completed")}</span>
-        <span><i className={styles.hatch} />{t("mb.inc.partial")}</span>
+        <span><i className={meter.swatch} />{t("mb.inc.completed")}</span>
+        <span><i className={`${meter.swatch} ${meter.hatch}`} />{t("mb.inc.partial")}</span>
       </div>
       <p className={styles.note}>{t("mb.inc.note")}</p>
     </MemberCard>

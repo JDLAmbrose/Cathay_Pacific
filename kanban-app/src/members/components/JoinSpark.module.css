@@ -32,30 +32,6 @@
   font-size: 12px;
 }
 
-.funnel { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
-
-.step { display: grid; grid-template-columns: 92px 1fr 48px; gap: 10px; align-items: center; }
-
-.step span { font-size: 13px; color: var(--muted); }
-
-.track {
-  display: block;
-  height: 22px;
-  background: #e7eeea;
-  border-radius: 8px;
-  overflow: hidden;
-}
-
-.fill {
-  display: block;
-  height: 100%;
-  background: var(--green);
-  border-radius: 8px;
-  transition: width 400ms ease;
-}
-
-.step b { text-align: right; font-size: 16px; }
-
 .spark { width: 100%; height: 96px; display: block; margin-top: 8px; }
 
 .tick { font-size: 9px; fill: var(--muted); }
@@ -64,5 +40,4 @@
 
 @media (max-width: 720px) {
   .metrics { grid-template-columns: 1fr 1fr; }
-  .step { grid-template-columns: 72px 1fr 40px; }
 }

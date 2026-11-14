@@ -1,68 +1,115 @@
-.tiers {
-  display: grid;
-  gap: 16px;
-  align-items: end;
-  min-height: 220px;
+.kicker {
+  margin: 14px 0 8px;
+  color: var(--muted);
+  font-size: 12px;
 }
 
-.tier {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: flex-end;
-}
+.kicker:first-child { margin-top: 0; }
 
-.tier strong { margin-bottom: 6px; font-size: 18px; }
-
-.col {
-  width: 46%;
-  background: #e7eeea;
-  border-radius: 8px 8px 3px 3px;
+.mix {
   display: flex;
-  align-items: flex-end;
+  height: var(--meter-height);
+  border-radius: var(--meter-radius);
   overflow: hidden;
-  transition: height 400ms ease;
+  background: var(--meter-track);
 }
 
-.empty {
-  background: transparent;
-  border: 1px dashed #c5d5d0;
-}
-
-.exec .empty {
-  background: transparent;
-  border-color: #e4d3a8;
-}
-
-.fill {
+.mix i {
   display: block;
-  width: 100%;
-  background: var(--green);
-  transition: height 400ms ease;
+  height: 100%;
+  transition: width 400ms ease;
 }
 
-/* Card-face colours from Cathay membership cards. */
-.green .col { background: #d5e7e7; }
-.green .fill { background: linear-gradient(180deg, #367878 0%, #005d63 100%); }
+.rows {
+  display: grid;
+  grid-template-columns: 10px max-content 2.6rem minmax(48px, 1fr) 5rem;
+  column-gap: 8px;
+  row-gap: 4px;
+  align-items: center;
+}
 
-.silver .col { background: #e4e4e4; }
-.silver .fill { background: linear-gradient(180deg, #767676 0%, #4d4d4d 100%); }
+.row { display: contents; }
 
-.gold .col { background: #f3ead0; }
-.gold .fill { background: linear-gradient(180deg, #8f7000 0%, #705300 100%); }
+.swatch {
+  width: 10px;
+  height: 10px;
+  border-radius: 99px;
+}
 
-.diamond .col { background: #e6e6e6; }
-.diamond .fill { background: linear-gradient(180deg, #2d2d2d 0%, #000000 100%); }
-
-.exec .col { background: #f3ead0; }
-.exec .fill { background: linear-gradient(180deg, #d3a955 0%, #d3a955 16%, #1a1a1a 16%, #1a1a1a 100%); }
-
-.tier em {
-  font-style: normal;
-  margin-top: 8px;
+.name {
   font-size: 13px;
   font-weight: 650;
-  text-align: center;
+  white-space: nowrap;
 }
 
-.tier span { margin-top: 4px; color: var(--muted); font-size: 12px; }
+.count,
+.rate {
+  font-variant-numeric: tabular-nums;
+  font-size: 13px;
+}
+
+.count { text-align: right; }
+
+.rate { text-align: right; }
+
+.track {
+  position: relative;
+  height: 16px;
+  margin: 0 6px;
+}
+
+.line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 7px;
+  height: 2px;
+  border-radius: 99px;
+  background: #e7eeea;
+}
+
+.dot {
+  position: absolute;
+  top: 2px;
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-radius: 99px;
+  border: 2px solid #fff;
+  transition: left 400ms ease;
+}
+
+.pending {
+  grid-column: 4 / -1;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.note { grid-column: 3 / -1; }
+
+.later .name { color: var(--muted); font-weight: 600; }
+.later .swatch { opacity: 0.45; }
+
+.green .swatch,
+.mix .green,
+.green .dot { background: #005d63; }
+
+.silver .swatch,
+.mix .silver,
+.silver .dot { background: #5c5c5c; }
+
+.gold .swatch,
+.mix .gold,
+.gold .dot { background: #8f7000; }
+
+.diamond .swatch,
+.mix .diamond,
+.diamond .dot { background: #1a1a1a; }
+
+.exec .swatch,
+.mix .exec { background: linear-gradient(90deg, #d3a955 0 28%, #1a1a1a 28% 100%); }
+
+.exec .dot {
+  background: #1a1a1a;
+  border-color: #d3a955;
+}

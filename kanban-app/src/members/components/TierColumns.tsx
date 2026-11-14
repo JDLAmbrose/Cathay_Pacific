@@ -15,43 +15,56 @@ const TIER_TONE: Record<TierName, string> = {
 
 export function TierColumns({ tiers }: { tiers: TierView }) {
   const { t } = useI18n();
-  const tallest = Math.max(...tiers.tiers.map((column) => column.count), 1);
+  const mix = tiers.tiers.filter((column) => column.count > 0);
+  const total = mix.reduce((sum, column) => sum + column.count, 0);
 
   return (
     <MemberCard questionKey="mb.q7" showScopeAll={false}>
-      <div className={styles.tiers} style={{ gridTemplateColumns: `repeat(${tiers.tiers.length}, 1fr)` }}>
+      <p className={styles.kicker}>{t("mb.tier.people")}</p>
+      <div className={styles.mix} aria-hidden="true">
+        {total === 0
+          ? null
+          : mix.map((column) => (
+              <i
+                key={column.tier}
+                className={TIER_TONE[column.tier]}
+                style={{ width: `${(column.count / total) * 100}%` }}
+              />
+            ))}
+      </div>
+      <p className={styles.kicker}>{t("mb.tier.usage")}</p>
+      <div className={styles.rows}>
         {tiers.tiers.map((column) => {
-          const usage = column.usage.rate;
-          const showFill = usage != null && usage > 0;
           const labelKey = tierKey(column.tier);
-          const barHeight = column.count === 0 ? 36 : Math.max((column.count / tallest) * 160, 8);
+          const label = labelKey ? t(labelKey) : column.tier;
+          const usage = column.usage.rate;
           return (
-            <div key={column.tier} className={`${styles.tier} ${TIER_TONE[column.tier]}`}>
-              <strong>{column.count}</strong>
-              <div
-                className={`${styles.col} ${column.count === 0 ? styles.empty : ""}`}
-                style={{ height: `${barHeight}px` }}
-              >
-                {showFill ? (
-                  <i className={styles.fill} style={{ height: `${usage * 100}%` }} />
-                ) : null}
-              </div>
-              <em>{labelKey ? t(labelKey) : column.tier}</em>
-              <span>
-                {column.notYetEffective ? (
-                  <>
-                    {t("mb.tier.notYet")}
-                    <br />
-                    {t("mb.tier.execFrom")}
-                  </>
-                ) : (
-                  <>
-                    {t("mb.tier.usage")}
-                    <br />
-                    {usage == null ? t("mb.noSample") : formatRate(usage)}
-                  </>
-                )}
-              </span>
+            <div
+              key={column.tier}
+              className={`${styles.row} ${TIER_TONE[column.tier]} ${column.notYetEffective ? styles.later : ""}`}
+            >
+              <i className={styles.swatch} />
+              <span className={styles.name}>{label}</span>
+              {column.notYetEffective ? (
+                <span className={`${styles.pending} ${styles.note}`}>
+                  {t("mb.tier.notYet")} · {t("mb.tier.execFrom")}
+                </span>
+              ) : (
+                <>
+                  <b className={styles.count}>{column.count}</b>
+                  {usage == null ? (
+                    <span className={styles.pending}>{t("mb.noSample")}</span>
+                  ) : (
+                    <>
+                      <span className={styles.track}>
+                        <i className={styles.line} />
+                        <i className={styles.dot} style={{ left: `${usage * 100}%` }} />
+                      </span>
+                      <b className={styles.rate}>{formatRate(usage)}</b>
+                    </>
+                  )}
+                </>
+              )}
             </div>
           );
         })}

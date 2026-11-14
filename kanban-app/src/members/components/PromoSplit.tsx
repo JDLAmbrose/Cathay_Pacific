@@ -3,6 +3,7 @@ import { useI18n } from "../../i18n/useI18n";
 import { formatHkd, formatRatio } from "../format";
 import type { AudienceFilter, PromoView } from "../types";
 import { MemberCard } from "./MemberCard";
+import meter from "./meter.module.css";
 import styles from "./PromoSplit.module.css";
 
 export function PromoSplit({ promo, audience }: { promo: PromoView; audience: AudienceFilter }) {
@@ -16,26 +17,28 @@ export function PromoSplit({ promo, audience }: { promo: PromoView; audience: Au
         <small>{t("mb.promo.usage")}</small>
         <b>{formatRatio(promo.usage, t("mb.noSample"))}</b>
       </p>
-      <div className={styles.row}>
-        <div className={styles.top}>
-          <span>{t("mb.promo.family")}</span>
-          <b>
-            {promo.familyOrders} {t("mb.promo.orders")} · {formatHkd(promo.familyRevenueHkd)}
-          </b>
+      <div className={meter.rows}>
+        <div>
+          <div className={meter.top}>
+            <span>{t("mb.promo.family")}</span>
+            <b>
+              {promo.familyOrders} {t("mb.promo.orders")} · {formatHkd(promo.familyRevenueHkd)}
+            </b>
+          </div>
+          <div className={meter.track}>
+            <i style={{ width: `${(promo.familyOrders / widest) * 100}%` }} />
+          </div>
         </div>
-        <div className={styles.track}>
-          <i style={{ width: `${(promo.familyOrders / widest) * 100}%` }} />
-        </div>
-      </div>
-      <div className={styles.row}>
-        <div className={styles.top}>
-          <span>{t("mb.promo.official")}</span>
-          <b>
-            {promo.officialOrders} {t("mb.promo.orders")}
-          </b>
-        </div>
-        <div className={styles.track}>
-          <i className={styles.official} style={{ width: `${(promo.officialOrders / widest) * 100}%` }} />
+        <div>
+          <div className={meter.top}>
+            <span>{t("mb.promo.official")}</span>
+            <b>
+              {promo.officialOrders} {t("mb.promo.orders")}
+            </b>
+          </div>
+          <div className={meter.track}>
+            <i className={meter.soft} style={{ width: `${(promo.officialOrders / widest) * 100}%` }} />
+          </div>
         </div>
       </div>
       <button type="button" className={styles.toggle} onClick={() => setOpen((current) => !current)}>

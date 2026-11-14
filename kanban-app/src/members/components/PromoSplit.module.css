@@ -9,27 +9,6 @@
   letter-spacing: -0.03em;
 }
 
-.row { margin-top: 14px; }
-
-.top { display: flex; justify-content: space-between; gap: 12px; margin-bottom: 6px; font-size: 13px; }
-.top b { text-align: right; }
-
-.track {
-  height: 14px;
-  background: #e7eeea;
-  border-radius: 99px;
-  overflow: hidden;
-}
-
-.track i {
-  display: block;
-  height: 100%;
-  background: #02544f;
-  transition: width 400ms ease;
-}
-
-.official { background: #3d8f86; }
-
 .toggle {
   margin-top: 12px;
   border: 1px solid var(--line);
