@@ -13,6 +13,7 @@ import type {
   Quote,
   View,
   Bag,
+  AssistantProgress,
 } from "../types/domain";
 
 const clone = <T>(value: T): T => JSON.parse(JSON.stringify(value));
@@ -1812,8 +1813,11 @@ const agentRuntime: {
   imageLoading: boolean;
   imageError: string | null;
   imageVersion: number;
+  streamText: string;
+  progress: Extract<AssistantProgress, { type: "status" }> | null;
 } = { pending: false, error: null, controller: null, requestId: 0,
-  image: null, imageLoading: false, imageError: null, imageVersion: 0 };
+  image: null, imageLoading: false, imageError: null, imageVersion: 0,
+  streamText: "", progress: null };
 
 async function selectAgentImage(file?: File) {
   if (!file || agentRuntime.pending || !liveAgent()) return;
@@ -1911,7 +1915,9 @@ function agentContext() {
       allowance: ticketAllowance(),
       countUnknown: d.countUnknown,
       zero: d.zero,
-      items: d.items.slice(0, 50).map((i) => ({
+      totalCount: d.countUnknown ? null : d.zero ? 0 : d.items.length,
+      serviceCount: d.countUnknown ? null : d.zero ? 0 : d.items.filter((i) => i.mode === "checked" && i.service).length,
+      items: (d.zero || d.countUnknown ? [] : d.items).slice(0, 50).map((i) => ({
         id: i.id,
         name: displayValue(i.name).slice(0, 300),
         categories: itemCategories(i),
@@ -1944,6 +1950,8 @@ function clearAgentConversation(renderAfter = true) {
   agentRuntime.controller = null;
   agentRuntime.pending = false;
   agentRuntime.error = null;
+  agentRuntime.streamText = "";
+  agentRuntime.progress = null;
   Object.assign(state.agent, {
     messages: [],
     answer: null,
@@ -1963,6 +1971,7 @@ function agentErrorKey(code) {
       provider_quota: "agent.quota",
       provider_model: "agent.modelError",
       provider_refusal: "agent.refusal",
+      unverified_policy: "agent.unverifiedPolicy",
       invalid_image: "agent.imageRead",
       too_many_images: "agent.imageSize",
       request_too_large: "agent.imageSize",
@@ -2012,6 +2021,8 @@ async function sendQuestion(question: string, retry = false) {
   const messages = assistantHistory(a.messages);
   agentRuntime.pending = true;
   agentRuntime.error = null;
+  agentRuntime.streamText = "";
+  agentRuntime.progress = { type: "status", stage: "thinking" };
   const controller = new AbortController();
   agentRuntime.controller = controller;
   const timeout = setTimeout(() => controller.abort("timeout"), 90000);
@@ -2021,8 +2032,17 @@ async function sendQuestion(question: string, retry = false) {
     const data = await requestAssistantReply(
       { messages, context, language },
       controller.signal,
+      (event) => {
+        if (requestId !== agentRuntime.requestId || state.agent !== a || controller.signal.aborted) return;
+        if (JSON.stringify(agentContext()) !== snapshot) throw Error("context_changed");
+        if (event.type === "reset") agentRuntime.streamText = "";
+        if (event.type === "delta") agentRuntime.streamText += event.text;
+        if (event.type === "status") agentRuntime.progress = event;
+        render();
+      },
     );
     if (requestId !== agentRuntime.requestId || state.agent !== a) return;
+    if (controller.signal.aborted) throw Error("cancelled");
     if (JSON.stringify(agentContext()) !== snapshot)
       throw Error("context_changed");
     a.messages.push({
@@ -2036,6 +2056,7 @@ async function sendQuestion(question: string, retry = false) {
               "get_baggage_context",
               "get_price_context",
               "get_service_guide",
+              "get_customs_policy",
             ].includes(k),
           )
         : [],
@@ -2055,6 +2076,8 @@ async function sendQuestion(question: string, retry = false) {
     if (requestId === agentRuntime.requestId) {
       agentRuntime.pending = false;
       agentRuntime.controller = null;
+      agentRuntime.streamText = "";
+      agentRuntime.progress = null;
       persist();
       render();
     }

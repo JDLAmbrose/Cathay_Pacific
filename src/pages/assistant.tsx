@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import {
   fmt,
   money,
@@ -13,6 +13,7 @@ import {
   removeAgentImage,
 } from "../engine/booking";
 import { messageImage } from "../services/assistantImages";
+import { AssistantReplyContent } from "../components/AssistantReply";
 import { t } from "../services/i18n";
 import { cx, keyed, Input, Select, Option } from "../components/primitives";
 import { useQuery } from "@tanstack/react-query";
@@ -357,39 +358,36 @@ function rulesAnswerHTML(ans) {
     </>
   );
 }
-function agentMessageHTML(m) {
-  const image = messageImage(m);
-  const tools = {
+const toolLabels = {
     get_trip_context: "agent.toolTrip",
     get_baggage_context: "agent.toolBaggage",
     get_price_context: "agent.toolPrice",
     get_service_guide: "agent.toolGuide",
-  };
+    get_customs_policy: "agent.toolCustoms",
+};
+function agentMessageHTML(m) {
+  const image = messageImage(m);
   return (
     <div className={cx("message " + String(m.role === "user" ? "user" : ""))}>
-      {m.role === "assistant" ? (
-        <small className={cx("message-source")}>
-          {T(m.mode === "live" ? "agent.liveLabel" : "agent.localLabel")}
-        </small>
-      ) : (
-        ""
-      )}
-      <div className={cx("message-text")}>
-        {m.key ? T(m.key) : text(m.text)}
-      </div>
+      {m.role === "assistant" && !m.key
+        ? <AssistantReplyContent text={m.text || ""} />
+        : <div className={cx("message-text")}>{m.key ? T(m.key) : text(m.text)}</div>}
       {image ? <img className={cx("agent-image")} src={image.dataUrl} alt={T("agent.photoAlt")} />
         : m.imageCount ? <small className={cx("message-source")}>{T("agent.imageExpired")}</small> : null}
       {m.tools?.length ? (
         <small className={cx("message-source")}>
           {T("agent.consulted")}{" "}
           {m.tools
-            .filter((k) => tools[k])
-            .map((k) => T(tools[k]))
+            .filter((k) => toolLabels[k])
+            .map((k) => T(toolLabels[k]))
             .join(" · ")}
         </small>
       ) : (
         ""
       )}
+      {m.role === "assistant" && <small className={cx("message-source")}>
+        {T(m.mode === "live" ? "agent.liveLabel" : "agent.localLabel")}
+      </small>}
     </div>
   );
 }
@@ -406,6 +404,17 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
     },
     replyKey = pendingReplies[a.pending?.type];
   const status = useQuery({ ...assistantStatusOptions(), enabled: live });
+  const messagesRef = useRef<HTMLDivElement>(null);
+  const followReply = useRef(true);
+  useLayoutEffect(() => {
+    const element = messagesRef.current;
+    if (element && followReply.current) element.scrollTop = element.scrollHeight;
+  }, [a.messages.length, agentRuntime.streamText, busy]);
+  const progressKey = agentRuntime.streamText ? "agent.writing" : ({
+    reading_image: "agent.readingImage",
+    checking: "agent.checkingReply", tool: "agent.usingSources",
+  }[agentRuntime.progress?.stage] || "agent.thinking");
+  const activeTool = toolLabels[agentRuntime.progress?.tool];
   const statusKey = !live
     ? "agent.localLabel"
     : status.isError
@@ -446,6 +455,11 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
             <div
               className={cx("chatmessages")}
               id={"chatMessages"}
+              ref={messagesRef}
+              onScroll={(event) => {
+                const el = event.currentTarget;
+                followReply.current = el.scrollHeight - el.scrollTop - el.clientHeight < 64;
+              }}
               role={"log"}
               aria-label={T("ai.conversation")}
               aria-live={"polite"}
@@ -459,8 +473,14 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
                 </div>
               )}
               {busy ? (
-                <div className={cx("message agent-loading")}>
-                  {T("agent.thinking")}
+                <div className={cx("message agent-streaming")}>
+                  {agentRuntime.streamText && <div className={cx("agent-stream-text")}>
+                    <AssistantReplyContent text={agentRuntime.streamText} streaming />
+                  </div>}
+                  <div className={cx("agent-thinking")} role="status">
+                    <span className={cx("agent-thinking-dots")} aria-hidden="true"><i /><i /><i /></span>
+                    <span>{T(progressKey)}{!agentRuntime.streamText && activeTool ? ` · ${T(activeTool)}` : ""}</span>
+                  </div>
                 </div>
               ) : (
                 ""
@@ -574,6 +594,9 @@ function AssistantPage({ embedded = false }: { embedded?: boolean }) {
                 {keyed(
                   [
                     ["GB", "ai.gb"],
+                    ["CN", "agent.cn"],
+                    ["JP", "agent.jp"],
+                    ["HK", "agent.hk"],
                     ["AU", "qa.au"],
                     ["IN", "qa.in"],
                     ["FR", "ai.fr"],

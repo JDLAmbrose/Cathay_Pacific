@@ -25,6 +25,47 @@ def tool_call(name="get_price_context", arguments="{}", identifier="call-1"):
 
 
 class AgentTests(unittest.TestCase):
+    def test_photo_has_latest_trip_count_and_quote_before_any_tool_call(self):
+        payload = request_payload()
+        payload["messages"][0]["images"] = ["data:image/png;base64," + base64.b64encode(b"\x89PNG\r\n\x1a\nphoto").decode()]
+        payload["context"]["trip"].update({
+            "flight": {"destination": "LHR"}, "enquiryDestination": "AU",
+            "order": {"status": "paid", "bagCount": 2, "quote": {"valid": True, "total": 1200}}})
+        payload["context"]["baggage"] = {"countUnknown": False, "totalCount": 4, "serviceCount": 3,
+            "selectedItemId": "bag1", "items": [{"id": "bag1", "name": "Bag A", "address": "PRIVATE_ADDRESS"}]}
+        snapshots = []
+        def model(messages, *args):
+            system = messages[0]["content"]
+            snapshot = json.loads(system.split("<CURRENT_TRIP_SNAPSHOT>\n")[1].split("\n</CURRENT_TRIP_SNAPSHOT>")[0])
+            snapshots.append(snapshot)
+            self.assertNotIn("PRIVATE_", system)
+            self.assertIsInstance(messages[-1]["content"], list)
+            return {"content": "Demo trip summary"}
+        assistant.chat(payload, model)
+        self.assertEqual(snapshots[0]["trip"]["flight"]["destination"], "LHR")
+        self.assertEqual(snapshots[0]["trip"]["enquiryDestination"], "AU")
+        self.assertEqual(snapshots[0]["baggage"]["declaredCount"], 4)
+        self.assertEqual(snapshots[0]["baggage"]["collectionDeliveryCount"], 3)
+        self.assertEqual(snapshots[0]["baggage"]["selectedItem"]["name"], "Bag A")
+        self.assertEqual(snapshots[0]["draftQuotes"]["current"]["total"], 1800)
+        self.assertEqual(snapshots[0]["paidOrder"]["quote"]["total"], 1200)
+        payload["context"]["trip"]["flight"]["destination"] = "MEL"
+        payload["context"]["pricing"]["current"]["total"] = 2400
+        assistant.chat(payload, model)
+        self.assertEqual(snapshots[1]["trip"]["flight"]["destination"], "MEL")
+        self.assertEqual(snapshots[1]["draftQuotes"]["current"]["total"], 2400)
+
+    def test_snapshot_does_not_turn_unknown_into_zero_or_reuse_invalid_price(self):
+        context = {"baggage": {"countUnknown": True, "totalCount": 4, "serviceCount": 3},
+                   "pricing": {"current": {"valid": False, "total": 1800, "error": "Missing dimensions"}}}
+        snapshot = assistant.trip_snapshot(context)
+        self.assertIsNone(snapshot["baggage"]["declaredCount"])
+        self.assertIsNone(snapshot["baggage"]["collectionDeliveryCount"])
+        self.assertEqual(snapshot["draftQuotes"]["current"], {"valid": False, "error": "Missing dimensions"})
+        self.assertIsNone(snapshot["paidOrder"])
+        context["baggage"].update(countUnknown=False, totalCount=0, serviceCount=0)
+        self.assertEqual(assistant.trip_snapshot(context)["baggage"]["declaredCount"], 0)
+
     def test_tool_loop_receives_quote_and_keeps_history(self):
         payload = request_payload()
         payload["messages"][:0] = [{"role": "user", "content": "I have three bags"},
@@ -182,7 +223,8 @@ class AssistantHTTPTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertTrue(json.loads(body)["configured"])
         self.assertNotIn(b"fake-test-key", body)
-        for path in ("/.env", "/.git/config", "/tools/assistant.py", "/assets/../tools/assistant.py"):
+        for path in ("/.env", "/.git/config", "/tools/assistant.py", "/assets/../tools/assistant.py",
+                     "/tools/data/customs_policies.json", "/tools/customs_policy.py"):
             self.assertEqual(self.request("GET", path)[0], 404)
         expected = 200 if (serve.DIST / "index.html").is_file() else 503
         self.assertEqual(self.request("GET", "/pages/assistant.html")[0], expected)
@@ -210,3 +252,37 @@ class AssistantHTTPTests(unittest.TestCase):
         self.assertEqual(status, 429)
         self.assertEqual(json.loads(body)["error"], "rate_limit")
         model.assert_not_called()
+
+    def test_sse_flushes_before_completion_and_closes_with_done(self):
+        release = threading.Event()
+        def delayed(payload, on_event):
+            on_event({"type": "delta", "text": "First sentence. "})
+            release.wait(3)
+            return {"reply": "First sentence. Done.", "tools": []}
+        client = HTTPConnection("127.0.0.1", self.server.server_port, timeout=2)
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(assistant, "chat", side_effect=delayed):
+            try:
+                client.request("POST", serve.CHAT_PATH, json.dumps(request_payload()),
+                               {"Content-Type": "application/json", "Accept": "text/event-stream"})
+                response = client.getresponse()
+                self.assertIn("text/event-stream", response.getheader("Content-Type"))
+                self.assertEqual(response.getheader("X-Accel-Buffering"), "no")
+                first = response.readline() + response.readline() + response.readline()
+                self.assertIn(b'"type": "delta"', first)
+                self.assertFalse(release.is_set())
+                release.set()
+                self.assertIn(b'"type": "done"', response.read())
+            finally:
+                release.set()
+                client.close()
+
+    def test_sse_error_is_terminal_and_releases_request_slot(self):
+        with patch.dict("os.environ", {"OPENAI_API_KEY": "fake-test-key"}), patch.object(assistant, "chat", side_effect=assistant.AgentError("provider_timeout")):
+            status, body = self.request("POST", serve.CHAT_PATH, json.dumps(request_payload()),
+                                        {"Content-Type": "application/json", "Accept": "text/event-stream"})
+        self.assertEqual(status, 200)
+        self.assertIn(b'"type": "error", "error": "provider_timeout"', body)
+        self.assertNotIn(b'"type": "done"', body)
+        self.assertNotIn(b'fake-test-key', body)
+        self.assertTrue(serve.CHAT_SLOTS.acquire(blocking=False))
+        serve.CHAT_SLOTS.release()

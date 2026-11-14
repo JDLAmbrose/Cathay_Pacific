@@ -30,7 +30,8 @@ jobs:
         run: |
           mkdir -p preview/tools
           cp -R dist preview/dist
-          cp tools/serve.py tools/assistant.py preview/tools/
+          cp tools/serve.py tools/assistant.py tools/customs_policy.py preview/tools/
+          cp -R tools/data preview/tools/data
           printf '#!/bin/sh\ncd "$(dirname "$0")" || exit 1\npython3 tools/serve.py --port 8000\n' > preview/preview.command
           chmod +x preview/preview.command
           printf '@echo off\r\ncd /d "%%~dp0"\r\npython tools/serve.py --port 8000\r\npause\r\n' > preview/preview.bat

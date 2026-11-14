@@ -437,12 +437,36 @@ html[dir=rtl] .milestone-stage-copy,html[dir=rtl] .milestone-summary>p{direction
 /* French labels are the longest: keep the site's existing two-row header until all six tabs fit with room to spare. */
 @media(min-width:1281px) and (max-width:1366px){html[lang=fr] .nav{gap:18px;flex-wrap:wrap}html[lang=fr] .main-nav{order:3;flex-basis:100%;justify-content:center;border-top:1px solid var(--line);padding-top:10px;margin:0}html[lang=fr] .header-tools{margin-inline-start:auto}}
 
-/* Assistant replies remain escaped plain text; preserve paragraphs on every screen. */
+/* Assistant content is escaped; only explicit headings, callouts and safe links are rendered. */
 .agent-toolbar{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
 .message-text{white-space:pre-wrap;overflow-wrap:anywhere}
 .message-source{display:block;font-size:.75em;opacity:.75;margin-block:4px 8px}
+.agent-reply{min-width:0;overflow-wrap:anywhere}
+.agent-reply .agent-verdict{display:flex;align-items:baseline;gap:.45em;font-size:clamp(1.25rem,2.4vw,1.65rem);line-height:1.45;letter-spacing:0;margin:0 0 16px;font-weight:800}
+.agent-verdict strong{font-weight:800}
+.agent-verdict-yes{color:#126147}
+.agent-verdict-no{color:#a02732}
+.agent-verdict-unknown{color:#805700}
+.agent-callout{margin-block:12px;padding:14px 16px;border:1px solid #d5e2de;border-inline-start:4px solid #5c8277;border-radius:10px;background:#ffffffd9}
+.agent-callout h4{display:flex;align-items:center;gap:8px;margin:0 0 8px;font-size:1em;line-height:1.5;font-weight:700;color:#254f44}
+.agent-callout .message-text{font-size:.95em;line-height:1.85}
+.agent-callout-important{border-inline-start-color:#277960;background:#f6fbf8}
+.agent-callout-warning{border-color:#eadfbf;border-inline-start-color:#a77918;background:#fffaf0}
+.agent-callout-warning h4{color:#805700}
+.agent-callout-tip{border-inline-start-color:#4e7893;background:#f6fafc}
+.agent-callout a,.agent-reply>.message-text a{color:#126147;text-decoration:underline;text-underline-offset:3px;overflow-wrap:anywhere}
+.agent-callout a:focus-visible{outline:2px solid var(--green);outline-offset:3px}
 .agent-next-steps{display:flex;flex-direction:column;gap:10px;margin-top:20px}
-.agent-loading{opacity:.7}
+.agent-streaming{border:1px solid var(--line)}
+.agent-thinking{display:flex;align-items:center;gap:10px;min-height:24px;color:var(--green);font-size:.85em}
+.agent-stream-text+.agent-thinking{margin-block-start:12px}
+.agent-thinking-dots{display:inline-flex;align-items:center;gap:4px;flex:none}
+.agent-thinking-dots i{width:6px;height:6px;border-radius:50%;background:currentColor;opacity:.6;animation:agent-thought 1.3s ease-in-out infinite}
+.agent-thinking-dots i:nth-child(2){animation-delay:.16s}
+.agent-thinking-dots i:nth-child(3){animation-delay:.32s}
+.agent-cursor{display:inline-block;width:2px;height:1em;vertical-align:-.12em;margin-inline-start:3px;background:var(--green);animation:agent-caret 1s step-end infinite}
+@keyframes agent-thought{0%,65%,100%{transform:translateY(0);opacity:.35}30%{transform:translateY(-4px);opacity:1}}
+@keyframes agent-caret{50%{opacity:0}}
 .chatinput .input{min-width:0}
 .chatinput button:disabled{opacity:.55;cursor:wait}
 

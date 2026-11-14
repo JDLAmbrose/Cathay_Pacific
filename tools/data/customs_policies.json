@@ -1,0 +1,317 @@
+{
+  "version": "2026-11-14.1",
+  "reviewed_on": "2026-11-14",
+  "review_after_days": 30,
+  "scope": "Curated summaries of official inbound passenger customs and biosecurity guidance. Not complete legislation, airline rules, airport security rules, or commercial cargo clearance.",
+  "destinations": {
+    "GB": {
+      "name": "英国（大不列颠）",
+      "scope": "England, Scotland and Wales only. Northern Ireland has different rules. Origin and food ingredients matter.",
+      "sources": [
+        {
+          "id": "gb-declare",
+          "title": "GOV.UK — Bringing goods into the UK for personal use",
+          "url": "https://www.gov.uk/bringing-goods-into-uk-personal-use"
+        },
+        {
+          "id": "gb-duty",
+          "title": "GOV.UK — Arriving in Great Britain",
+          "url": "https://www.gov.uk/bringing-goods-into-uk-personal-use/arriving-in-Great-Britain"
+        },
+        {
+          "id": "gb-food",
+          "title": "GOV.UK — Meat, dairy, fish and animal products",
+          "url": "https://www.gov.uk/bringing-food-into-great-britain/meat-dairy-fish-animal-products"
+        }
+      ],
+      "rules": [
+        {
+          "id": "gb-declaration",
+          "topics": [
+            "general"
+          ],
+          "summary": "Declare goods above personal allowances and banned or restricted goods. All commercial goods must be declared; personal allowances do not cover goods for sale or business use. Declaration does not legalise prohibited goods.",
+          "source_ids": [
+            "gb-declare"
+          ]
+        },
+        {
+          "id": "gb-general-allowance",
+          "topics": [
+            "duty_free"
+          ],
+          "summary": "For self-carried personal goods or gifts arriving from outside the UK, the other-goods allowance is GBP390, or GBP270 when arriving by private plane or boat. Allowances cannot be pooled. Above the allowance, tax and duty apply to the full category value, not only the excess. Alcohol and tobacco have separate allowances.",
+          "source_ids": [
+            "gb-duty"
+          ]
+        },
+        {
+          "id": "gb-food-origin",
+          "topics": [
+            "food"
+          ],
+          "summary": "Food rules depend on where products are brought from. From outside the EU, Switzerland, Norway, Iceland, Liechtenstein, Faroe Islands and Greenland (including Hong Kong, mainland China and Japan), meat/meat products cannot be brought in. Milk/milk-based products are also prohibited except specified powdered infant milk, infant food or medically required food meeting the official conditions. Do not extend those specific food exceptions to ordinary meat snacks. Check packaging, refrigeration and quantity conditions. These rules do not apply to Northern Ireland.",
+          "source_ids": [
+            "gb-food"
+          ]
+        }
+      ],
+      "gaps": [
+        "Northern Ireland",
+        "Item-specific medicines and controlled drugs",
+        "Full alcohol/tobacco allowances",
+        "Plant-specific import conditions",
+        "Relocation relief and unaccompanied/commercial cargo"
+      ]
+    },
+    "CN": {
+      "name": "中国内地",
+      "scope": "Mainland China customs territory; do not apply Hong Kong rules. Special regions and traveller categories may have separate rules.",
+      "sources": [
+        {
+          "id": "cn-baggage",
+          "title": "海关总署令第276号《中华人民共和国海关进出境行李物品监管办法》（湖南省政府转载）",
+          "url": "https://www.hunan.gov.cn/zqt/zcsd/202502/t20250219_33590491.html",
+          "effective_from": "2025-04-01"
+        },
+        {
+          "id": "cn-quarantine",
+          "title": "海关总署 — 出入境人员携带物检疫办事指南",
+          "url": "https://online.customs.gov.cn/static/pages/guides/000629014001/000629014001.html"
+        }
+      ],
+      "rules": [
+        {
+          "id": "cn-personal-use",
+          "topics": [
+            "general",
+            "restricted"
+          ],
+          "summary": "Baggage must be for reasonable personal use; quantities beyond that scope follow cargo procedures. Prohibited goods cannot enter. Restricted goods require applicable limits and permits/documents. Declaration is not permission to import prohibited items.",
+          "source_ids": [
+            "cn-baggage"
+          ]
+        },
+        {
+          "id": "cn-declaration",
+          "topics": [
+            "general",
+            "food",
+            "duty_free"
+          ],
+          "summary": "Truthfully declare baggage. Written declaration is required for animal/plant products and other quarantine articles, goods over applicable tax-free or quantity limits, goods requiring permits, and separately shipped baggage, among other cases. Use the red channel when declaration is required or the correct channel is uncertain. This library does not specify a universal mainland tax-free allowance.",
+          "source_ids": [
+            "cn-baggage"
+          ]
+        },
+        {
+          "id": "cn-separated-baggage",
+          "topics": [
+            "general"
+          ],
+          "summary": "Declare separately transported inbound personal baggage when entering; with Customs agreement, complete its clearance within six months after entry. Cargo quotations do not establish eligibility for this procedure.",
+          "source_ids": [
+            "cn-baggage"
+          ]
+        },
+        {
+          "id": "cn-quarantine-service",
+          "topics": [
+            "food"
+          ],
+          "summary": "Quarantine is administered by the local customs office. Depending on the article, plant/animal permits or quarantine approval documents may be required. The official service guide provides consultation through Customs 12360. A specific food's eligibility needs the applicable prohibited list and product conditions, not just its photograph.",
+          "source_ids": [
+            "cn-quarantine"
+          ]
+        }
+      ],
+      "gaps": [
+        "Complete prohibited food/plant/animal list",
+        "Resident/non-resident and Hong Kong/Macao-route tax-free allowance details",
+        "Specific medicine permissions",
+        "Hainan and other special customs arrangements"
+      ]
+    },
+    "JP": {
+      "name": "日本",
+      "scope": "Inbound personal passenger baggage. Personal-use scope, quantity and separate shipment affect procedures; commercial cargo is different.",
+      "sources": [
+        {
+          "id": "jp-customs",
+          "title": "Japan Customs — Procedures of Passenger Clearance",
+          "url": "https://www.customs.go.jp/english/summary/passenger.htm"
+        },
+        {
+          "id": "jp-medicine",
+          "title": "MHLW — Bringing medicines for personal use into Japan",
+          "url": "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/iyakuhin/kojinyunyu/topics/tp010401-1_00001.html"
+        }
+      ],
+      "rules": [
+        {
+          "id": "jp-declaration",
+          "topics": [
+            "general"
+          ],
+          "summary": "All arriving passengers declare their belongings. Visit Japan Web is recommended for electronic declaration. Unaccompanied articles also need declaration. Green channel is for passengers with no taxable, prohibited or restricted goods; others use red.",
+          "source_ids": [
+            "jp-customs"
+          ]
+        },
+        {
+          "id": "jp-personal-allowance",
+          "topics": [
+            "duty_free"
+          ],
+          "summary": "Reasonable personal clothing, toiletries and portable professional equipment used during the stay and not for sale are tax-exempt. For other articles, the published allowance is JPY200,000 total overseas market value. Items below JPY10,000 are excluded from this total; an individual item/set above JPY200,000 has no allowance. Alcohol, tobacco and perfume have separate limits. Accompanied and unaccompanied personal baggage are considered together.",
+          "source_ids": [
+            "jp-customs"
+          ]
+        },
+        {
+          "id": "jp-quarantine",
+          "topics": [
+            "food",
+            "restricted"
+          ],
+          "summary": "Plants and animals must undergo relevant quarantine before customs examination. Medicines and cosmetics have quantity controls. Firearms, explosives and certain drugs are prohibited or controlled; photographs cannot establish permits or lawful ingredients.",
+          "source_ids": [
+            "jp-customs"
+          ]
+        },
+        {
+          "id": "jp-medicine-check",
+          "topics": [
+            "medicine"
+          ],
+          "summary": "Personal medicines require ingredient and quantity checks. Ordinary prescription medicines up to one month's supply may be exempt from Import Confirmation; other ordinary drugs/quasi-drugs up to two months may qualify. These exemptions do not override prohibitions or controlled-drug requirements. Prescribed narcotics and specified stimulant raw materials require separate advance permission where permitted. Check the exact ingredient and obtain necessary confirmation before departure.",
+          "source_ids": [
+            "jp-medicine"
+          ]
+        }
+      ],
+      "gaps": [
+        "Exact animal/plant quarantine eligibility",
+        "Complete controlled-drug schedules",
+        "Full alcohol/tobacco/perfume allowances",
+        "Commercial cargo procedures"
+      ]
+    },
+    "HK": {
+      "name": "中国香港",
+      "scope": "Hong Kong SAR inbound passenger customs, separate from mainland China. Cross-boundary drivers have different duty-free eligibility.",
+      "sources": [
+        {
+          "id": "hk-duty",
+          "title": "Hong Kong Customs — Duty-free Concessions",
+          "url": "https://www.customs.gov.hk/en/service-enforcement-information/passenger-clearance/duty-free-concessions/index.html"
+        },
+        {
+          "id": "hk-faq",
+          "title": "Hong Kong Customs — Passenger Clearance FAQs",
+          "url": "https://www.customs.gov.hk/en/service-enforcement-information/passenger-clearance/faqs/index.html?print=1"
+        }
+      ],
+      "rules": [
+        {
+          "id": "hk-declaration",
+          "topics": [
+            "general",
+            "restricted"
+          ],
+          "summary": "Use red channel for controlled goods or dutiable goods beyond concessions. Declaring controlled goods does not replace required licences or permits. Green-channel passengers may still be examined. Currency/bearer negotiable instruments above HKD120,000 equivalent require declaration at specified entry control points.",
+          "source_ids": [
+            "hk-faq"
+          ]
+        },
+        {
+          "id": "hk-duty-free",
+          "topics": [
+            "duty_free"
+          ],
+          "summary": "For eligible passengers aged 18 or above and personal use: 1 litre of liquor above 30% ABV; Hong Kong ID holders must have been outside Hong Kong for at least 24 hours for that liquor concession. Tobacco alternatives are 19 cigarettes, or 1 cigar/25g cigars, or 25g other manufactured tobacco. Cross-boundary drivers are not eligible. Commercial dutiable goods have no personal concession. This tobacco allowance is not permission for alternative smoking products.",
+          "source_ids": [
+            "hk-duty"
+          ]
+        },
+        {
+          "id": "hk-food",
+          "topics": [
+            "food"
+          ],
+          "summary": "Reasonable personal quantities of fruits, vegetables, fully cooked meat and seafood in personal baggage are generally not controlled. Certain foods, including fresh/frozen meat and poultry, game, eggs, milk and milk beverages, have import controls. Check the exact product with the Food and Environmental Hygiene Department; do not generalise from a sealed package.",
+          "source_ids": [
+            "hk-faq"
+          ]
+        }
+      ],
+      "gaps": [
+        "Alternative smoking products",
+        "Specific medicine permissions",
+        "Endangered species permits",
+        "Product-specific food certificates"
+      ]
+    },
+    "AU": {
+      "name": "澳大利亚",
+      "scope": "Inbound personal passenger baggage. Biosecurity and customs duty are separate; states such as Western Australia have additional requirements.",
+      "sources": [
+        {
+          "id": "au-duty",
+          "title": "Australian Border Force — Duty free",
+          "url": "https://www.abf.gov.au/entering-and-leaving-australia/duty-free"
+        },
+        {
+          "id": "au-biosecurity",
+          "title": "DAFF — Bringing or mailing goods to Australia",
+          "url": "https://www.agriculture.gov.au/travelling/bringing-mailing-goods"
+        },
+        {
+          "id": "au-arrival",
+          "title": "DAFF — Travelling to Australia",
+          "url": "https://www.agriculture.gov.au/travelling/to-australia"
+        }
+      ],
+      "rules": [
+        {
+          "id": "au-general-allowance",
+          "topics": [
+            "duty_free"
+          ],
+          "summary": "Eligible passengers aged 18 or over have an AUD900 general-goods allowance; under-18 passengers and crew have AUD450. Alcohol and tobacco have separate rules, with no concessions for under-18 travellers. Qualifying families on the same flight/voyage clearing customs together may pool allowances. Commercial goods do not qualify. Personal items owned and used overseas for at least 12 months, or temporarily imported, have separate exemption conditions.",
+          "source_ids": [
+            "au-duty"
+          ]
+        },
+        {
+          "id": "au-declaration",
+          "topics": [
+            "general",
+            "food"
+          ],
+          "summary": "Declare biosecurity risk goods, including relevant food, plant and animal materials, and footwear/clothing/equipment used near animals or in rural areas, or dispose of risk goods in designated arrival bins. Declared goods are assessed and may require treatment, export or destruction; declaration does not guarantee admission.",
+          "source_ids": [
+            "au-arrival"
+          ]
+        },
+        {
+          "id": "au-food-check",
+          "topics": [
+            "food",
+            "restricted"
+          ],
+          "summary": "Check product-specific import conditions in BICON before bringing food, plant materials or animal products. Origin, ingredients, processing and packaging affect eligibility. Clean used outdoor gear of soil and biological debris. Postal goods require accurate contents declarations; passenger and mail procedures should not be interchanged.",
+          "source_ids": [
+            "au-biosecurity"
+          ]
+        }
+      ],
+      "gaps": [
+        "Exact BICON commodity decision",
+        "Medicines and controlled substances",
+        "Full alcohol/tobacco allowances",
+        "Commercial cargo and relocation concessions"
+      ]
+    }
+  }
+}

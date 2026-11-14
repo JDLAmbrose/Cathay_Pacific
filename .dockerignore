@@ -14,5 +14,8 @@
 !tools/
 !tools/serve.py
 !tools/assistant.py
+!tools/customs_policy.py
+!tools/data/
+!tools/data/*.json
 !tools/copy-kanban.mjs
 dist/

@@ -318,6 +318,10 @@ export type AssistantInput = {
   context: object;
 };
 export type AssistantReply = { reply: string; tools?: string[] };
+export type AssistantProgress =
+  | { type: "delta"; text: string }
+  | { type: "reset" }
+  | { type: "status"; stage: "thinking" | "reading_image" | "checking" | "tool"; tool?: string };
 export interface DataSource {
   loadDemo(): BookingState;
   readBooking(): BookingState | null;
@@ -326,6 +330,7 @@ export interface DataSource {
   askAssistant(
     input: AssistantInput,
     signal?: AbortSignal,
+    onProgress?: (event: AssistantProgress) => void,
   ): Promise<AssistantReply>;
   lookupTracking(
     input: TrackingInput,

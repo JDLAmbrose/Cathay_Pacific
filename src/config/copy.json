@@ -6928,5 +6928,68 @@
     "L’assistant ne peut pas traiter cette demande. Changez de photo ou reformulez.",
     "El asistente no puede procesar la solicitud. Cambia la foto o reformula.",
     "لا يستطيع المساعد معالجة هذا الطلب. جرّب صورة أخرى أو أعد صياغة السؤال."
+  ],
+  "agent.toolCustoms": [
+    "已存海關政策",
+    "Saved customs policies",
+    "Règles douanières enregistrées",
+    "Normas aduaneras guardadas",
+    "السياسات الجمركية المحفوظة"
+  ],
+  "agent.cn": [
+    "中國內地",
+    "Mainland China",
+    "Chine continentale",
+    "China continental",
+    "البر الرئيسي للصين"
+  ],
+  "agent.jp": [
+    "日本",
+    "Japan",
+    "Japon",
+    "Japón",
+    "اليابان"
+  ],
+  "agent.hk": [
+    "中國香港",
+    "Hong Kong SAR",
+    "Hong Kong",
+    "Hong Kong",
+    "هونغ كونغ"
+  ],
+  "agent.unverifiedPolicy": [
+    "回答包含未經資料支持的攜帶限制，已暫停顯示。請重新提問或向官方核實。",
+    "The answer included an unsupported carriage limit and was withheld. Please ask again or verify with the official authority.",
+    "La réponse contenait une limite de transport non étayée et a été masquée. Réessayez ou consultez une source officielle.",
+    "La respuesta incluía un límite de transporte sin respaldo y no se ha mostrado. Vuelve a preguntar o consulta a la autoridad.",
+    "حُجبت الإجابة لأنها تضمنت حداً للنقل دون مصدر. أعد السؤال أو تحقق من الجهة الرسمية."
+  ],
+  "agent.writing": [
+    "正在回覆…",
+    "Writing a reply…",
+    "Réponse en cours…",
+    "Escribiendo la respuesta…",
+    "جارٍ كتابة الرد…"
+  ],
+  "agent.readingImage": [
+    "正在查看圖片…",
+    "Looking at your photo…",
+    "Analyse de votre photo…",
+    "Revisando tu foto…",
+    "جارٍ فحص صورتك…"
+  ],
+  "agent.checkingReply": [
+    "正在核對回覆…",
+    "Checking the reply…",
+    "Vérification de la réponse…",
+    "Verificando la respuesta…",
+    "جارٍ مراجعة الرد…"
+  ],
+  "agent.usingSources": [
+    "正在根據資料整理回覆…",
+    "Preparing a reply from the sources…",
+    "Préparation de la réponse à partir des sources…",
+    "Preparando la respuesta con las fuentes…",
+    "جارٍ إعداد الرد استنادًا إلى المصادر…"
   ]
 }

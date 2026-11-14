@@ -149,8 +149,6 @@ export function App() {
           ? "familyTabs.benefits"
           : "nav." + page;
     document.title = `Plume Light · ${t(title)}`;
-    const messages = document.getElementById("chatMessages");
-    if (messages) messages.scrollTop = messages.scrollHeight;
   }, [page, revision]);
 
   return (

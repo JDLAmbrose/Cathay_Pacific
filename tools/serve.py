@@ -131,6 +131,41 @@ class Handler(SimpleHTTPRequestHandler):
             return
         super().do_GET()
 
+    def stream_chat(self, payload):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/event-stream; charset=utf-8")
+        self.send_header("X-Accel-Buffering", "no")
+        self.send_header("Connection", "close")
+        self.end_headers()
+        self.close_connection = True
+        last_ping = 0
+
+        def emit(event):
+            nonlocal last_ping
+            if event["type"] == "heartbeat":
+                if time.monotonic() - last_ping < 1:
+                    return
+                last_ping = time.monotonic()
+                body = ": ping\n\n"
+            else:
+                body = "data: " + json.dumps(event, ensure_ascii=False) + "\n\n"
+            self.wfile.write(body.encode("utf-8"))
+            self.wfile.flush()
+
+        try:
+            emit({"type": "status", "stage": "thinking"})
+            result = assistant.chat(payload, on_event=emit)
+            emit({"type": "done", "result": result})
+        except (BrokenPipeError, ConnectionResetError, TimeoutError):
+            # Stop at the next write if the browser cancels; never retry the model.
+            return
+        except assistant.AgentError as exc:
+            emit({"type": "error", "error": exc.code})
+        except Exception:
+            # Never send provider bodies, credentials or tracebacks to the browser.
+            emit({"type": "error", "error": "provider_unavailable"})
+
+
     def do_POST(self):
         path = urlsplit(self.path).path
         if path not in (TRACKING_PATH, CHAT_PATH):
@@ -163,6 +198,12 @@ class Handler(SimpleHTTPRequestHandler):
                 if not CHAT_SLOTS.acquire(blocking=False):
                     raise assistant.AgentError("busy", 429)
                 try:
+                    if "text/event-stream" in self.headers.get("Accept", ""):
+                        try:
+                            self.stream_chat(payload)
+                        except (BrokenPipeError, ConnectionResetError, TimeoutError):
+                            pass
+                        return
                     result = assistant.chat(payload)
                 finally:
                     CHAT_SLOTS.release()

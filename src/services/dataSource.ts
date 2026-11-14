@@ -1,6 +1,6 @@
 import demo from "../config/demo.json";
+import { readAssistantStream, validateAssistantReply } from "./assistantStream";
 import type {
-  AssistantReply,
   BookingState,
   DataSource,
   TrackingRecord,
@@ -40,14 +40,16 @@ export const browserDataSource: DataSource = {
       window.localStorage.setItem(BOOKING_KEY, JSON.stringify(state));
   },
   assistantStatus: (signal) => request("/api/assistant/status", { signal }),
-  askAssistant: async (input, signal) => {
-    const data = await request<AssistantReply>(
-      "/api/assistant/chat",
-      post(input, signal),
-    );
-    if (typeof data?.reply !== "string" || !data.reply.trim())
-      throw new Error("invalid_response");
-    return data;
+  askAssistant: async (input, signal, onProgress) => {
+    const response = await fetch("/api/assistant/chat", {
+      ...post(input, signal),
+      headers: { "Content-Type": "application/json", Accept: onProgress ? "text/event-stream" : "application/json" },
+    });
+    if (response.ok && onProgress && response.headers.get("Content-Type")?.includes("text/event-stream"))
+      return readAssistantStream(response, onProgress, signal);
+    const data = await response.json().catch(() => { throw new Error("provider_unavailable"); });
+    if (!response.ok) throw new Error(typeof data?.error === "string" ? data.error : "provider_unavailable");
+    return validateAssistantReply(data);
   },
   lookupTracking: async (input, signal) => {
     const data = await request<TrackingRecord>(

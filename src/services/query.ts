@@ -7,6 +7,7 @@ import { dataSource } from "./dataSource";
 import type {
   AssistantInput,
   AssistantReply,
+  AssistantProgress,
   TrackingInput,
 } from "../types/domain";
 
@@ -34,11 +35,12 @@ export const trackingOptions = (input: TrackingInput) =>
 export function requestAssistantReply(
   input: AssistantInput,
   signal: AbortSignal,
+  onProgress?: (event: AssistantProgress) => void,
 ) {
   const request = new MutationObserver<AssistantReply, Error, AssistantInput>(
     queryClient,
     {
-      mutationFn: (payload) => dataSource.askAssistant(payload, signal),
+      mutationFn: (payload) => dataSource.askAssistant(payload, signal, onProgress),
       gcTime: 0,
     },
   );
