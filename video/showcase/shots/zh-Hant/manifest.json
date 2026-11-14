@@ -160,64 +160,6 @@
    "w": 1440,
    "h": 2033
   },
-  "agent-0": {
-   "file": "agent-0.jpg",
-   "w": 1440,
-   "h": 1634
-  },
-  "agent-type": {
-   "frames": [
-    "agent-type-00.png",
-    "agent-type-01.png",
-    "agent-type-02.png",
-    "agent-type-03.png",
-    "agent-type-04.png",
-    "agent-type-05.png",
-    "agent-type-06.png",
-    "agent-type-07.png",
-    "agent-type-08.png",
-    "agent-type-09.png"
-   ],
-   "w": 864,
-   "h": 55.4,
-   "x": 103,
-   "y": 802.5
-  },
-  "agent-1": {
-   "file": "agent-1.jpg",
-   "w": 1440,
-   "h": 1692
-  },
-  "agent-type2": {
-   "frames": [
-    "agent-type2-00.png",
-    "agent-type2-01.png",
-    "agent-type2-02.png",
-    "agent-type2-03.png",
-    "agent-type2-04.png",
-    "agent-type2-05.png",
-    "agent-type2-06.png",
-    "agent-type2-07.png",
-    "agent-type2-08.png",
-    "agent-type2-09.png"
-   ],
-   "w": 864,
-   "h": 55.4,
-   "x": 103,
-   "y": 860
-  },
-  "agent-2": {
-   "file": "agent-2.jpg",
-   "w": 1440,
-   "h": 2223
-  },
-  "agent-3": {
-   "file": "agent-3.jpg",
-   "w": 1440,
-   "h": 810,
-   "x": 0,
-   "y": 483
-  },
   "family-0": {
    "file": "family-0.jpg",
    "w": 1440,
@@ -243,59 +185,145 @@
   "cargo": {
    "file": "cargo.jpg",
    "w": 1440,
-   "h": 2531
+   "h": 4883
   },
   "cargo-hover": {
    "file": "cargo-hover.jpg",
    "w": 1440,
    "h": 810,
    "x": 0,
-   "y": 104
+   "y": 2699
   },
   "cargo-detail": {
    "file": "cargo-detail.jpg",
    "w": 1440,
-   "h": 1312
+   "h": 3692
   },
   "cargo-vol": {
    "file": "cargo-vol.jpg",
    "w": 1440,
-   "h": 2531
+   "h": 4883
   },
   "cargo-mel": {
    "file": "cargo-mel.jpg",
    "w": 1440,
-   "h": 1475
+   "h": 3841
   },
   "members-0": {
    "file": "members-0.jpg",
    "w": 1440,
-   "h": 2840
+   "h": 2787
   },
   "members-1": {
    "file": "members-1.jpg",
    "w": 1440,
-   "h": 2844
+   "h": 2842
   },
   "members-2": {
    "file": "members-2.jpg",
    "w": 1440,
-   "h": 2844
+   "h": 2842
   },
   "members-3": {
    "file": "members-3.jpg",
    "w": 1440,
-   "h": 2844
+   "h": 2842
   },
   "members-4": {
    "file": "members-4.jpg",
    "w": 1440,
-   "h": 2844
+   "h": 2842
   },
   "members-5": {
    "file": "members-5.jpg",
    "w": 1440,
-   "h": 2844
+   "h": 2842
+  },
+  "agent-0": {
+   "file": "agent-0.jpg",
+   "w": 1440,
+   "h": 1906
+  },
+  "agent-type": {
+   "frames": [
+    "agent-type-00.png",
+    "agent-type-01.png",
+    "agent-type-02.png",
+    "agent-type-03.png",
+    "agent-type-04.png",
+    "agent-type-05.png",
+    "agent-type-06.png",
+    "agent-type-07.png",
+    "agent-type-08.png",
+    "agent-type-09.png",
+    "agent-type-10.png",
+    "agent-type-11.png",
+    "agent-type-12.png"
+   ],
+   "w": 864,
+   "h": 55.4,
+   "x": 103,
+   "y": 1074.1
+  },
+  "agent-final": {
+   "file": "agent-final.jpg",
+   "w": 1440,
+   "h": 2484
+  },
+  "agent-s00": {
+   "file": "agent-s00.jpg",
+   "w": 1440,
+   "h": 2228
+  },
+  "agent-s01": {
+   "file": "agent-s01.jpg",
+   "w": 1440,
+   "h": 2275
+  },
+  "agent-s02": {
+   "file": "agent-s02.jpg",
+   "w": 1440,
+   "h": 2317
+  },
+  "agent-s03": {
+   "file": "agent-s03.jpg",
+   "w": 1440,
+   "h": 2364
+  },
+  "agent-s04": {
+   "file": "agent-s04.jpg",
+   "w": 1440,
+   "h": 2364
+  },
+  "agent-s05": {
+   "file": "agent-s05.jpg",
+   "w": 1440,
+   "h": 2385
+  },
+  "agent-s06": {
+   "file": "agent-s06.jpg",
+   "w": 1440,
+   "h": 2385
+  },
+  "agent-s07": {
+   "file": "agent-s07.jpg",
+   "w": 1440,
+   "h": 2406
+  },
+  "agent-s08": {
+   "file": "agent-s08.jpg",
+   "w": 1440,
+   "h": 2406
+  },
+  "agent-s09": {
+   "file": "agent-s09.jpg",
+   "w": 1440,
+   "h": 2448
+  },
+  "agent-s10": {
+   "file": "agent-s10.jpg",
+   "w": 1440,
+   "h": 2484
   }
  },
  "rects": {
@@ -473,48 +501,6 @@
    "w": 147,
    "h": 37
   },
-  "agent.input": {
-   "x": 107,
-   "y": 806.5,
-   "w": 856,
-   "h": 47.4
-  },
-  "agent-type": {
-   "x": 107,
-   "y": 806.5,
-   "w": 856,
-   "h": 47.4
-  },
-  "agent.input2": {
-   "x": 107,
-   "y": 864,
-   "w": 856,
-   "h": 47.4
-  },
-  "agent-type2": {
-   "x": 107,
-   "y": 864,
-   "w": 856,
-   "h": 47.4
-  },
-  "agent.review": {
-   "x": 128,
-   "y": 1212.2,
-   "w": 157,
-   "h": 38
-  },
-  "agent.answer": {
-   "x": 107,
-   "y": 476.7,
-   "w": 966,
-   "h": 1487.5
-  },
-  "agent.confirm": {
-   "x": 461,
-   "y": 916.5,
-   "w": 120,
-   "h": 47.4
-  },
   "family.demo": {
    "x": 267,
    "y": 367.7,
@@ -540,26 +526,26 @@
    "h": 629
   },
   "cargo.bar": {
-   "x": 827.8,
-   "y": 549.5,
-   "w": 113,
-   "h": 364.2
+   "x": 818.2,
+   "y": 2929.5,
+   "w": 226.4,
+   "h": 350
   },
   "cargo.flow": {
    "x": 55,
-   "y": 843.2,
+   "y": 3223.1,
    "w": 1330,
    "h": 317.7
   },
   "cargo.btn.vol": {
    "x": 1303.2,
-   "y": 122.4,
+   "y": 2502.3,
    "w": 81.8,
    "h": 28.3
   },
   "cargo.btn.mel": {
-   "x": 488.9,
-   "y": 122.4,
+   "x": 512,
+   "y": 2502.3,
    "w": 96.5,
    "h": 28.3
   },
@@ -623,24 +609,6 @@
    "w": 629,
    "h": 570.1
   },
-  "agent.layer1": {
-   "x": 128,
-   "y": 1057.2,
-   "w": 300,
-   "h": 48.7
-  },
-  "agent.layer2": {
-   "x": 440,
-   "y": 1057.2,
-   "w": 300,
-   "h": 48.7
-  },
-  "agent.layer3": {
-   "x": 752,
-   "y": 1057.2,
-   "w": 300,
-   "h": 48.7
-  },
   "benefits.milestone": {
    "x": 80,
    "y": 340.7,
@@ -652,6 +620,138 @@
    "y": 462.2,
    "w": 567,
    "h": 313.5
+  },
+  "cargo.kpis": {
+   "x": 32,
+   "y": 2639.3,
+   "w": 1376,
+   "h": 215.4
+  },
+  "members.flow": {
+   "x": 219,
+   "y": 1703.7,
+   "w": 1002,
+   "h": 322.6
+  },
+  "agent-type": {
+   "x": 107,
+   "y": 1078.1,
+   "w": 856,
+   "h": 47.4
+  },
+  "agent.reply": {
+   "x": 107,
+   "y": 658.3,
+   "w": 908,
+   "h": 687
+  },
+  "agent.verdict": {
+   "x": 127,
+   "y": 675.3,
+   "w": 868,
+   "h": 35.9
+  },
+  "agent.callout1": {
+   "x": 127,
+   "y": 727.2,
+   "w": 868,
+   "h": 119.3
+  },
+  "agent.callout2": {
+   "x": 127,
+   "y": 858.4,
+   "w": 868,
+   "h": 98.2
+  },
+  "agent.callout3": {
+   "x": 127,
+   "y": 968.6,
+   "w": 868,
+   "h": 77.1
+  },
+  "agent.callout4": {
+   "x": 127,
+   "y": 1057.7,
+   "w": 868,
+   "h": 119.3
+  },
+  "agent.callout5": {
+   "x": 127,
+   "y": 1189,
+   "w": 868,
+   "h": 77.1
+  },
+  "agent.source": {
+   "x": 127,
+   "y": 1278.1,
+   "w": 868,
+   "h": 17.1
+  },
+  "agent.r0": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 430
+  },
+  "agent.r1": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 477
+  },
+  "agent.r2": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 519
+  },
+  "agent.r3": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 566
+  },
+  "agent.r4": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 566
+  },
+  "agent.r5": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 587
+  },
+  "agent.r6": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 587
+  },
+  "agent.r7": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 609
+  },
+  "agent.r8": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 609
+  },
+  "agent.r9": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 651
+  },
+  "agent.r10": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 687
   }
  },
  "text": {
@@ -686,8 +786,8 @@
   "dragged": "行李 3 紙箱 · 書籍 10 kg 60 × 40 × 40 cm 書籍",
   "cargoCount": 1,
   "pay": "模擬現金支付 · HKD 1,450",
-  "question": "充電寶可以托運嗎？",
-  "cargoHoverScroll": 104,
+  "question": "可以帶牛肉乾入境英國嗎？",
+  "cargoHoverScroll": 2699,
   "bookmarks": [
    "暑假前 6/17",
    "行前 8/12",
@@ -695,6 +795,69 @@
    "回落 10/21",
    "演示 11/10",
    "返校 1/13"
+  ],
+  "agentFrames": [
+   {
+    "name": "agent-s00",
+    "at": 3.33,
+    "len": 285
+   },
+   {
+    "name": "agent-s01",
+    "at": 3.6,
+    "len": 326
+   },
+   {
+    "name": "agent-s02",
+    "at": 3.64,
+    "len": 332
+   },
+   {
+    "name": "agent-s03",
+    "at": 3.76,
+    "len": 337
+   },
+   {
+    "name": "agent-s04",
+    "at": 3.84,
+    "len": 362
+   },
+   {
+    "name": "agent-s05",
+    "at": 3.88,
+    "len": 367
+   },
+   {
+    "name": "agent-s06",
+    "at": 3.96,
+    "len": 388
+   },
+   {
+    "name": "agent-s07",
+    "at": 4.01,
+    "len": 393
+   },
+   {
+    "name": "agent-s08",
+    "at": 4.12,
+    "len": 419
+   },
+   {
+    "name": "agent-s09",
+    "at": 4.16,
+    "len": 425
+   },
+   {
+    "name": "agent-s10",
+    "at": 4.61,
+    "len": 493
+   }
+  ],
+  "agentVerdict": "❌ 不可以入境 — GB（牛肉乾屬肉類製品，從香港帶入被禁止）",
+  "agentCallouts": 5,
+  "agentSource": [
+   "已參考： 已存海關政策",
+   "OpenAI 智能助手"
   ]
  }
 }

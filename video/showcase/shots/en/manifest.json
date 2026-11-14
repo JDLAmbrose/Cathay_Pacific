@@ -160,10 +160,89 @@
    "w": 1440,
    "h": 2033
   },
+  "family-0": {
+   "file": "family-0.jpg",
+   "w": 1440,
+   "h": 1115
+  },
+  "family-1": {
+   "file": "family-1.jpg",
+   "w": 1440,
+   "h": 1317
+  },
+  "benefits": {
+   "file": "benefits.jpg",
+   "w": 1440,
+   "h": 2343
+  },
+  "ops": {
+   "file": "ops.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 0
+  },
+  "cargo": {
+   "file": "cargo.jpg",
+   "w": 1440,
+   "h": 4856
+  },
+  "cargo-hover": {
+   "file": "cargo-hover.jpg",
+   "w": 1440,
+   "h": 810,
+   "x": 0,
+   "y": 2672
+  },
+  "cargo-detail": {
+   "file": "cargo-detail.jpg",
+   "w": 1440,
+   "h": 3665
+  },
+  "cargo-vol": {
+   "file": "cargo-vol.jpg",
+   "w": 1440,
+   "h": 4856
+  },
+  "cargo-mel": {
+   "file": "cargo-mel.jpg",
+   "w": 1440,
+   "h": 3881
+  },
+  "members-0": {
+   "file": "members-0.jpg",
+   "w": 1440,
+   "h": 2836
+  },
+  "members-1": {
+   "file": "members-1.jpg",
+   "w": 1440,
+   "h": 2890
+  },
+  "members-2": {
+   "file": "members-2.jpg",
+   "w": 1440,
+   "h": 2890
+  },
+  "members-3": {
+   "file": "members-3.jpg",
+   "w": 1440,
+   "h": 2890
+  },
+  "members-4": {
+   "file": "members-4.jpg",
+   "w": 1440,
+   "h": 2890
+  },
+  "members-5": {
+   "file": "members-5.jpg",
+   "w": 1440,
+   "h": 2890
+  },
   "agent-0": {
    "file": "agent-0.jpg",
    "w": 1440,
-   "h": 1634
+   "h": 1967
   },
   "agent-type": {
    "frames": [
@@ -195,134 +274,100 @@
     "agent-type-25.png",
     "agent-type-26.png",
     "agent-type-27.png",
-    "agent-type-28.png"
+    "agent-type-28.png",
+    "agent-type-29.png",
+    "agent-type-30.png",
+    "agent-type-31.png",
+    "agent-type-32.png",
+    "agent-type-33.png",
+    "agent-type-34.png",
+    "agent-type-35.png",
+    "agent-type-36.png",
+    "agent-type-37.png",
+    "agent-type-38.png",
+    "agent-type-39.png",
+    "agent-type-40.png",
+    "agent-type-41.png",
+    "agent-type-42.png",
+    "agent-type-43.png",
+    "agent-type-44.png",
+    "agent-type-45.png",
+    "agent-type-46.png",
+    "agent-type-47.png",
+    "agent-type-48.png",
+    "agent-type-49.png",
+    "agent-type-50.png",
+    "agent-type-51.png",
+    "agent-type-52.png",
+    "agent-type-53.png",
+    "agent-type-54.png",
+    "agent-type-55.png",
+    "agent-type-56.png",
+    "agent-type-57.png",
+    "agent-type-58.png",
+    "agent-type-59.png",
+    "agent-type-60.png",
+    "agent-type-61.png"
    ],
    "w": 858,
    "h": 55.4,
    "x": 103,
-   "y": 802.5
+   "y": 1114.8
   },
-  "agent-1": {
-   "file": "agent-1.jpg",
+  "agent-final": {
+   "file": "agent-final.jpg",
    "w": 1440,
-   "h": 1692
+   "h": 2471
   },
-  "agent-type2": {
-   "frames": [
-    "agent-type2-00.png",
-    "agent-type2-01.png",
-    "agent-type2-02.png",
-    "agent-type2-03.png",
-    "agent-type2-04.png",
-    "agent-type2-05.png",
-    "agent-type2-06.png",
-    "agent-type2-07.png",
-    "agent-type2-08.png",
-    "agent-type2-09.png",
-    "agent-type2-10.png",
-    "agent-type2-11.png",
-    "agent-type2-12.png",
-    "agent-type2-13.png",
-    "agent-type2-14.png",
-    "agent-type2-15.png",
-    "agent-type2-16.png",
-    "agent-type2-17.png"
-   ],
-   "w": 858,
-   "h": 55.4,
-   "x": 103,
-   "y": 860.5
-  },
-  "agent-2": {
-   "file": "agent-2.jpg",
+  "agent-s00": {
+   "file": "agent-s00.jpg",
    "w": 1440,
-   "h": 2266
+   "h": 2283
   },
-  "agent-3": {
-   "file": "agent-3.jpg",
+  "agent-s01": {
+   "file": "agent-s01.jpg",
    "w": 1440,
-   "h": 810,
-   "x": 0,
-   "y": 483
+   "h": 2325
   },
-  "family-0": {
-   "file": "family-0.jpg",
+  "agent-s02": {
+   "file": "agent-s02.jpg",
    "w": 1440,
-   "h": 1115
+   "h": 2372
   },
-  "family-1": {
-   "file": "family-1.jpg",
+  "agent-s03": {
+   "file": "agent-s03.jpg",
    "w": 1440,
-   "h": 1317
+   "h": 2372
   },
-  "benefits": {
-   "file": "benefits.jpg",
+  "agent-s04": {
+   "file": "agent-s04.jpg",
    "w": 1440,
-   "h": 2343
+   "h": 2393
   },
-  "ops": {
-   "file": "ops.jpg",
+  "agent-s05": {
+   "file": "agent-s05.jpg",
    "w": 1440,
-   "h": 810,
-   "x": 0,
-   "y": 0
+   "h": 2393
   },
-  "cargo": {
-   "file": "cargo.jpg",
+  "agent-s06": {
+   "file": "agent-s06.jpg",
    "w": 1440,
-   "h": 2531
+   "h": 2414
   },
-  "cargo-hover": {
-   "file": "cargo-hover.jpg",
+  "agent-s07": {
+   "file": "agent-s07.jpg",
    "w": 1440,
-   "h": 810,
-   "x": 0,
-   "y": 104
+   "h": 2414
   },
-  "cargo-detail": {
-   "file": "cargo-detail.jpg",
+  "agent-s08": {
+   "file": "agent-s08.jpg",
    "w": 1440,
-   "h": 1312
+   "h": 2456
   },
-  "cargo-vol": {
-   "file": "cargo-vol.jpg",
+  "agent-s09": {
+   "file": "agent-s09.jpg",
    "w": 1440,
-   "h": 2531
-  },
-  "cargo-mel": {
-   "file": "cargo-mel.jpg",
-   "w": 1440,
-   "h": 1543
-  },
-  "members-0": {
-   "file": "members-0.jpg",
-   "w": 1440,
-   "h": 2906
-  },
-  "members-1": {
-   "file": "members-1.jpg",
-   "w": 1440,
-   "h": 2906
-  },
-  "members-2": {
-   "file": "members-2.jpg",
-   "w": 1440,
-   "h": 2906
-  },
-  "members-3": {
-   "file": "members-3.jpg",
-   "w": 1440,
-   "h": 2906
-  },
-  "members-4": {
-   "file": "members-4.jpg",
-   "w": 1440,
-   "h": 2906
-  },
-  "members-5": {
-   "file": "members-5.jpg",
-   "w": 1440,
-   "h": 2906
+   "h": 2471
   }
  },
  "rects": {
@@ -524,60 +569,6 @@
    "w": 629,
    "h": 570.1
   },
-  "agent.input": {
-   "x": 107,
-   "y": 806.5,
-   "w": 850,
-   "h": 47.4
-  },
-  "agent-type": {
-   "x": 107,
-   "y": 806.5,
-   "w": 850,
-   "h": 47.4
-  },
-  "agent.input2": {
-   "x": 107,
-   "y": 864.5,
-   "w": 850,
-   "h": 47.4
-  },
-  "agent-type2": {
-   "x": 107,
-   "y": 864.5,
-   "w": 850,
-   "h": 47.4
-  },
-  "agent.layer1": {
-   "x": 128,
-   "y": 1080,
-   "w": 300,
-   "h": 69
-  },
-  "agent.layer2": {
-   "x": 440,
-   "y": 1080,
-   "w": 300,
-   "h": 69
-  },
-  "agent.layer3": {
-   "x": 752,
-   "y": 1080,
-   "w": 300,
-   "h": 69
-  },
-  "agent.review": {
-   "x": 128,
-   "y": 1255.3,
-   "w": 249.6,
-   "h": 38
-  },
-  "agent.confirm": {
-   "x": 461,
-   "y": 928.8,
-   "w": 199.6,
-   "h": 47.4
-  },
   "family.demo": {
    "x": 267,
    "y": 389.2,
@@ -603,26 +594,26 @@
    "h": 629
   },
   "cargo.bar": {
-   "x": 827.8,
-   "y": 549.5,
-   "w": 113,
-   "h": 364.2
+   "x": 818.2,
+   "y": 2902.3,
+   "w": 226.4,
+   "h": 350
   },
   "cargo.flow": {
    "x": 55,
-   "y": 843.2,
+   "y": 3195.9,
    "w": 1330,
    "h": 317.7
   },
   "cargo.btn.vol": {
    "x": 154.8,
-   "y": 190.1,
+   "y": 2542.8,
    "w": 102.7,
    "h": 28.3
   },
   "cargo.btn.mel": {
-   "x": 511,
-   "y": 122.4,
+   "x": 557.1,
+   "y": 2475.1,
    "w": 126.7,
    "h": 28.3
   },
@@ -673,6 +664,126 @@
    "y": 483.6,
    "w": 567,
    "h": 313.5
+  },
+  "cargo.kpis": {
+   "x": 32,
+   "y": 2612.1,
+   "w": 1376,
+   "h": 215.4
+  },
+  "members.flow": {
+   "x": 219,
+   "y": 1752.5,
+   "w": 1002,
+   "h": 322.6
+  },
+  "agent-type": {
+   "x": 107,
+   "y": 1118.8,
+   "w": 850,
+   "h": 47.4
+  },
+  "agent.reply": {
+   "x": 107,
+   "y": 658.3,
+   "w": 908,
+   "h": 612.7
+  },
+  "agent.verdict": {
+   "x": 127,
+   "y": 675.3,
+   "w": 868,
+   "h": 71.8
+  },
+  "agent.callout1": {
+   "x": 127,
+   "y": 763,
+   "w": 868,
+   "h": 119.3
+  },
+  "agent.callout2": {
+   "x": 127,
+   "y": 894.3,
+   "w": 868,
+   "h": 98.2
+  },
+  "agent.callout3": {
+   "x": 127,
+   "y": 1004.5,
+   "w": 868,
+   "h": 119.3
+  },
+  "agent.callout4": {
+   "x": 127,
+   "y": 1135.8,
+   "w": 868,
+   "h": 56
+  },
+  "agent.source": {
+   "x": 127,
+   "y": 1203.8,
+   "w": 868,
+   "h": 17.1
+  },
+  "agent.r0": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 424
+  },
+  "agent.r1": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 466
+  },
+  "agent.r2": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 513
+  },
+  "agent.r3": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 513
+  },
+  "agent.r4": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 534
+  },
+  "agent.r5": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 534
+  },
+  "agent.r6": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 555
+  },
+  "agent.r7": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 555
+  },
+  "agent.r8": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 597
+  },
+  "agent.r9": {
+   "x": 107,
+   "y": 658,
+   "w": 908,
+   "h": 613
   }
  },
  "text": {
@@ -707,8 +818,8 @@
   "dragged": "Bag 3 Box · Books 10 kg 60 × 40 × 40 cm Books",
   "cargoCount": 1,
   "pay": "Simulate cash payment · HKD 1,450",
-  "question": "Can I check in a power bank?",
-  "cargoHoverScroll": 104,
+  "question": "Can I bring beef jerky into the UK? Please answer in English.",
+  "cargoHoverScroll": 2672,
   "bookmarks": [
    "Before summer 6/17",
    "Pre-dep 8/12",
@@ -716,6 +827,64 @@
    "Easing 10/21",
    "Demo 11/10",
    "Return 1/13"
+  ],
+  "agentVerdict": "❌ Not allowed to bring in — GB (beef jerky is a meat product from outside the EU)",
+  "agentCallouts": 4,
+  "agentSource": [
+   "Consulted: Saved customs policies",
+   "OpenAI assistant"
+  ],
+  "agentFrames": [
+   {
+    "name": "agent-s00",
+    "at": 2.61,
+    "len": 559
+   },
+   {
+    "name": "agent-s01",
+    "at": 2.64,
+    "len": 563
+   },
+   {
+    "name": "agent-s02",
+    "at": 2.72,
+    "len": 577
+   },
+   {
+    "name": "agent-s03",
+    "at": 2.8,
+    "len": 637
+   },
+   {
+    "name": "agent-s04",
+    "at": 2.84,
+    "len": 642
+   },
+   {
+    "name": "agent-s05",
+    "at": 2.92,
+    "len": 707
+   },
+   {
+    "name": "agent-s06",
+    "at": 2.96,
+    "len": 712
+   },
+   {
+    "name": "agent-s07",
+    "at": 3,
+    "len": 764
+   },
+   {
+    "name": "agent-s08",
+    "at": 3.04,
+    "len": 768
+   },
+   {
+    "name": "agent-s09",
+    "at": 3.32,
+    "len": 876
+   }
   ]
  }
 }
