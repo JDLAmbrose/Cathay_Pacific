@@ -2,7 +2,8 @@
 
 读取 data/cues-<lang>.json（由 `node showcase/tools/render.mjs --cues` 从 film.js 导出），
 输出 audio/soundtrack-<lang>.m4a —— 网页播放器与 MP4 共用。
-用法（在 video/ 目录下）：python3 showcase/tools/build_audio.py [--lang zh-Hant|en]
+用法（在 video/ 目录下）：python3 showcase/tools/build_audio.py [--lang zh-Hant|en] [--clip <片段>]
+带 --clip 时读 data/clips/cues-<lang>-<片段>.json，写 audio/clips/<lang>/<片段>.m4a：同一套律动，按片段时长截取，首尾淡入淡出。
 
 配乐全部为程序合成的原创素材：120 BPM，D 大调 I–vi–IV–V，一小节 2 秒，分镜都切在小节线上。
   0–78   主体律动：底鼓、踩镲、贝斯、拨弦琶音、垫乐；开头两小节与 AI 助手段落先抽掉鼓
@@ -174,10 +175,12 @@ def reverb(x, seconds=2.2, seed=11):
     return out
 
 
-def section(bar):
+def section(bar, clip=False):
     """各小节的配器开关（0 关，1 开，中间值为力度）。"""
     t = bar * BAR
     full = {"kick": 1, "hat": 1, "clap": 1, "bass": 1, "arp": 1, "pad": 1, "lead": 0}
+    if clip:          # 分功能片段：只有十来秒，从第一拍起就是完整但克制的律动
+        return {**full, "clap": 0}
     if t < 4:         # 开头两小节：先只有拨弦与垫乐
         return {**full, "kick": 0, "clap": 0, "bass": 0}
     if t < 12:
@@ -199,13 +202,18 @@ def build(cues):
     k_clip, c_clip = kick(), clap(3)
     duck_shape = 1 - 0.55 * np.exp(-np.arange(int(0.3 * SR)) / SR / 0.09)
 
-    for bar in range(MAIN_BAR, OUTRO_BAR):
-        sec = section(bar)
+    is_clip = bool(cues.get("clip"))   # 注意：下面的 clip 变量指音频片段，不要混用
+    last_bar = int(np.ceil(duration / BAR)) if is_clip else OUTRO_BAR
+    shift = cues.get("n", 0) if is_clip else 0   # 每个片段从不同的和弦起，连着看不至于千篇一律
+    for bar in range(MAIN_BAR, last_bar):
+        sec = section(bar, is_clip)
         t0 = bar * BAR
-        ch = CHORDS[(bar - MAIN_BAR) % 4]
+        ch = CHORDS[(bar - MAIN_BAR + shift) % 4]
         place(music, pad(ch["pad"], BAR, bright=2400), t0, 1.0)
         for beat in range(4):
             tb = t0 + beat * BEAT
+            if tb >= duration:   # 片段时长不一定是整小节，超出结尾的拍子不再放
+                break
             if sec["kick"]:
                 place(drums, k_clip, tb, 0.5)
                 s = int(tb * SR)
@@ -233,7 +241,7 @@ def build(cues):
                 place(wet, clip, t0 + off, 0.1 * sec["lead"])
 
     # 收尾：长和弦与钟琴，逐渐停下
-    out_t = OUTRO_BAR * BAR
+    out_t = OUTRO_BAR * BAR if not is_clip else duration + 10   # 片段没有片尾段落
     place(music, pad(CHORDS[0]["pad"] + [74], 4.6, attack=0.05, release=1.6, bright=2600), out_t, 0.85)
     place(music, bass_note(38, 2.5), out_t, 0.3)
     for off, m in [(0, 86), (0.5, 81), (1.0, 78), (1.5, 74), (2.5, 78), (3.5, 81), (5.0, 86)]:
@@ -257,14 +265,14 @@ def build(cues):
         place(sfx, pop_clip, t, 0.13)
         place(wet, pop_clip, t, 0.03)
     riser = whoosh(77, 2.0)   # 进入高点与片尾前的长扫
-    place(sfx, riser, PEAK_BAR * BAR - 1.9, 0.2)
+    place(sfx, riser, (PEAK_BAR * BAR if not is_clip else duration + 10) - 1.9, 0.2)
     place(sfx, riser, out_t - 1.9, 0.26)
 
     mix = drums + music * duck + reverb(wet) * 0.8 + sfx
     mix = np.stack([highpass(mix[ch], 28) for ch in range(2)])
     # 首尾淡入淡出，再软限幅，峰值留 1 dB 余量
     tt = np.arange(n) / SR
-    mix *= np.minimum(1, tt / 0.3) * np.clip((duration - 0.15 - tt) / 1.6, 0, 1)
+    mix *= np.minimum(1, tt / (0.15 if is_clip else 0.3)) * np.clip((duration - (0.05 if is_clip else 0.15) - tt) / (0.7 if is_clip else 1.6), 0, 1)
     mix = np.tanh(mix * 1.35) / np.tanh(1.35)
     mix *= 10 ** (-1 / 20) / np.max(np.abs(mix))
     return mix
@@ -273,20 +281,23 @@ def build(cues):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--lang", default="zh-Hant")
-    lang = parser.parse_args().lang
-    cues = json.loads((ROOT / "data" / f"cues-{lang}.json").read_text(encoding="utf-8"))
+    parser.add_argument("--clip", default=None)
+    args = parser.parse_args()
+    lang, clip = args.lang, args.clip
+    cues_path = ROOT / "data" / (f"clips/cues-{lang}-{clip}.json" if clip else f"cues-{lang}.json")
+    cues = json.loads(cues_path.read_text(encoding="utf-8"))
     mix = build(cues)
     build_dir = ROOT / ".build"
     build_dir.mkdir(exist_ok=True)
-    wav_path = build_dir / f"soundtrack-{lang}.wav"
+    wav_path = build_dir / (f"clip-{lang}-{clip}.wav" if clip else f"soundtrack-{lang}.wav")
     with wave.open(str(wav_path), "wb") as w:
         w.setnchannels(2)
         w.setsampwidth(2)
         w.setframerate(SR)
         w.writeframes((mix.T * 32767).astype("<i2").tobytes())
-    out_dir = ROOT / "audio"
-    out_dir.mkdir(exist_ok=True)
-    m4a = out_dir / f"soundtrack-{lang}.m4a"
+    out_dir = ROOT / "audio" / "clips" / lang if clip else ROOT / "audio"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    m4a = out_dir / (f"{clip}.m4a" if clip else f"soundtrack-{lang}.m4a")
     subprocess.run(["afconvert", "-f", "m4af", "-d", "aac", "-b", "192000", str(wav_path), str(m4a)], check=True)
     rms = 20 * np.log10(np.sqrt(np.mean(mix ** 2)))
     count = sum(len(cues[k]) for k in ("clicks", "keys", "pops", "whoosh", "hits"))

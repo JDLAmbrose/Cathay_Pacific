@@ -17,7 +17,27 @@
   document.documentElement.lang = EN ? 'en' : 'zh-Hant';
   if (RENDER) document.body.classList.add('render');
 
-  const DURATION = 90, W = 1920, H = 1080, VH = M.vh, BAR = 44;
+  // 分功能片段（index.html?clip=<id>）：每段取某个分镜自身时间轴上的一段，rate 小于 1 表示放慢播放。
+  // 不带 clip 参数时播放 90 秒完整版。
+  const CLIPS = {
+    languages: { n: 1, scene: 'home', from: 3.3, to: 7.7, rate: 0.8, name: L('多語言切換', 'Language switch') },
+    stories: { n: 2, scene: 'home', from: 8.8, to: 13.4, rate: 0.85, name: L('旅客故事', 'Traveller stories') },
+    deadlines: { n: 3, scene: 'book', from: 0.3, to: 4.1, rate: 0.7, name: L('截止時間計算', 'Booking deadlines') },
+    baggage: { n: 4, scene: 'book', from: 4.75, to: 9.4, rate: 0.85, name: L('行李預報', 'Baggage forecast') },
+    pricing: { n: 5, scene: 'book', from: 9.9, to: 17.0, rate: 1, name: L('拖拽分配與價格', 'Drag-and-drop pricing') },
+    checkout: { n: 6, scene: 'book', from: 17.7, to: 21.8, rate: 0.75, name: L('現金 / 里數結算', 'Cash or miles checkout') },
+    assistant: { n: 7, scene: 'agent', from: 0.3, to: 13.1, rate: 1, name: L('AI 出行助手', 'AI travel assistant') },
+    journey: { n: 8, scene: 'journey', from: 0.3, to: 9.7, rate: 1, name: L('行程追蹤', 'Journey tracking') },
+    family: { n: 9, scene: 'family', from: 0.2, to: 7.8, rate: 1, name: L('家庭專區', 'Family zone') },
+    cargo: { n: 10, scene: 'ops', from: 0.4, to: 15.3, rate: 1, name: L('貨艙看板', 'Cargo board') },
+    members: { n: 11, scene: 'ops', from: 15.9, to: 21.8, rate: 1, name: L('用戶看板', 'Users board') },
+  };
+  const CLIP_ID = Q.get('clip');
+  if (CLIP_ID && !CLIPS[CLIP_ID]) throw new Error(`没有这个片段：${CLIP_ID}（可选：${Object.keys(CLIPS).join('、')}）`);
+  const CLIP = CLIPS[CLIP_ID] || null;
+  const FPS = 30;
+  const DURATION = CLIP ? Math.round(((CLIP.to - CLIP.from) / CLIP.rate) * FPS) / FPS : 90;
+  const W = 1920, H = 1080, VH = M.vh, BAR = 44;
   const DIR = `shots/${LANG}/`;
   const ASSETS = '../../assets/';
   const stage = document.getElementById('stage');
@@ -82,9 +102,18 @@
   // 供 tools/build_audio.py 使用的音效时刻表（全片时间，秒）
   const CUES = { duration: DURATION, bpm: 120, clicks: [], keys: [], whoosh: [], hits: [], pops: [] };
   // 分镜内部按各自的原始节奏写时间，scene() 再把它等比压缩到实际时长；这里把分镜内的时刻换算成全片时间
-  let SCALE = { a: 0, k: 1 };
-  const toGlobal = (t) => SCALE.a + (t - SCALE.a) / SCALE.k;
-  const cue = (kind, t) => { CUES[kind].push(Math.round(toGlobal(t) * 1000) / 1000); return t; };
+  let SCALE = { a: 0, k: 1, on: false };
+  /** 分镜里的时刻 → 成片时间。片段模式下落在片段之外的返回 null。 */
+  function filmTime(t) {
+    if (!CLIP) return SCALE.a + (t - SCALE.a) / SCALE.k;
+    const ct = (t - SCALE.a - CLIP.from) / CLIP.rate;
+    return SCALE.on && ct >= 0 && ct <= DURATION ? ct : null;
+  }
+  const cue = (kind, t) => {
+    const ft = filmTime(t);
+    if (ft != null) CUES[kind].push(Math.round(ft * 1000) / 1000);
+    return t;
+  };
 
   // ---------- 文字逐行揭示 ----------
   function lines(el, html) {
@@ -112,7 +141,7 @@
     const tiEl = lines(h('div', 'cap-ti', el), ti);
     const suEl = su ? h('div', 'cap-su', el, su) : null;
     return (t, a, b) => {
-      if (t < a || t >= b) { el.style.display = 'none'; return; }
+      if (t < a || t >= b || (CLIP && b < CLIP.from + 1)) { el.style.display = 'none'; return; }
       el.style.display = 'block';
       const tin = t - a;
       const out = seg(t, b - 0.32, b, E.in);
@@ -185,7 +214,7 @@
       while (i + 1 < seq.length && t >= seq[i + 1][0]) i++;
       const [at, cur, mode] = seq[i];
       const prev = i > 0 ? seq[i - 1][1] : null;
-      const p = i > 0 ? E.io(clamp((t - at) / (mode === 'nav' ? NAV : 0.14))) : 1;
+      const p = i > 0 && !(CLIP && at < CLIP.from) ? E.io(clamp((t - at) / (mode === 'nav' ? NAV : 0.14))) : 1;
       for (const n of this.pageNames) {
         const img = this.layers[n].imgs[0];
         op(img, 0);
@@ -281,6 +310,10 @@
   const NOW = { rt: 0, D: 1 };   // 正在渲染的分镜：真实的本地时间与时长（秒）
   function inOut(enter = 'pan', exit = 'pan') {
     const { rt, D } = NOW;
+    if (CLIP) {   // 单个片段：窗口轻轻浮起入场，结尾淡出
+      const r = seg(rt, 0, 0.8, E.out5), q = seg(rt, D - 0.45, D, E.in);
+      return { o: Math.min(seg(rt, 0, 0.3, E.lin), 1 - q), tx: 0, ty: (1 - r) * 46, rx: (1 - r) * 5, ry: 0, zm: lerp(0.94, 1, r) * lerp(1, 1.02, q) };
+    }
     const a = enter === 'pan' ? seg(rt, -PAN, PAN, E.io) : 1;
     const b = exit === 'pan' ? seg(rt, D - PAN, D + PAN, E.io) : 0;
     const swing = Math.sin(a * Math.PI) + Math.sin(b * Math.PI);   // 平移途中略微拉远并侧转
@@ -326,14 +359,30 @@
     [58, L('營運看板', 'Operations boards')],
   ];
   const UI_START = 0, UI_END = 78;
-  for (const [at] of [...CHAPTERS.slice(1), [UI_END]]) h('s', '', bar).style.left = `${(at / DURATION) * 100}%`;
   const FLASHES = [];
-  for (const [at] of [...CHAPTERS.slice(1), [UI_END]]) cue('whoosh', at);
+  if (!CLIP) for (const [at] of [...CHAPTERS.slice(1), [UI_END]]) {
+    h('s', '', bar).style.left = `${(at / DURATION) * 100}%`;
+    cue('whoosh', at);
+  }
 
   function renderChrome(t) {
     st(g1, { x: 60 + 240 * Math.sin(t * 0.13), y: -260 + 150 * Math.cos(t * 0.11) });
     st(g2, { x: 900 + 300 * Math.cos(t * 0.09 + 1), y: 200 + 190 * Math.sin(t * 0.12) });
     grid.style.transform = `translate(${-(t * 5) % 80}px,${-(t * 3) % 80}px)`;
+    if (CLIP) {
+      // 片段模式：右上角只显示功能名，首尾各自淡入淡出
+      if (!hudChapter.dataset.i) {
+        hudChapter.dataset.i = 'clip';
+        hudChapter.innerHTML = `<span>${CLIP.name}</span>`;
+      }
+      st(hudChapter, { y: (1 - seg(t, 0.15, 0.8, E.out5)) * -22, o: seg(t, 0.15, 0.6) });
+      barFill.style.transform = `scaleX(${t / DURATION})`;
+      op(fade, Math.max(1 - seg(t, 0, 0.35, E.lin), seg(t, DURATION - 0.4, DURATION - 0.04, E.lin)));
+      let f = 0;
+      for (const [at, k] of FLASHES) if (at != null && t >= at && t < at + 0.6) f = Math.max(f, k * (1 - E.out((t - at) / 0.6)));
+      op(flash, f);
+      return;
+    }
     const ui = bell(t, UI_START, UI_START + 0.7, UI_END - 0.5, UI_END);
     op(scrim, ui); op(topscrim, ui); op(hud, ui);
     let ci = 0;
@@ -347,7 +396,7 @@
     barFill.style.transform = `scaleX(${t / DURATION})`;
     op(bar, bell(t, 0.2, 0.9, DURATION - 1.5, DURATION - 0.6));
     let f = 0;
-    for (const [at, k] of FLASHES) if (t >= at && t < at + 0.6) f = Math.max(f, k * (1 - E.out((t - at) / 0.6)));
+    for (const [at, k] of FLASHES) if (at != null && t >= at && t < at + 0.6) f = Math.max(f, k * (1 - E.out((t - at) / 0.6)));
     op(flash, f);
     op(fade, Math.max(1 - seg(t, 0, 0.5, E.lin), seg(t, DURATION - 1.1, DURATION - 0.15, E.lin)));
   }
@@ -358,12 +407,13 @@
   // lap 是与前后分镜重叠的秒数：相邻两镜在这段时间里同时渲染，才能做连续的摇镜。
   const scenes = [];
   function scene(id, a, b, span, build, lap = [PAN, PAN]) {
+    if (CLIP && CLIP.scene !== id) return;   // 片段模式只搭建用到的那个分镜
     const el = h('section', 'scene', scenesRoot);
     el.id = `s-${id}`;
     const ui = h('section', 'scene', front);
-    SCALE = { a, k: span / (b - a) };
+    SCALE = { a, k: span / (b - a), on: true };
     scenes.push({ id, a, b, k: span / (b - a), lap, els: [el, ui], render: build(el, a, ui) });
-    SCALE = { a: 0, k: 1 };
+    SCALE = { a: 0, k: 1, on: false };
   }
 
   // ---------- 标志与飘落的羽毛（片尾使用） ----------
@@ -422,7 +472,7 @@
     const tN1 = cue('clicks', T0 + 10.0) - T0, tN2 = cue('clicks', T0 + 11.6) - T0;
     const track = [[1.6, 960, 560], [3.8, lang[0], lang[1]], [7.2, lang[0] - 40, lang[1] + 20], [9.6, next[0], next[1]], [13, next[0], next[1]]];
     const c1 = Caption(ui, { eb: L('01 · 行程首頁', '01 · Journey home'), ti: L('一趟旅程，從<em>提前準備</em>開始', 'Every journey starts with <em>getting ready early</em>'), su: L('航班、行李入口、目的地與旅客故事，放在同一頁', 'Flight, baggage entry points, destination and traveller stories on one page') });
-    const c2 = Caption(ui, { eb: L('多語言', 'Internationalisation'), ti: L('<em>5 種語言</em>，一鍵切換', '<em>5 languages</em>, one switch'), su: L('979 條文案鍵 · 阿拉伯語版面自動 RTL 鏡像', '979 copy keys · Arabic layout mirrors to RTL automatically') });
+    const c2 = Caption(ui, { eb: L('多語言', 'Internationalisation'), ti: L('<em>5 種語言</em>，一鍵切換', '<em>5 languages</em>, one switch'), su: L('1,018 條文案鍵 · 阿拉伯語版面自動 RTL 鏡像', '1,018 copy keys · Arabic layout mirrors to RTL automatically') });
     const c3 = Caption(ui, { eb: L('旅客故事', 'Traveller stories'), ti: L('三位旅客，<em>三段旅程</em>', 'Three travellers, <em>three journeys</em>'), su: L('留學生 · 獨行兒童 · 研究學者（均為虛構案例）', 'A student, a child travelling alone, a visiting scholar — all fictional') });
     const pills = Steps(ui, [locales.find((l) => l.value === LANG), ...others].map((l) => l.label), { numbered: false });
     return (t) => {
@@ -461,7 +511,7 @@
     const tW = k('clicks', 6.1), tK1 = k('keys', 6.5), tK2 = k('keys', 6.8);
     const tGrab = k('clicks', 11.4), tDrop = k('pops', 12.9);
     const tMiles = k('clicks', 18.3), tCash = k('clicks', 19.3), tAgree = k('clicks', 20.0), tPay = k('clicks', 20.8);
-    FLASHES.push([toGlobal(T0 + tPay + 0.12), 0.25]);
+    FLASHES.push([filmTime(T0 + tPay + 0.12), 0.25]);
     const seq = [[0, 'info-hk'], [tR1 + 0.2, 'info-gba'], [tR2 + 0.2, 'info-cn'], [4.2, 'baggage', 'nav'], [9.5, 'pricing', 'nav'], [tDrop, 'pricing-after'], [17.2, 'checkout', 'nav'], [tMiles + 0.05, 'checkout-miles'], [tCash + 0.05, 'checkout'], [tAgree + 0.05, 'checkout-agreed']];
     const urls = { info: 'information', baggage: 'baggage', pricing: 'pricing', checkout: 'checkout' };
     const track = [
@@ -523,48 +573,52 @@
     };
   });
 
-  // ===== 32–44 AI 出行助手 =====
-  scene('agent', 32, 44, 14, (el, T0, ui) => {
-    const w = new Win(el, '<b>plume-light</b> / pages / assistant.html', ['agent-0', 'agent-1', 'agent-2'], ['agent-type', 'agent-type2', 'agent-3']);
-    const in1 = R('agent-type'), in2 = R('agent-type2'), review = C('agent.review'), confirm = C('agent.confirm');
-    const dlg = M.shots['agent-3'];
-    const layers = [1, 2, 3].map((i) => R(`agent.layer${i}`));
-    const lc = [layers[1].x + layers[1].w / 2, layers[1].y + layers[1].h / 2];
-    const n1 = M.shots['agent-type'].frames.length, n2 = M.shots['agent-type2'].frames.length;
+  // ===== 32–44 AI 出行助手（线上 OpenAI 助手的真实流式回复） =====
+  scene('agent', 32, 44, 13.2, (el, T0, ui) => {
+    const frames = M.text.agentFrames.map((f) => f.name);
+    const w = new Win(el, '<b>plume-light</b> / pages / assistant.html', ['agent-0', ...frames, 'agent-final'], ['agent-type']);
+    const in1 = R('agent-type'), reply = R('agent.reply'), source = M.rects['agent.source'];
+    // 回复的结构由模型决定：没有标题结论时，把回复顶部当作结论区
+    const verdict = M.rects['agent.verdict'] || { x: reply.x + 20, y: reply.y + 16, w: reply.w - 40, h: 40 };
+    const callouts = Array.from({ length: M.text.agentCallouts }, (_, i) => R(`agent.callout${i + 1}`)).slice(0, 4);
+    const n1 = M.shots['agent-type'].frames.length;
     const k = (kind, lt) => cue(kind, T0 + lt) - T0;
-    const tFocus = k('clicks', 1.7);
-    const type1 = Array.from({ length: n1 - 1 }, (_, i) => k('keys', 1.95 + (i * 1.4) / (n1 - 1)));
-    const tSend1 = k('pops', 3.6);
-    const type2 = Array.from({ length: n2 - 1 }, (_, i) => k('keys', 5.0 + (i * 1.3) / (n2 - 1)));
-    const tSend2 = k('pops', 6.55);
-    const tL = [8.1, 8.9, 9.7].map((x) => k('pops', x));
-    const tReview = k('clicks', 11.0), tConfirm = k('clicks', 12.5);
-    const track = [[0.9, 900, 640], [1.6, in1.x + 150, in1.y + 26], [3.5, in1.x + 520, in1.y + 30], [4.7, in2.x + 150, in2.y + 26], [6.5, in2.x + 520, in2.y + 30], [7.4, 900, lc[1] + 150], [10.4, 900, lc[1] + 150], [10.9, review[0], review[1]], [11.3, review[0], review[1]], [12.3, confirm[0], confirm[1]], [13.4, confirm[0], confirm[1]]];
+    const tFocus = k('clicks', 1.6);
+    const typing = Array.from({ length: n1 - 1 }, (_, i) => k('keys', 1.9 + (i * 1.5) / (n1 - 1)));
+    const tSend = k('pops', 3.6);
+    // 流式帧：第一帧是“问题已发出、助手在准备”，其余按顺序铺在 4.5–7.0 秒
+    const tStream = frames.map((_, i) => (i === 0 ? tSend : 4.5 + ((i - 1) * 2.5) / Math.max(1, frames.length - 2)));
+    const tDone = 7.15;
+    const tVerdict = k('pops', 7.5);
+    const tCall = callouts.map((_, i) => k('pops', 8.7 + i * 0.62));
+    const tSource = 8.7 + callouts.length * 0.62 + 0.1;
+    const seq = [[0, 'agent-0'], ...frames.map((name, i) => [tStream[i], name]), [tDone, 'agent-final']];
+    const cx = reply.x + reply.w / 2, cy = reply.y + reply.h / 2;
+    const fit = clamp(700 / reply.h, 0.86, 1.25);   // 让整条回复刚好放进画面
+    const inX = in1.x + in1.w / 2, inY = in1.y + in1.h / 2;
+    const bottom = reply.y + reply.h - 150;
+    const PX = [[0, 640], [0.8, 640], [1.7, inX], [3.55, inX], [4.15, cx], [12, cx]];
+    const PY = [[0, inY - 260], [0.8, inY - 260], [1.7, inY - 4], [3.55, inY - 4], [4.15, cy], [7.2, cy], [8.2, verdict.y + 150], [8.6, verdict.y + 150], [tSource + 0.4, Math.max(verdict.y + 150, bottom), E.lin], [tSource + 1.4, cy], [13.2, cy + 10, E.lin]];
+    const Z = [[0, 0.92], [0.8, 0.92], [1.7, 1.5], [3.55, 1.5], [4.15, fit], [7.2, fit], [8.2, 1.42], [tSource + 0.4, 1.42], [tSource + 1.4, fit], [13.2, fit * 1.03, E.lin]];
+    const track = [[0.8, 900, inY - 170], [1.5, in1.x + 150, inY + 4], [3.5, in1.x + 520, inY + 8], [4.4, in1.x + 700, inY + 60]];
     const hl = w.hl(6);
-    const done = w.tag(L('已標記：規則待復核 · 同步營運看板', 'Marked for rule review · synced to operations'));
     const caps = [
-      [Caption(ui, { eb: L('03 · AI 出行助手', '03 · AI travel assistant'), ti: L('出發之前，<em>把問題問清楚</em>', 'Ask before you fly, <em>get it straight</em>'), su: L('13 類常見問題 · 可關聯目的地與指定行李', '13 question types · tied to the destination and a specific bag') }), 0.4, 3.5],
-      [Caption(ui, { eb: L('追問', 'Follow-up'), ti: L('先<em>追問規格</em>，再給答案', 'It <em>asks for the spec</em> before answering'), su: L('未知規格也可說明，結果會保留待確認', 'Unknown specs are fine — the result stays pending') }), 3.8, 6.5],
-      [Caption(ui, { eb: L('三層回答', 'Three-layer answer'), ti: L('海關、隨身、托運，<em>分開整理</em>', 'Customs, carry-on, checked — <em>kept apart</em>'), su: L('附資料來源樣本 · 模擬規則，不是承運批准', 'With source samples · simulated rules, not carriage approval') }), 6.8, 10.8],
-      [Caption(ui, { eb: L('回寫清單', 'Write-back'), ti: L('<em>確認之後</em>，才更新行李清單', 'The list only changes <em>after you confirm</em>'), su: L('保存後同步營運看板', 'Once saved, it syncs to the operations boards') }), 11.1, 13.6],
+      [Caption(ui, { eb: L('03 · AI 出行助手', '03 · AI travel assistant'), ti: L('出發之前，<em>把問題問清楚</em>', 'Ask before you fly, <em>get it straight</em>'), su: L('OpenAI 智能助手 · 結合目的地與已申報行李作答', 'OpenAI-powered · answers for your destination and declared bags') }), 0.4, 3.5],
+      [Caption(ui, { eb: L('流式回覆', 'Streamed reply'), ti: L('回覆<em>即時串流</em>，先給結論', 'The reply <em>streams in</em>, verdict first'), su: L('先查已存的海關政策與服務規則，再作答', 'Checks stored customs policies and service rules before answering') }), 3.8, 7.1],
+      [Caption(ui, { eb: L('逐項結論', 'Item verdict'), ti: L('能不能帶，<em>一眼看清</em>', 'Allowed or not, <em>at a glance</em>'), su: L('規定、官方來源、下一步分塊呈現 · 不是海關或航司的批准', 'Rules, official source and next steps in blocks · not customs or airline approval') }), 7.3, 12.9],
     ];
-    const pills = Steps(ui, EN ? ['Customs & entry', 'Carry-on', 'Checked'] : ['入境與海關', '隨身攜帶', '托運行李']);
     return (t) => {
       const io = inOut();
-      w.pages(t, [[0, 'agent-0'], [tSend1, 'agent-1'], [tSend2, 'agent-2']]);
-      w.frame('agent-type', t < tFocus + 0.1 || t >= tSend1 ? -1 : type1.filter((x) => t >= x).length);
-      w.frame('agent-type2', t < 4.8 || t >= tSend2 ? -1 : type2.filter((x) => t >= x).length);
-      w.patch('agent-3', seg(t, tReview + 0.1, tReview + 0.3, E.lin));
-      const px = K(t, [[0, 640], [0.9, 640], [1.8, in1.x + in1.w / 2], [3.5, in1.x + in1.w / 2], [4.3, 640], [4.9, in2.x + in2.w / 2], [6.5, in2.x + in2.w / 2], [7.4, lc[0]], [10.3, lc[0]], [10.9, 720]]);
-      const py = K(t, [[0, 640], [0.9, 640], [1.8, in1.y + 20], [3.5, in1.y + 20], [4.3, in2.y - 150], [4.9, in2.y + 10], [6.5, in2.y + 10], [7.4, lc[1] - 60], [7.9, lc[1] - 60], [8.6, lc[1] + 10], [10.3, lc[1] + 10], [10.9, dlg.y + 405], [14, dlg.y + 395, E.lin]]);
-      const z = K(t, [[0, 0.92], [0.9, 0.92], [1.8, 1.5], [3.5, 1.5], [4.3, 1.2], [4.9, 1.5], [6.5, 1.5], [7.4, 1.12], [7.9, 1.12], [8.6, 1.42], [10.3, 1.42], [10.9, 1.0], [11.4, 1.0], [12.2, 1.2], [14, 1.24, E.lin]]) * 1.06 * io.zm;
-      w.look(px, py, z, io);
-      w.pointer(t, track, [tFocus, tReview, tConfirm]);
-      const li = t < tL[1] ? 0 : t < tL[2] ? 1 : 2;
-      hl(layers[li], bell(t, tL[0], tL[0] + 0.25, 10.2, 10.5), (1 - seg(t, tL[li], tL[li] + 0.4, E.out5)) * 14);
-      done(confirm[0] - 60, confirm[1] + 60, bell(t, tConfirm + 0.25, tConfirm + 0.65, 13.5, 13.8));
+      w.pages(t, seq);
+      w.frame('agent-type', t < tFocus + 0.1 || t >= tSend ? -1 : typing.filter((x) => t >= x).length);
+      w.look(K(t, PX), K(t, PY), K(t, Z) * 1.06 * io.zm, io);
+      w.pointer(t, track, [tFocus]);
+      // 高亮依次落在：结论 → 各提示块 → 资料来源
+      const stops = [[tVerdict, verdict], ...callouts.map((c, i) => [tCall[i], c]), ...(source ? [[tSource, source]] : [])];
+      const cur = stops.filter(([at]) => t >= at).pop();
+      const end = stops[stops.length - 1][0] + 0.9;
+      hl(cur ? cur[1] : verdict, cur ? bell(t, tVerdict, tVerdict + 0.25, end, end + 0.3) : 0, cur ? (1 - seg(t, cur[0], cur[0] + 0.4, E.out5)) * 14 : 0);
       caps.forEach(([c, a0, b0]) => c(t, a0, b0));
-      pills(t, 6.8, 10.8, t < tL[0] ? -1 : li);
     };
   });
 
@@ -641,6 +695,8 @@
     const w = new Win(el, '', pages, ['cargo-hover']);
     const cargoCard = C('ops.cargo'), barC = C('cargo.bar'), flow = R('cargo.flow'), vol = C('cargo.btn.vol'), mel = C('cargo.btn.mel');
     const hover = M.shots['cargo-hover'];
+    const kp = R('cargo.kpis'), family = R('members.flow');
+    const kpY = kp.y + kp.h / 2, boardY = kpY + 60, familyY = family.y + family.h / 2;
     const k = (kind, lt) => cue(kind, T0 + lt) - T0;
     const tEnter = k('clicks', 2.2), tBar = k('clicks', 8.4), tVol = k('clicks', 13.4), tMel = k('clicks', 14.4), tBoard = k('clicks', 15.5);
     const tMark = marks.map((_, i) => k('clicks', 16.3 + i * 0.4));
@@ -649,9 +705,9 @@
     const a = tEnter + 0.55;
     const seq = [[0, 'ops'], [a, 'cargo', 'nav'], [tBar + 0.06, 'cargo-detail', 'nav'], [tVol + 0.06, 'cargo-vol'], [tMel + 0.06, 'cargo-mel'], [tBoard + 0.06, `members-${demoIdx}`, 'nav'], ...tMark.map((x, i) => [x + 0.05, `members-${i}`]), [tHome + 0.05, `members-${demoIdx}`]];
     const track = [
-      [1.0, 940, 430], [2.1, cargoCard[0], cargoCard[1] + 120], [3.2, cargoCard[0], cargoCard[1] + 120], [5.8, 640, 620], [7.3, barC[0], barC[1] - 20], [tBar + 0.2, barC[0], barC[1] - 20],
-      [9.6, 420, flow.y + flow.h + 40], [12.6, 420, flow.y + flow.h + 40], [tVol - 0.1, vol[0], vol[1]], [tMel - 0.1, mel[0], mel[1]], [tBoard - 0.1, 611, 29], [tBoard + 0.2, 611, 29],
-      ...tMark.map((x, i) => [x - 0.08, marks[i][0], marks[i][1] + 4]), [tHome - 0.08, marks[demoIdx][0], marks[demoIdx][1] + 4], [tHome + 0.4, marks[demoIdx][0] + 40, marks[demoIdx][1] + 90], [20.0, 1000, 1560], [21.4, 1000, 1560],
+      [1.0, 940, 430], [2.1, cargoCard[0], cargoCard[1] + 120], [3.2, cargoCard[0], cargoCard[1] + 120], [3.6, 700, kpY + 150], [5.8, 640, kpY + 230], [7.3, barC[0], barC[1] - 20], [tBar + 0.2, barC[0], barC[1] - 20],
+      [9.6, 420, flow.y + flow.h + 40], [12.6, 420, flow.y + flow.h + 40], [tVol - 0.1, vol[0], vol[1]], [tMel - 0.1, mel[0], mel[1]], [tBoard - 0.1, mel[0] + 90, mel[1] + 150],
+      ...tMark.map((x, i) => [x - 0.08, marks[i][0], marks[i][1] + 4]), [tHome - 0.08, marks[demoIdx][0], marks[demoIdx][1] + 4], [tHome + 0.4, marks[demoIdx][0] + 40, marks[demoIdx][1] + 90], [20.0, 1010, familyY - 190], [21.4, 1010, familyY - 190],
     ];
     const urls = { ops: 'operations.html', cargo: 'hold-pressure /', members: 'hold-pressure / ?board=members' };
     const hl = w.hl(10);
@@ -667,7 +723,7 @@
     const flowY = flow.y + flow.h / 2 + 10;
     // 进入货舱看板：朝卡片推近，新页面在推近中叠入，再拉回全景
     const PX = [[0, 720], [tEnter, 720], [a, cargoCard[0], E.in], [a + 0.7, 720, E.out], [3.7, 720], [4.6, 420], [5.6, 1010], [6.8, 720], [9.3, 720], [10.3, 600], [12.8, 860, E.lin], [13.3, 720], [16.1, 720]];
-    const PY = [[0, 405], [3.7, 405], [4.6, 400], [5.6, 400], [6.8, hover.y + 405], [tBar + 0.05, hover.y + 405], [tBar + 0.06, 430, E.lin], [9.3, 430], [10.3, flowY], [12.8, flowY], [13.3, 430], [tBoard, 430], [16.1, 330], [tHome + 0.2, 330], [tHome + 1.2, 1650, E.io5], [22, 1700, E.lin]];
+    const PY = [[0, 405], [a - 0.01, 405, E.lin], [a, boardY, E.lin], [3.7, boardY], [4.6, kpY], [5.6, kpY], [6.8, hover.y + 405], [tBar + 0.05, hover.y + 405], [tBar + 0.06, boardY + 60, E.lin], [9.3, boardY + 60], [10.3, flowY], [12.8, flowY], [13.3, boardY], [tBoard + 0.05, boardY], [tBoard + 0.06, 380, E.lin], [16.1, 330], [tHome + 0.2, 330], [tHome + 1.2, familyY - 40, E.io5], [22, familyY, E.lin]];
     const Z = [[0, 0.92], [tEnter, 0.94, E.lin], [a, 1.5, E.in], [a + 0.7, 0.92, E.out], [3.7, 0.92], [4.6, 1.6], [5.6, 1.6], [6.8, 1.0], [tBar - 0.1, 1.03, E.lin], [tBar + 0.5, 0.95], [9.3, 0.95], [10.3, 1.3], [12.8, 1.3], [13.3, 0.95], [tBoard, 0.95], [16.1, 1.3], [tHome + 0.2, 1.3], [tHome + 1.2, 1.25], [22, 1.3, E.lin]];
     return (t) => {
       const io = inOut('pan', 'sink');
@@ -680,7 +736,7 @@
       const py = K(t, PY);
       const z = K(t, Z) * 1.08 * io.zm;
       w.look(px, py, z, { ...io, prevPy });
-      w.pointer(t, track, [tEnter, tBar, tVol, tMel, tBoard, ...tMark, tHome], CUTS);
+      w.pointer(t, track, [tEnter, tBar, tVol, tMel, ...tMark, tHome], CUTS);
       hl(flow, pg.cur === 'cargo-detail' ? bell(t, 10.2, 10.6, 12.6, 12.9) : 0, (1 - seg(t, 10.2, 10.8, E.out5)) * 22);
       caps.forEach(([c, a0, b0]) => c(t, a0, b0));
       pills(t, 3.1, 21.5, t < tBoard ? 0 : 1, 99);
@@ -690,7 +746,7 @@
   // ===== 78–90 技术与收尾 =====
   scene('outro', 78, 90, 16, (el, T0) => {
     const lastLocale = M.text.locales[M.text.locales.length - 1].value;
-    const names = ['home', 'pricing', 'agent-2', 'cargo', 'journey-4', 'baggage', 'members-4', 'checkout', 'family-1', 'cargo-detail', 'benefits', 'info-hk', `home-${lastLocale}`, 'prepare', 'ops'];
+    const names = ['home', 'pricing', 'agent-final', 'cargo', 'journey-4', 'baggage', 'members-4', 'checkout', 'family-1', 'cargo-detail', 'benefits', 'info-hk', `home-${lastLocale}`, 'prepare', 'ops'];
     const persp = h('div', '', el);
     persp.style.cssText = 'position:absolute;inset:0;perspective:1700px;perspective-origin:50% 40%';
     const wall = h('div', 'wall', persp);
@@ -704,7 +760,7 @@
     const shade = h('div', 'wall-shade', el);
     const title = lines(h('div', 'center-title', el), L('一套 React 技術棧，<em>旅客端與營運端</em>同步上線', 'One React stack for <em>passengers and operations</em>'));
     title.el.style.top = '170px';
-    const KPIS = [[11, L('個頁面', 'PAGES')], [5, L('種語言', 'LANGUAGES')], [2, L('塊營運看板', 'OPS BOARDS')], [151, L('項測試通過', 'TESTS PASSING')]];
+    const KPIS = [[11, L('個頁面', 'PAGES')], [5, L('種語言', 'LANGUAGES')], [2, L('塊營運看板', 'OPS BOARDS')], [200, L('項測試通過', 'TESTS PASSING')]];
     const kpis = h('div', 'kpis', el);
     kpis.style.top = '330px';
     const kEls = KPIS.map(([, label]) => h('div', 'kpi', kpis, `<b>0</b><span>${label}</span>`));
@@ -720,7 +776,7 @@
       fine: L('Cathay Hackathon 概念原型 · 頁面中的價格、里數、時間與規則均為演示數據', 'Cathay Hackathon concept prototype · prices, miles, times and rules shown are demo data'),
     });
     KPIS.forEach((_, i) => cue('pops', T0 + 0.9 + i * 0.3));
-    FLASHES.push([toGlobal(cue('hits', T0 + 8)), 0.45]);
+    FLASHES.push([filmTime(cue('hits', T0 + 8)), 0.45]);
     return (t) => {
       const fin = seg(t, 7.4, 8.2, E.io);
       op(shade, seg(t, 0, 0.8, E.lin));
@@ -755,6 +811,14 @@
   function render(t) {
     t = clamp(t, 0, DURATION);
     renderChrome(t);
+    if (CLIP) {
+      const [s] = scenes;
+      for (const el of s.els) el.style.display = 'block';
+      NOW.rt = t;
+      NOW.D = DURATION;
+      s.render(CLIP.from + t * CLIP.rate);
+      return;
+    }
     for (const s of scenes) {
       const on = t >= s.a - s.lap[0] && t < s.b + s.lap[1];
       for (const el of s.els) el.style.display = on ? 'block' : 'none';
@@ -773,7 +837,8 @@
   fit();
 
   window.__duration = DURATION;
-  window.__cues = CUES;
+  window.__cues = CLIP ? { ...CUES, clip: CLIP_ID, n: CLIP.n } : CUES;
+  window.__clips = Object.entries(CLIPS).map(([id, c]) => ({ id, n: c.n, name: c.name }));
   window.__seek = (t) => { render(t); };
   window.__ready = (async () => {
     await document.fonts.ready;
@@ -784,7 +849,7 @@
   })();
 
   if (!RENDER) {
-    const audio = new Audio(`audio/soundtrack-${LANG}.m4a`);
+    const audio = new Audio(CLIP ? `audio/clips/${LANG}/${CLIP_ID}.m4a` : `audio/soundtrack-${LANG}.m4a`);
     const play = document.getElementById('play'), seekEl = document.getElementById('seek'), clock = document.getElementById('clock');
     let t = Number(Q.get('t')) || 0, playing = false, last = 0;
     const mmss = (x) => `${Math.floor(x / 60)}:${String(Math.floor(x % 60)).padStart(2, '0')}`;

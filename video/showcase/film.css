@@ -45,6 +45,7 @@ body { font-family: var(--sans); color: #fff; -webkit-font-smoothing: antialiase
 #hud .logo { position: absolute; left: 40px; top: 10px; height: 76px; }
 #hud .chapter { position: absolute; right: 64px; top: 30px; display: flex; align-items: baseline; gap: 14px; font-size: 20px; letter-spacing: .08em; color: #d7e7dc; }
 #hud .chapter b { font-size: 34px; font-weight: 650; color: var(--gold); letter-spacing: 0; font-variant-numeric: tabular-nums; }
+#hud .chapter[data-i=clip] span { font-size: 28px; font-weight: 600; letter-spacing: .1em; color: var(--cream); }
 #hud .chapter i { font-style: normal; color: #7fa596; font-size: 16px; }
 #bar { position: absolute; left: 0; bottom: 0; height: 5px; width: 100%; background: rgba(255, 255, 255, .08); }
 #bar i { position: absolute; left: 0; top: 0; bottom: 0; width: 100%; transform-origin: 0 50%; background: linear-gradient(90deg, #2c8f77, var(--gold)); }
